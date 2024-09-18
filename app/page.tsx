@@ -68,6 +68,7 @@ export default function Home() {
               src={raphgptDemo}
               alt="raphGPT Preview"
               className="rounded-lg"
+              unoptimized
             />
           </SpatialMaterial>
         </Link>
@@ -79,7 +80,12 @@ export default function Home() {
             reactToMouse
           >
             <p className="font-bold">read my cv</p>
-            <Image src={cv} alt="CV Preview" className="rounded-lg" />
+            <Image
+              src={cv}
+              alt="CV Preview"
+              className="rounded-lg"
+              unoptimized
+            />
           </SpatialMaterial>
         </Link>
 
@@ -90,7 +96,12 @@ export default function Home() {
             reactToMouse
           >
             <p className="font-bold">see my bento</p>
-            <Image src={bento} alt="Bento Preview" className="rounded-lg" />
+            <Image
+              src={bento}
+              alt="Bento Preview"
+              className="rounded-lg"
+              unoptimized
+            />
           </SpatialMaterial>
         </Link>
       </div>
