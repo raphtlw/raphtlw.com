@@ -9,7 +9,7 @@ import {
   useMotionValue,
   useSpring,
 } from "framer-motion";
-import { PropsWithChildren, useEffect, useState } from "react";
+import { PropsWithChildren, useEffect, useRef, useState } from "react";
 import { HoverEffect } from "./hover";
 
 export type SpatialMaterialProps = HTMLMotionProps<"div"> &
@@ -24,13 +24,15 @@ export const SpatialMaterial = ({
   enableTap,
   ...props
 }: SpatialMaterialProps) => {
+  const ref = useRef<HTMLDivElement>(null);
   const isDesktop = useMediaQuery("(min-device-width: 768px)");
 
   const [isTap, setTap] = useState(false);
+  const [isHover, setHover] = useState(false);
 
-  const opacity = useMotionValue(0);
-  const opacitySpring = useSpring(opacity);
-  const background = useMotionTemplate`radial-gradient(circle at center, rgba(255, 255, 255, ${opacitySpring}), rgba(255, 255, 255, 0))`;
+  const backlightOpacity = useMotionValue(0);
+  const backlightOpacitySpring = useSpring(backlightOpacity);
+  const background = useMotionTemplate`radial-gradient(circle at center, rgba(255, 255, 255, ${backlightOpacitySpring}), rgba(255, 255, 255, 0))`;
 
   const scale = useMotionValue(0);
   const scaleSpring = useSpring(scale, {
@@ -46,18 +48,44 @@ export const SpatialMaterial = ({
 
   useEffect(() => {
     if ((props.onClick || enableTap) && isTap) {
-      opacity.set(0.15);
+      backlightOpacity.set(0.15);
       scale.set(0.95);
       posY.set(5);
     } else {
-      opacity.set(0);
+      backlightOpacity.set(0);
       scale.set(1);
       posY.set(0);
     }
-  }, [isTap, enableTap, opacity, posY, props.onClick, scale]);
+  }, [isTap, enableTap, backlightOpacity, posY, props.onClick, scale]);
+
+  useEffect(() => {
+    if (isHover) {
+      backlightOpacity.set(0.15);
+    } else {
+      backlightOpacity.set(0);
+    }
+  }, [isHover, backlightOpacity]);
+
+  useEffect(() => {
+    if (ref.current) {
+      if (isDesktop && reactToMouse) {
+        ref.current.addEventListener("mouseenter", () => setHover(true));
+        ref.current.addEventListener("mouseover", () => setHover(true));
+        ref.current.addEventListener("mouseleave", () => setHover(false));
+        ref.current.addEventListener("mouseout", () => setHover(false));
+      }
+      ref.current.addEventListener("mousedown", () => setTap(true));
+      ref.current.addEventListener("touchstart", () => setTap(true));
+      ref.current.addEventListener("mouseup", () => setTap(false));
+      ref.current.addEventListener("touchend", () => setTap(false));
+      ref.current.addEventListener("touchcancel", () => setTap(false));
+      ref.current.addEventListener("contextmenu", () => setTap(false));
+    }
+  }, [ref, setHover, isDesktop, reactToMouse]);
 
   const component = (
     <motion.div
+      ref={ref}
       {...props}
       style={{
         backdropFilter: "blur(20px)",
@@ -66,30 +94,6 @@ export const SpatialMaterial = ({
         scale: scaleSpring,
         y: posYSpring,
         ...props.style,
-      }}
-      onMouseDown={(e) => {
-        setTap(true);
-        if (props.onMouseDown) props.onMouseDown(e);
-      }}
-      onTouchStart={(e) => {
-        setTap(true);
-        if (props.onTouchStart) props.onTouchStart(e);
-      }}
-      onMouseUp={(e) => {
-        setTap(false);
-        if (props.onMouseUp) props.onMouseUp(e);
-      }}
-      onTouchEnd={(e) => {
-        setTap(false);
-        if (props.onTouchEnd) props.onTouchEnd(e);
-      }}
-      onTouchCancel={(e) => {
-        setTap(false);
-        if (props.onTouchCancel) props.onTouchCancel(e);
-      }}
-      onContextMenu={(e) => {
-        setTap(false);
-        if (props.onContextMenu) props.onContextMenu(e);
       }}
       className={cn(
         "bg-opacity-40 bg-neutral-900 flex flex-1 relative z-10 overflow-hidden",
