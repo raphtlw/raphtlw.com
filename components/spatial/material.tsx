@@ -47,7 +47,7 @@ export const SpatialMaterial = ({
   useEffect(() => {
     if ((props.onClick || enableTap) && isTap) {
       opacity.set(0.15);
-      scale.set(0.9);
+      scale.set(0.95);
       posY.set(5);
     } else {
       opacity.set(0);
