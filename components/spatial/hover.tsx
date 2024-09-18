@@ -3,7 +3,7 @@
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { MouseEvent, PropsWithChildren, useCallback } from "react";
 
-export type HoverEffectProps = PropsWithChildren<{}>;
+export type HoverEffectProps = PropsWithChildren;
 
 export const HoverEffect = ({ children }: HoverEffectProps) => {
   const x = useMotionValue(0);
@@ -37,23 +37,26 @@ export const HoverEffect = ({ children }: HoverEffectProps) => {
     damping: 30,
   });
 
-  const handleMouseMove = useCallback((e: MouseEvent<HTMLDivElement>) => {
-    const rect = e.currentTarget.getBoundingClientRect();
+  const handleMouseMove = useCallback(
+    (e: MouseEvent<HTMLDivElement>) => {
+      const rect = e.currentTarget.getBoundingClientRect();
 
-    const mouseX = e.clientX - rect.left;
-    const mouseY = e.clientY - rect.top;
+      const mouseX = e.clientX - rect.left;
+      const mouseY = e.clientY - rect.top;
 
-    const xPct = mouseX / rect.width - 0.5;
-    const yPct = mouseY / rect.height - 0.5;
+      const xPct = mouseX / rect.width - 0.5;
+      const yPct = mouseY / rect.height - 0.5;
 
-    x.set(xPct);
-    y.set(yPct);
-  }, []);
+      x.set(xPct);
+      y.set(yPct);
+    },
+    [x, y],
+  );
 
-  const handleMouseLeave = useCallback((e: MouseEvent<HTMLDivElement>) => {
+  const handleMouseLeave = useCallback(() => {
     x.set(0);
     y.set(0);
-  }, []);
+  }, [x, y]);
 
   return (
     <motion.div

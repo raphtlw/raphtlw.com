@@ -14,14 +14,12 @@ import { HoverEffect } from "./hover";
 
 export type SpatialMaterialProps = HTMLMotionProps<"div"> &
   PropsWithChildren<{
-    backgroundIntensity?: number;
     reactToMouse?: boolean;
     enableTap?: boolean;
   }>;
 
 export const SpatialMaterial = ({
   children,
-  backgroundIntensity,
   reactToMouse,
   enableTap,
   ...props
@@ -56,7 +54,7 @@ export const SpatialMaterial = ({
       scale.set(1);
       posY.set(0);
     }
-  }, [isTap]);
+  }, [isTap, enableTap, opacity, posY, props.onClick, scale]);
 
   const component = (
     <motion.div
