@@ -38,6 +38,7 @@ export default function Home() {
           </SpatialMaterial>
         </Link>
       </div>
+
       <p className="mt-8">
         started coding when i was 15. did freelance, liked the money but
         didn&apos;t enjoy the stress that came with it. did some working
