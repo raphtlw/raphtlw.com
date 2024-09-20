@@ -33,11 +33,11 @@ export const StaggeredText = ({ text }: StaggeredTextProps) => {
         transition={{ staggerChildren: 0.1 }}
         aria-hidden
       >
-        {textArray.map((line) => (
-          <span className="block">
-            {line.split(" ").map((word) => (
-              <span className="inline-block">
-                {word.split("").map((char) => (
+        {textArray.map((line, index) => (
+          <span className="block" key={index}>
+            {line.split(" ").map((word, index) => (
+              <span className="inline-block" key={index}>
+                {word.split("").map((char, index) => (
                   <motion.span
                     className="inline-block text-3xl font-bold"
                     style={{ transformStyle: "preserve-3d" }}
@@ -47,6 +47,7 @@ export const StaggeredText = ({ text }: StaggeredTextProps) => {
                       damping: 40,
                     }}
                     variants={defaultAnimations}
+                    key={index}
                   >
                     {char}
                   </motion.span>
