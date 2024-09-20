@@ -1,7 +1,7 @@
 import { ThemeProvider } from "@/components/provider/theme";
 import { SpatialMaterial } from "@/components/spatial/material";
-import { ModeToggle } from "@/components/ui/mode-toggle";
 import { cn } from "@/lib/utils";
+import { ConstructionIcon } from "lucide-react";
 import type { Metadata } from "next";
 import { Hanken_Grotesk, JetBrains_Mono } from "next/font/google";
 import Image from "next/image";
@@ -39,7 +39,7 @@ export default function RootLayout({
       <body
         className={cn(
           "flex flex-col md:items-center",
-          "bg-[url(/pattern.svg)] bg-[center_top] bg-no-repeat",
+          "bg-[url(/pattern.svg)] bg-[center_top] bg-no-repeat dark",
         )}
       >
         <ThemeProvider
@@ -48,7 +48,7 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <header className="w-full md:max-w-screen-md px-8 pt-10 sticky top-0 z-30">
+          <header className="w-full md:max-w-screen-md px-8 pt-10 sticky top-0 z-30 light:">
             <SpatialMaterial
               className={cn(
                 "flex flex-row items-center rounded-full px-6 py-4",
@@ -60,7 +60,10 @@ export default function RootLayout({
                 <Image src={icon} alt="Icon" width={32} height={32} />
               </Link>
               <div className="flex-1"></div>
-              <ModeToggle />
+              <div className="flex flex-row gap-2 justify-center font-mono">
+                <ConstructionIcon />
+                <span>WIP</span>
+              </div>
             </SpatialMaterial>
           </header>
           <div className="py-10 md:max-w-screen-md">{children}</div>
