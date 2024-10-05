@@ -65,6 +65,8 @@ export default function RootLayout({
                 "bg-slate-400 bg-opacity-10 backdrop-filter backdrop-blur-2xl",
                 "border-t border-b border-t-slate-500 border-b-black border-opacity-50",
               )}
+              initial={{ y: -160 }}
+              animate={{ y: 0 }}
             >
               <Link href="/" className="rounded-full overflow-hidden">
                 <Image src={icon} alt="Icon" width={32} height={32} />

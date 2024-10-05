@@ -34,7 +34,7 @@ export const SpatialMaterial = ({
   const backlightOpacitySpring = useSpring(backlightOpacity);
   const background = useMotionTemplate`radial-gradient(circle at center, rgba(255, 255, 255, ${backlightOpacitySpring}), rgba(255, 255, 255, 0))`;
 
-  const scale = useMotionValue(0);
+  const scale = useMotionValue(1);
   const scaleSpring = useSpring(scale, {
     stiffness: 300,
     damping: 20,

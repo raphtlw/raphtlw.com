@@ -53,9 +53,9 @@ export default function Home() {
           experienced in multi-disciplinary productive applications with
           language models.
         </li>
-        <li className="mt-10">📍 status: currently looking for work.</li>
+        <li className="mt-10">📍 &nbsp; status: currently looking for work.</li>
         <li>
-          text me on{" "}
+          💭 &nbsp; text me on{" "}
           <Link
             href="https://t.me/raphtlw"
             className="gap-2 items-center justify-center w-min underline"
