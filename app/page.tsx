@@ -1,11 +1,10 @@
-import bento from "@/app/images/bento.gif";
-import cv from "@/app/images/cv.gif";
 import profile from "@/app/images/profile.jpeg";
-import raphgptDemo from "@/app/images/raphgpt-demo.gif";
 import { SpatialMaterial } from "@/components/spatial/material";
+import { HostedVideoPlayer } from "@/components/ui/video";
 import { ArrowUpRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { Suspense } from "react";
 
 export default function Home() {
   return (
@@ -81,12 +80,16 @@ export default function Home() {
             reactToMouse
           >
             <p className="font-bold">try raphGPT</p>
-            <Image
-              src={raphgptDemo}
-              alt="raphGPT Preview"
-              className="rounded-lg"
-              unoptimized
-            />
+            <Suspense fallback={<p>Loading demo...</p>}>
+              <HostedVideoPlayer
+                fileName="raphgpt-demo-bYjX2Qq3suEkwhQDuWJuXRBHLCNzu0"
+                autoPlay
+                playsInline
+                loop
+                muted
+                className="rounded-lg"
+              />
+            </Suspense>
           </SpatialMaterial>
         </Link>
 
@@ -97,12 +100,16 @@ export default function Home() {
             reactToMouse
           >
             <p className="font-bold">read my cv</p>
-            <Image
-              src={cv}
-              alt="CV Preview"
-              className="rounded-lg"
-              unoptimized
-            />
+            <Suspense fallback={<p>Loading preview...</p>}>
+              <HostedVideoPlayer
+                fileName="cv-preview-Ns6syJPPna2f3V7e0UVIluVzJH3q0f"
+                autoPlay
+                playsInline
+                loop
+                muted
+                className="rounded-lg"
+              />
+            </Suspense>
           </SpatialMaterial>
         </Link>
 
@@ -113,12 +120,16 @@ export default function Home() {
             reactToMouse
           >
             <p className="font-bold">see my bento</p>
-            <Image
-              src={bento}
-              alt="Bento Preview"
-              className="rounded-lg"
-              unoptimized
-            />
+            <Suspense fallback={<p>Loading preview...</p>}>
+              <HostedVideoPlayer
+                fileName="bento-preview-1eGNBgSs7wXcj7FYcedzLFp84OrLNx"
+                autoPlay
+                playsInline
+                loop
+                muted
+                className="rounded-lg"
+              />
+            </Suspense>
           </SpatialMaterial>
         </Link>
       </div>
