@@ -1,11 +1,21 @@
 "use client";
 
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
-import { MouseEvent, PropsWithChildren, useCallback } from "react";
+import {
+  MouseEvent,
+  PropsWithChildren,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 
 export type HoverEffectProps = PropsWithChildren;
 
 export const HoverEffect = ({ children }: HoverEffectProps) => {
+  const elemRef = useRef<HTMLDivElement>(null);
+  const [elemSize, setElemSize] = useState<DOMRect>();
+
   const x = useMotionValue(0);
   const y = useMotionValue(0);
 
@@ -58,8 +68,15 @@ export const HoverEffect = ({ children }: HoverEffectProps) => {
     y.set(0);
   }, [x, y]);
 
+  useEffect(() => {
+    if (elemRef.current) {
+      setElemSize(elemRef.current.getBoundingClientRect());
+    }
+  }, [elemRef]);
+
   return (
     <motion.div
+      ref={elemRef}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
       style={{
@@ -69,6 +86,7 @@ export const HoverEffect = ({ children }: HoverEffectProps) => {
         x: posXSpring,
         y: posYSpring,
         transformStyle: "preserve-3d",
+        transformPerspective: elemSize ? `${elemSize.height}px` : "0",
         zIndex: 1,
         padding: "2em",
         margin: "-2em",

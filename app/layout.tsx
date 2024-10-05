@@ -1,9 +1,10 @@
+import gradientBlur from "@/app/gradient-blur.module.css";
 import { ThemeProvider } from "@/components/provider/theme";
 import { SpatialMaterial } from "@/components/spatial/material";
 import { cn } from "@/lib/utils";
 import { ConstructionIcon } from "lucide-react";
 import type { Metadata } from "next";
-import { Hanken_Grotesk, JetBrains_Mono } from "next/font/google";
+import { Hanken_Grotesk, JetBrains_Mono, Syne } from "next/font/google";
 import Image from "next/image";
 import Link from "next/link";
 import "./globals.css";
@@ -16,6 +17,10 @@ const hankenSans = Hanken_Grotesk({
 const jetbrainsMono = JetBrains_Mono({
   subsets: ["latin"],
   variable: "--font-jetbrains",
+});
+const syne = Syne({
+  subsets: ["latin"],
+  variable: "--font-syne",
 });
 
 export const metadata: Metadata = {
@@ -31,7 +36,12 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={cn(hankenSans.variable, jetbrainsMono.variable, "antialiased")}
+      className={cn(
+        hankenSans.variable,
+        jetbrainsMono.variable,
+        syne.variable,
+        "antialiased",
+      )}
     >
       <head>
         <meta name="viewport" content="width=device-width" />
@@ -74,6 +84,15 @@ export default function RootLayout({
             </p>
           </footer>
         </ThemeProvider>
+
+        <div className={gradientBlur["gradient-blur"]}>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+        </div>
       </body>
     </html>
   );

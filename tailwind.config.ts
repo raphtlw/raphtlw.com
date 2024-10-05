@@ -61,6 +61,7 @@ const config: Config = {
       fontFamily: {
         sans: ["var(--font-hanken)"],
         mono: ["var(--font-jetbrains)"],
+        syne: ["var(--font-syne)"],
       },
     },
   },
