@@ -1,5 +1,5 @@
-import gradientBlur from "@/app/gradient-blur.module.css";
 import { ThemeProvider } from "@/components/provider/theme";
+import { GradientBlur } from "@/components/spatial/gradient-blur";
 import { SpatialMaterial } from "@/components/spatial/material";
 import { cn } from "@/lib/utils";
 import { ConstructionIcon } from "lucide-react";
@@ -58,7 +58,7 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <header className="w-full md:max-w-screen-md px-8 pt-10 sticky top-0 z-30 light:">
+          <header className="w-full md:max-w-screen-md px-8 pt-10 sticky top-0 z-30">
             <SpatialMaterial
               className={cn(
                 "flex flex-row items-center rounded-full px-6 py-4",
@@ -87,14 +87,12 @@ export default function RootLayout({
           </footer>
         </ThemeProvider>
 
-        <div className={gradientBlur["gradient-blur"]}>
-          <div></div>
-          <div></div>
-          <div></div>
-          <div></div>
-          <div></div>
-          <div></div>
-        </div>
+        <GradientBlur
+          z={100}
+          style={{ position: "fixed" }}
+          count={6}
+          size="16vh"
+        />
       </body>
     </html>
   );

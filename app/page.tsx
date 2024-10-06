@@ -1,10 +1,9 @@
 import profile from "@/app/images/profile.jpeg";
 import { SpatialMaterial } from "@/components/spatial/material";
-import { HostedVideoPlayer } from "@/components/ui/video";
 import { ArrowUpRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { Suspense } from "react";
+import { PreviewLink } from "./preview-link";
 
 export default function Home() {
   return (
@@ -67,71 +66,29 @@ export default function Home() {
         </li>
       </ul>
 
-      <div className="flex flex-col gap-10 mt-16">
+      <div className="flex flex-col gap-8 mt-16">
         <div className="flex flex-row items-center justify-between">
           <ArrowUpRight size={20} />
           <h2 className="font-medium">links</h2>
         </div>
 
-        <Link href="https://t.me/raphgptbot">
-          <SpatialMaterial
-            className="rounded-xl px-4 py-2 flex flex-col gap-2"
-            enableTap
-            reactToMouse
-          >
-            <p className="font-bold">try raphGPT</p>
-            <Suspense fallback={<p>Loading demo...</p>}>
-              <HostedVideoPlayer
-                fileName="raphgpt-demo-bYjX2Qq3suEkwhQDuWJuXRBHLCNzu0"
-                autoPlay
-                playsInline
-                loop
-                muted
-                className="rounded-lg"
-              />
-            </Suspense>
-          </SpatialMaterial>
-        </Link>
+        <PreviewLink
+          link="https://t.me/raphgptbot"
+          title="try raphGPT"
+          video="38219bcf592a29900b22df3c1e8d3070"
+        />
 
-        <Link href="https://read.cv/raphtlw">
-          <SpatialMaterial
-            className="rounded-xl px-4 py-2 flex flex-col gap-2"
-            enableTap
-            reactToMouse
-          >
-            <p className="font-bold">read my cv</p>
-            <Suspense fallback={<p>Loading preview...</p>}>
-              <HostedVideoPlayer
-                fileName="cv-preview-Ns6syJPPna2f3V7e0UVIluVzJH3q0f"
-                autoPlay
-                playsInline
-                loop
-                muted
-                className="rounded-lg"
-              />
-            </Suspense>
-          </SpatialMaterial>
-        </Link>
+        <PreviewLink
+          link="https://read.cv/raphtlw"
+          title="read my cv"
+          video="e830ce8b35dbdb88e93f8a946512e755"
+        />
 
-        <Link href="https://bento.me/raphtlw">
-          <SpatialMaterial
-            className="rounded-xl px-4 py-2 flex flex-col gap-2"
-            enableTap
-            reactToMouse
-          >
-            <p className="font-bold">see my bento</p>
-            <Suspense fallback={<p>Loading preview...</p>}>
-              <HostedVideoPlayer
-                fileName="bento-preview-1eGNBgSs7wXcj7FYcedzLFp84OrLNx"
-                autoPlay
-                playsInline
-                loop
-                muted
-                className="rounded-lg"
-              />
-            </Suspense>
-          </SpatialMaterial>
-        </Link>
+        <PreviewLink
+          link="https://bento.me/raphtlw"
+          title="see my bento"
+          video="243c1781f605abf0b9607cd754d1b108"
+        />
       </div>
     </main>
   );

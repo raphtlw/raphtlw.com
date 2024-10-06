@@ -1,31 +1,26 @@
 "use client";
 
-import { HTMLMotionProps, motion } from "framer-motion";
+import { animate } from "framer-motion/dom";
+import { useEffect } from "react";
 
-export type GracefulEntryProps = HTMLMotionProps<HTMLDivElement>;
-
-export const GracefulEntry = ({ ...props }: GracefulEntryProps) => {
-  return (
-    <motion.div
-      layout
-      {...props}
-      initial={{
-        y: 60,
-        opacity: 0,
-        filter: "blur(16px)",
-      }}
-      animate={{
-        y: 0,
-        opacity: 1,
-        filter: "blur(0px)",
-      }}
-      transition={{
+export const GracefulEntry = () => {
+  useEffect(() => {
+    animate(
+      "* > div",
+      {
+        y: [40, 0],
+        opacity: [0, 1],
+        filter: ["blur(16px)", "blur(0px)"],
+        scale: [0.95, 1],
+      },
+      {
         type: "spring",
         stiffness: 125,
         damping: 25,
         mass: 1,
-        delay: 1,
-      }}
-    />
-  );
+      },
+    );
+  }, []);
+
+  return <></>;
 };

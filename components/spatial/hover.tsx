@@ -5,7 +5,6 @@ import {
   MouseEvent,
   PropsWithChildren,
   useCallback,
-  useEffect,
   useRef,
   useState,
 } from "react";
@@ -37,14 +36,14 @@ export const HoverEffect = ({ children }: HoverEffectProps) => {
   const posY = useTransform(y, [-0.5, 0.5], ["-10px", "10px"]);
 
   const posXSpring = useSpring(posX, {
+    stiffness: 125,
+    damping: 25,
     mass: 1,
-    stiffness: 200,
-    damping: 30,
   });
   const posYSpring = useSpring(posY, {
+    stiffness: 125,
+    damping: 25,
     mass: 1,
-    stiffness: 200,
-    damping: 30,
   });
 
   const handleMouseMove = useCallback(
@@ -68,12 +67,6 @@ export const HoverEffect = ({ children }: HoverEffectProps) => {
     y.set(0);
   }, [x, y]);
 
-  useEffect(() => {
-    if (elemRef.current) {
-      setElemSize(elemRef.current.getBoundingClientRect());
-    }
-  }, [elemRef]);
-
   return (
     <motion.div
       ref={elemRef}
@@ -86,7 +79,7 @@ export const HoverEffect = ({ children }: HoverEffectProps) => {
         x: posXSpring,
         y: posYSpring,
         transformStyle: "preserve-3d",
-        transformPerspective: elemSize ? `${elemSize.height}px` : "0",
+        transformPerspective: 400,
         zIndex: 1,
         padding: "2em",
         margin: "-2em",
