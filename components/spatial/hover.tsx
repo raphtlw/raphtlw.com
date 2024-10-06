@@ -1,19 +1,12 @@
 "use client";
 
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
-import {
-  MouseEvent,
-  PropsWithChildren,
-  useCallback,
-  useRef,
-  useState,
-} from "react";
+import { MouseEvent, PropsWithChildren, useCallback, useRef } from "react";
 
 export type HoverEffectProps = PropsWithChildren;
 
 export const HoverEffect = ({ children }: HoverEffectProps) => {
   const elemRef = useRef<HTMLDivElement>(null);
-  const [elemSize, setElemSize] = useState<DOMRect>();
 
   const x = useMotionValue(0);
   const y = useMotionValue(0);
