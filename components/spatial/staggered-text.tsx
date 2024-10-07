@@ -1,63 +1,122 @@
 "use client";
 
-import { motion, Variants } from "framer-motion";
+import { HTMLMotionProps, motion } from "framer-motion";
 
-export type StaggeredTextProps = {
-  text: string | string[];
+const STAGGER = 0.115;
+const FADE_BLUR = 10;
+
+export type StaggeredTextProps = HTMLMotionProps<"div"> & {
+  children: string | string[];
+  reactToMouse?: boolean;
 };
 
-const defaultAnimations: Variants = {
-  hidden: {
-    opacity: 0,
-    filter: "blur(10px)",
-    y: 20,
-    rotateX: -90,
-  },
-  visible: {
-    opacity: 1,
-    filter: "blur(0px)",
-    y: 0,
-    rotateX: 0,
-  },
-};
-
-export const StaggeredText = ({ text }: StaggeredTextProps) => {
-  const textArray = Array.isArray(text) ? text : [text];
+export const StaggeredText = ({
+  children,
+  reactToMouse,
+  ...props
+}: StaggeredTextProps) => {
+  const textArray = Array.isArray(children) ? children : [children];
 
   return (
-    <div>
-      <span className="sr-only">{text}</span>
-      <motion.span
-        initial="hidden"
-        animate="visible"
-        transition={{ staggerChildren: 0.1 }}
+    <>
+      <span className="sr-only">{children}</span>
+      <motion.div
+        initial="initial"
+        exit="exit"
+        whileHover={reactToMouse ? "hovered" : undefined}
         aria-hidden
+        {...props}
       >
         {textArray.map((line, index) => (
-          <span className="block" key={index}>
+          <div key={`${line}_${index}`}>
             {line.split(" ").map((word, index) => (
-              <span className="inline-block" key={index}>
-                {word.split("").map((char, index) => (
-                  <motion.span
-                    className="inline-block text-3xl font-bold"
-                    style={{ transformStyle: "preserve-3d" }}
-                    transition={{
-                      type: "spring",
-                      stiffness: 200,
-                      damping: 40,
-                    }}
-                    variants={defaultAnimations}
-                    key={index}
-                  >
-                    {char}
-                  </motion.span>
-                ))}
-                <span className="inline-block">&nbsp;</span>
-              </span>
+              <div
+                className="relative block whitespace-nowrap"
+                style={{
+                  lineHeight: 0.75,
+                }}
+                key={`${word}_${index}`}
+              >
+                <div key={`${word}_above`}>
+                  {word.split("").map((char, index) => (
+                    <motion.span
+                      className="inline-block"
+                      style={{
+                        transformStyle: "preserve-3d",
+                        transformPerspective: 400,
+                      }}
+                      variants={{
+                        initial: {
+                          y: 0,
+                          rotateX: 0,
+                          opacity: 1,
+                          filter: "none",
+                        },
+                        hovered: {
+                          y: "-100%",
+                          rotateX: 90,
+                          opacity: 0,
+                          filter: `blur(${FADE_BLUR}px)`,
+                        },
+                      }}
+                      transition={{
+                        type: "spring",
+                        stiffness: 250,
+                        damping: 50,
+                        delay: STAGGER * index,
+                      }}
+                      key={`${char}_${index}_above`}
+                    >
+                      {char}
+                    </motion.span>
+                  ))}
+                </div>
+                <div className="absolute inset-0" key={`${word}_below`}>
+                  {word.split("").map((char, index) => (
+                    <motion.span
+                      className="inline-block"
+                      style={{
+                        transformStyle: "preserve-3d",
+                        transformPerspective: 400,
+                      }}
+                      variants={{
+                        initial: {
+                          y: "100%",
+                          rotateX: -90,
+                          opacity: 0,
+                          filter: `blur(${FADE_BLUR}px)`,
+                        },
+                        hovered: {
+                          y: 0,
+                          rotateX: 0,
+                          opacity: 1,
+                          filter: "none",
+                        },
+                        exit: {
+                          y: "100%",
+                          rotateX: -90,
+                          opacity: 0,
+                          filter: `blur(${FADE_BLUR}px)`,
+                        },
+                      }}
+                      transition={{
+                        type: "spring",
+                        stiffness: 250,
+                        damping: 50,
+                        delay: STAGGER * index,
+                      }}
+                      key={`${char}_${index}_below`}
+                    >
+                      {char}
+                    </motion.span>
+                  ))}
+                </div>
+                {/* <span className="inline-block">&nbsp;</span> */}
+              </div>
             ))}
-          </span>
+          </div>
         ))}
-      </motion.span>
-    </div>
+      </motion.div>
+    </>
   );
 };

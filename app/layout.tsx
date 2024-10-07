@@ -1,8 +1,8 @@
 import { ThemeProvider } from "@/components/provider/theme";
 import { GradientBlur } from "@/components/spatial/gradient-blur";
+import { ExternalLink } from "@/components/spatial/link";
 import { SpatialMaterial } from "@/components/spatial/material";
 import { cn } from "@/lib/utils";
-import { ConstructionIcon } from "lucide-react";
 import type { Metadata } from "next";
 import { Hanken_Grotesk, JetBrains_Mono, Syne } from "next/font/google";
 import Image from "next/image";
@@ -58,7 +58,7 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <header className="w-full md:max-w-screen-md px-8 pt-10 sticky top-0 z-30">
+          <header className="w-full md:max-w-screen-md px-6 pt-10 sticky top-0 z-30">
             <SpatialMaterial
               className={cn(
                 "flex flex-row items-center rounded-full px-6 py-4",
@@ -72,10 +72,11 @@ export default function RootLayout({
                 <Image src={icon} alt="Icon" width={32} height={32} />
               </Link>
               <div className="flex-1"></div>
-              <div className="flex flex-row gap-2 justify-center font-mono">
-                <ConstructionIcon />
-                <span>WIP</span>
-              </div>
+              <nav className="flex gap-4">
+                <ExternalLink href="/freelance">work</ExternalLink>
+                <ExternalLink href="/blog">writing</ExternalLink>
+                <ExternalLink href="/photography">photography</ExternalLink>
+              </nav>
             </SpatialMaterial>
           </header>
           <div className="py-10 md:max-w-screen-md">{children}</div>

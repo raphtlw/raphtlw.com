@@ -1,4 +1,5 @@
 import profile from "@/app/images/profile.jpeg";
+import { ExternalLink } from "@/components/spatial/link";
 import { SpatialMaterial } from "@/components/spatial/material";
 import { ArrowUpRight } from "lucide-react";
 import Image from "next/image";
@@ -55,13 +56,9 @@ export default function Home() {
         <li className="mt-10">📍 &nbsp; status: currently looking for work.</li>
         <li>
           💭 &nbsp; text me on{" "}
-          <Link
-            href="https://t.me/raphtlw"
-            className="gap-2 items-center justify-center w-min underline"
-          >
+          <ExternalLink href="https://t.me/raphtlw" icon>
             Telegram
-            <ArrowUpRight size={18} className="inline-block" />
-          </Link>
+          </ExternalLink>{" "}
           if you&apos;d like to work together.
         </li>
       </ul>
