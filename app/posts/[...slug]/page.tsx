@@ -74,15 +74,17 @@ export default async function Page({ params }: Params) {
   // Render the page
   return (
     <main className="flex flex-col px-10 gap-6">
-      <SpatialMaterial className="flex flex-col p-4 rounded-xl gap-2">
-        <h1 className="font-mono text-sm">
-          <span className="text-stone-400">title:</span> {frontmatter.title}
-        </h1>
-        <p className="font-mono text-sm">
-          <span className="text-stone-400">description:</span>{" "}
-          {frontmatter.description}
-        </p>
-      </SpatialMaterial>
+      {Object.values(frontmatter).every((p) => p === null || p === "") || (
+        <SpatialMaterial className="flex flex-col p-4 rounded-xl gap-2">
+          <h1 className="font-mono text-sm">
+            <span className="text-stone-400">title:</span> {frontmatter.title}
+          </h1>
+          <p className="font-mono text-sm">
+            <span className="text-stone-400">description:</span>{" "}
+            {frontmatter.description}
+          </p>
+        </SpatialMaterial>
+      )}
 
       <article
         className={cn(
