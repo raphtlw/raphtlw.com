@@ -73,9 +73,11 @@ export default function RootLayout({
               </Link>
               <div className="flex-1"></div>
               <nav className="flex gap-4">
-                <ExternalLink href="/freelance">work</ExternalLink>
-                <ExternalLink href="/blog">writing</ExternalLink>
-                <ExternalLink href="/photography">photography</ExternalLink>
+                <ExternalLink href="/posts/freelancing">work</ExternalLink>
+                <ExternalLink href="/posts">writing</ExternalLink>
+                <ExternalLink href="/posts/photography">
+                  photography
+                </ExternalLink>
               </nav>
             </SpatialMaterial>
           </header>

@@ -16,7 +16,7 @@ export type ExternalLinkProps = ComponentProps<typeof Link> & {
 export const ExternalLink = ({
   children,
   icon,
-  iconSize = 18,
+  iconSize = 12,
   ...props
 }: ExternalLinkProps) => {
   const isDesktop = useMediaQuery("(min-device-width: 768px)");
@@ -38,8 +38,8 @@ export const ExternalLink = ({
                   y: 0,
                 },
                 hover: {
-                  x: 3,
-                  y: -3,
+                  x: 2,
+                  y: -2,
                 },
               }}
             >
@@ -61,7 +61,7 @@ export const ExternalLink = ({
             stiffness: 250,
             damping: 50,
           }}
-          className="inline-flex items-center"
+          className="inline-flex items-center touch-manipulation"
         >
           {children}
           {icon && <ArrowUpRight size={iconSize} />}

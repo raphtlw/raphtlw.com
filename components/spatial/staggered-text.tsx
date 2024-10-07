@@ -22,7 +22,6 @@ export const StaggeredText = ({
       <span className="sr-only">{children}</span>
       <motion.div
         initial="initial"
-        exit="exit"
         whileHover={reactToMouse ? "hovered" : undefined}
         aria-hidden
         {...props}
@@ -92,12 +91,6 @@ export const StaggeredText = ({
                           opacity: 1,
                           filter: "none",
                         },
-                        exit: {
-                          y: "100%",
-                          rotateX: -90,
-                          opacity: 0,
-                          filter: `blur(${FADE_BLUR}px)`,
-                        },
                       }}
                       transition={{
                         type: "spring",
@@ -111,7 +104,6 @@ export const StaggeredText = ({
                     </motion.span>
                   ))}
                 </div>
-                {/* <span className="inline-block">&nbsp;</span> */}
               </div>
             ))}
           </div>
