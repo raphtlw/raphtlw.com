@@ -6,7 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { PreviewLink } from "./preview-link";
 
-export default function Home() {
+export default function Page() {
   return (
     <main className="flex flex-col px-10">
       <div className="flex gap-8">

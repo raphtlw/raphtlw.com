@@ -1,17 +1,17 @@
 import { useMDXComponents } from "@/app/mdx-components";
 import { cn } from "@/lib/utils";
-import fs from "fs";
+import { promises as fs } from "fs";
 import { compileMDX } from "next-mdx-remote/rsc";
 import path from "path";
 import rehypeHighlight from "rehype-highlight";
 import rehypeSlug from "rehype-slug";
 import remarkGfm from "remark-gfm";
 
-const contentSource = "app/posts/content";
+const CONTENT_PATH = "app/posts/content";
 
 export const generateStaticParams = async () => {
-  // Recursively fetech all files in the content directory
-  const targets = fs.readdirSync(path.join(process.cwd(), contentSource), {
+  // Recursively list all files in the content directory
+  const targets = await fs.readdir(path.join(process.cwd(), CONTENT_PATH), {
     recursive: true,
   });
 
@@ -21,14 +21,14 @@ export const generateStaticParams = async () => {
   for (const target of targets) {
     // If the target is a directory, skip it, otherwise add it to the files array
     if (
-      fs
-        .lstatSync(path.join(process.cwd(), contentSource, target.toString()))
-        .isDirectory()
+      (
+        await fs.lstat(
+          path.join(process.cwd(), CONTENT_PATH, target.toString()),
+        )
+      ).isDirectory()
     ) {
       continue;
     }
-
-    // Build the files array
     files.push(target);
   }
 
@@ -46,9 +46,9 @@ type Params = {
 
 export default async function Page({ params }: Params) {
   // Read the MDX file from the content source direectory
-  const source = fs.readFileSync(
-    path.join(process.cwd(), contentSource, params.slug.join("/")) + ".mdx",
-    "utf8",
+  const source = await fs.readFile(
+    path.join(process.cwd(), CONTENT_PATH, params.slug.join("/")) + ".mdx",
+    "utf-8",
   );
 
   // MDX accepts a list of React components
