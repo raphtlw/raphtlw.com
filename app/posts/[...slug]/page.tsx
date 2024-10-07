@@ -1,4 +1,5 @@
 import { useMDXComponents } from "@/app/mdx-components";
+import { SpatialMaterial } from "@/components/spatial/material";
 import { cn } from "@/lib/utils";
 import { promises as fs } from "fs";
 import { compileMDX } from "next-mdx-remote/rsc";
@@ -72,13 +73,20 @@ export default async function Page({ params }: Params) {
 
   // Render the page
   return (
-    <main className="flex flex-col px-10 gap-4">
-      <h1 className="font-mono text-sm text-stone-400">{frontmatter.title}</h1>
-      <p className="font-mono text-sm">{frontmatter.description}</p>
+    <main className="flex flex-col px-10 gap-6">
+      <SpatialMaterial className="flex flex-col p-4 rounded-xl gap-2">
+        <h1 className="font-mono text-sm">
+          <span className="text-stone-400">title:</span> {frontmatter.title}
+        </h1>
+        <p className="font-mono text-sm">
+          <span className="text-stone-400">description:</span>{" "}
+          {frontmatter.description}
+        </p>
+      </SpatialMaterial>
 
       <article
         className={cn(
-          "prose lg:prose-xl prose-stone dark:prose-invert prose-img:rounded-xl",
+          "prose lg:prose-lg prose-stone dark:prose-invert prose-img:rounded-xl",
         )}
       >
         {content}
