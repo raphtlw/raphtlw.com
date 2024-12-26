@@ -1,11 +1,11 @@
 "use client";
 
+import { StaggeredText } from "@/components/spatial/staggered-text";
 import { useMediaQuery } from "@uidotdev/usehooks";
 import { motion } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 import Link from "next/link";
 import { ComponentProps } from "react";
-import { StaggeredText } from "./staggered-text";
 
 export type ExternalLinkProps = ComponentProps<typeof Link> & {
   children: string;
@@ -24,7 +24,7 @@ export const ExternalLink = ({
   return (
     <Link {...props}>
       {isDesktop ? (
-        <motion.div
+        <motion.span
           initial="initial"
           whileHover="hover"
           className="inline-flex items-center"
@@ -46,7 +46,7 @@ export const ExternalLink = ({
               <ArrowUpRight size={iconSize} />
             </motion.span>
           )}
-        </motion.div>
+        </motion.span>
       ) : (
         <motion.span
           whileTap={{

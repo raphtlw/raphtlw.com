@@ -123,39 +123,7 @@ export type Post = {
     [internalGroqTypeReferenceTo]?: "category";
   }>;
   publishedAt?: string;
-  body?: Array<
-    | {
-        children?: Array<{
-          marks?: Array<string>;
-          text?: string;
-          _type: "span";
-          _key: string;
-        }>;
-        style?: "normal" | "h1" | "h2" | "h3" | "h4" | "blockquote";
-        listItem?: "bullet";
-        markDefs?: Array<{
-          href?: string;
-          _type: "link";
-          _key: string;
-        }>;
-        level?: number;
-        _type: "block";
-        _key: string;
-      }
-    | {
-        asset?: {
-          _ref: string;
-          _type: "reference";
-          _weak?: boolean;
-          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-        };
-        hotspot?: SanityImageHotspot;
-        crop?: SanityImageCrop;
-        alt?: string;
-        _type: "image";
-        _key: string;
-      }
-  >;
+  content?: string;
 };
 
 export type Author = {
@@ -305,6 +273,8 @@ export type SanityImageMetadata = {
   isOpaque?: boolean;
 };
 
+export type Markdown = string;
+
 export type AllSanitySchemaTypes =
   | SanityImagePaletteSwatch
   | SanityImagePalette
@@ -321,12 +291,14 @@ export type AllSanitySchemaTypes =
   | SanityImageHotspot
   | SanityImageAsset
   | SanityAssetSourceData
-  | SanityImageMetadata;
+  | SanityImageMetadata
+  | Markdown;
 export declare const internalGroqTypeReferenceTo: unique symbol;
 // Source: ./app/(pages)/page.tsx
 // Variable: LINKS_QUERY
-// Query: *[_type == "externalLink"] {  title,  cta,  description,  "videoUrl": video.asset->url,  url}
+// Query: *[_type == "externalLink"] {  "id": _id,  title,  cta,  description,  "videoUrl": video.asset->url,  url}
 export type LINKS_QUERYResult = Array<{
+  id: string;
   title: string | null;
   cta: string | null;
   description: string | null;
@@ -334,10 +306,49 @@ export type LINKS_QUERYResult = Array<{
   url: string | null;
 }>;
 
+// Source: ./app/(pages)/posts/page.tsx
+// Variable: QUERY_ALL_POSTS
+// Query: *[_type == "post"] {  "id": _id,  "slug": slug.current,  title,  categories,  publishedAt}
+export type QUERY_ALL_POSTSResult = Array<{
+  id: string;
+  slug: string | null;
+  title: string | null;
+  categories: Array<{
+    _ref: string;
+    _type: "reference";
+    _weak?: boolean;
+    _key: string;
+    [internalGroqTypeReferenceTo]?: "category";
+  }> | null;
+  publishedAt: string | null;
+}>;
+
+// Source: ./app/(pages)/posts/[...slug]/page.tsx
+// Variable: QUERY_ALL_POST_SLUGS
+// Query: *[_type == "post"] {  "slug": slug.current}
+export type QUERY_ALL_POST_SLUGSResult = Array<{
+  slug: string | null;
+}>;
+// Variable: QUERY_SINGLE_POST
+// Query: *[_type == "post" && slug.current == $slug][0]{    title,    author,    content  }
+export type QUERY_SINGLE_POSTResult = {
+  title: string | null;
+  author: {
+    _ref: string;
+    _type: "reference";
+    _weak?: boolean;
+    [internalGroqTypeReferenceTo]?: "author";
+  } | null;
+  content: string | null;
+} | null;
+
 // Query TypeMap
 import "@sanity/client";
 declare module "@sanity/client" {
   interface SanityQueries {
-    '*[_type == "externalLink"] {\n  title,\n  cta,\n  description,\n  "videoUrl": video.asset->url,\n  url\n}': LINKS_QUERYResult;
+    '*[_type == "externalLink"] {\n  "id": _id,\n  title,\n  cta,\n  description,\n  "videoUrl": video.asset->url,\n  url\n}': LINKS_QUERYResult;
+    '*[_type == "post"] {\n  "id": _id,\n  "slug": slug.current,\n  title,\n  categories,\n  publishedAt\n}': QUERY_ALL_POSTSResult;
+    '*[_type == "post"] {\n  "slug": slug.current\n}': QUERY_ALL_POST_SLUGSResult;
+    '*[_type == "post" && slug.current == $slug][0]{\n    title,\n    author,\n    content\n  }': QUERY_SINGLE_POSTResult;
   }
 }

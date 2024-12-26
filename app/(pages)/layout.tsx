@@ -35,14 +35,18 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={cn(hankenSans.variable, jetbrainsMono.variable, "antialiased")}
+      className={cn(
+        hankenSans.variable,
+        jetbrainsMono.variable,
+        "antialiased",
+        "scroll-smooth focus:scroll-auto",
+      )}
     >
       <head>
         <meta name="viewport" content="width=device-width" />
       </head>
       <body
         className={cn(
-          "flex flex-col md:items-center",
           "bg-[url(/pattern.svg)] bg-[center_top] bg-no-repeat dark",
         )}
       >
@@ -52,7 +56,7 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <header className="w-full md:max-w-screen-md px-6 pt-10 sticky top-0 z-30">
+          <header className="w-full md:max-w-screen-md px-6 pt-10 sticky top-0 z-30 mx-auto">
             <SpatialMaterial
               className={cn(
                 "flex flex-row items-center rounded-full px-6 py-4",
@@ -67,7 +71,9 @@ export default function RootLayout({
               </Link>
               <div className="flex-1"></div>
               <nav className="flex gap-4">
-                <ExternalLink href="/posts/freelancing">work</ExternalLink>
+                <ExternalLink href="/posts/freelancing">
+                  Need a website?
+                </ExternalLink>
                 <ExternalLink href="/posts">writing</ExternalLink>
                 <ExternalLink href="/posts/photography">
                   photography
@@ -75,7 +81,9 @@ export default function RootLayout({
               </nav>
             </SpatialMaterial>
           </header>
-          <div className="py-10 md:max-w-screen-md">{children}</div>
+
+          {children}
+
           <footer className="flex flex-col px-10 py-6 border-t border-slate-600 border-opacity-70">
             <p>
               Designed by <a href="https://bento.me/raphtlw">@raphtlw</a> &copy;
