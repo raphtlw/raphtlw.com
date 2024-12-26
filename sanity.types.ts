@@ -330,16 +330,26 @@ export type QUERY_ALL_POST_SLUGSResult = Array<{
   slug: string | null;
 }>;
 // Variable: QUERY_SINGLE_POST
-// Query: *[_type == "post" && slug.current == $slug][0]{    title,    author,    content  }
+// Query: *[_type == "post" && slug.current == $slug][0]{    title,    content,    publishedAt,    "author": {      "name": author->name,      "slug": author->slug,      "image": author->image,    }  }
 export type QUERY_SINGLE_POSTResult = {
   title: string | null;
-  author: {
-    _ref: string;
-    _type: "reference";
-    _weak?: boolean;
-    [internalGroqTypeReferenceTo]?: "author";
-  } | null;
   content: string | null;
+  publishedAt: string | null;
+  author: {
+    name: string | null;
+    slug: Slug | null;
+    image: {
+      asset?: {
+        _ref: string;
+        _type: "reference";
+        _weak?: boolean;
+        [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+      };
+      hotspot?: SanityImageHotspot;
+      crop?: SanityImageCrop;
+      _type: "image";
+    } | null;
+  };
 } | null;
 
 // Query TypeMap
@@ -349,6 +359,6 @@ declare module "@sanity/client" {
     '*[_type == "externalLink"] {\n  "id": _id,\n  title,\n  cta,\n  description,\n  "videoUrl": video.asset->url,\n  url\n}': LINKS_QUERYResult;
     '*[_type == "post"] {\n  "id": _id,\n  "slug": slug.current,\n  title,\n  categories,\n  publishedAt\n}': QUERY_ALL_POSTSResult;
     '*[_type == "post"] {\n  "slug": slug.current\n}': QUERY_ALL_POST_SLUGSResult;
-    '*[_type == "post" && slug.current == $slug][0]{\n    title,\n    author,\n    content\n  }': QUERY_SINGLE_POSTResult;
+    '*[_type == "post" && slug.current == $slug][0]{\n    title,\n    content,\n    publishedAt,\n    "author": {\n      "name": author->name,\n      "slug": author->slug,\n      "image": author->image,\n    }\n  }': QUERY_SINGLE_POSTResult;
   }
 }

@@ -104,10 +104,11 @@ const Inner = ({
           "inset 1.2px 0 0 0 rgba(255, 255, 255, 0.04), inset -1.2px 0 0 0 rgba(255, 255, 255, 0.04), inset 0 1.2px 0 0 rgba(255, 255, 255, 0.1), inset 0 0.6px 0 0 rgba(255, 255, 255, 0.1)",
         scale: scaleSpring,
         y: posYSpring,
+        cursor: props.onClick || enableTap ? "pointer" : "default",
         ...props.style,
       }}
       className={cn(
-        "bg-opacity-40 bg-neutral-900 flex flex-1 relative z-10 overflow-hidden",
+        "bg-opacity-40 bg-neutral-900 flex relative z-10 overflow-hidden",
         props.className,
       )}
     >
