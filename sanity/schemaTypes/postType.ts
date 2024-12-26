@@ -52,6 +52,9 @@ export const postType = defineType({
     defineField({
       name: "content",
       type: "markdown",
+      options: {
+        imageUrl: (imageAsset) => `${imageAsset.url}?w=600`,
+      },
     }),
   ],
   preview: {
