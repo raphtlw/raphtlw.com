@@ -8,7 +8,7 @@ import {
   useScroll,
   useTransform,
 } from "motion/react";
-import { HTMLAttributes, PropsWithChildren, useMemo } from "react";
+import { HTMLAttributes, PropsWithChildren } from "react";
 
 const HIDE_THRESHOLD = 0.8;
 
@@ -71,28 +71,26 @@ export const GradientBlur = ({
     );
   };
 
-  const gradientBlurMaterial = useMemo(() => {
-    return (
-      <div
-        {...(!children && props)}
-        style={{
-          position: "absolute",
-          zIndex: z,
-          inset: `${where === "bottom" ? "auto" : "0"} ${where === "left" ? "auto" : "0"} ${where === "top" ? "auto" : "0"} ${where === "right" ? "auto" : "0"}`,
-          ...(where === "top" || where === "bottom"
-            ? { height: size }
-            : { width: size }),
-          pointerEvents: "none",
+  const gradientBlurMaterial = (
+    <div
+      {...(!children && props)}
+      style={{
+        position: "absolute",
+        zIndex: z,
+        inset: `${where === "bottom" ? "auto" : "0"} ${where === "left" ? "auto" : "0"} ${where === "top" ? "auto" : "0"} ${where === "right" ? "auto" : "0"}`,
+        ...(where === "top" || where === "bottom"
+          ? { height: size }
+          : { width: size }),
+        pointerEvents: "none",
 
-          ...(!children && props.style),
-        }}
-      >
-        {[...Array(count)].map((_, i) => (
-          <GradientBlurSegment key={i} index={i} />
-        ))}
-      </div>
-    );
-  }, [count, size, where, children, z, props, blurMultiplier]);
+        ...(!children && props.style),
+      }}
+    >
+      {[...Array(count)].map((_, i) => (
+        <GradientBlurSegment key={i} index={i} />
+      ))}
+    </div>
+  );
 
   return children ? (
     <div {...props} className={cn("relative", props.className)}>
