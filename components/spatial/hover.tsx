@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
+import { motion, useMotionValue, useSpring, useTransform } from "motion/react";
 import { MouseEvent, PropsWithChildren, useCallback, useRef } from "react";
 
 export type HoverEffectProps = PropsWithChildren;

@@ -1,6 +1,6 @@
 "use client";
 
-import { animate } from "framer-motion/dom";
+import { animate } from "motion";
 import { useEffect } from "react";
 
 export const GracefulEntry = () => {

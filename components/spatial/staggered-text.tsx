@@ -1,6 +1,6 @@
 "use client";
 
-import { HTMLMotionProps, motion } from "framer-motion";
+import { HTMLMotionProps, motion } from "motion/react";
 
 const STAGGER_CHAR = 0.115;
 const STAGGER_WORD = 0.25;

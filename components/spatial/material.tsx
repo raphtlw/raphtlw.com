@@ -1,5 +1,7 @@
 "use client";
 
+import { HoverEffect } from "@/components/spatial/hover";
+import { ClientOnly } from "@/components/utils/client-only";
 import { cn } from "@/lib/utils";
 import { useMediaQuery } from "@uidotdev/usehooks";
 import {
@@ -8,9 +10,8 @@ import {
   useMotionTemplate,
   useMotionValue,
   useSpring,
-} from "framer-motion";
+} from "motion/react";
 import { PropsWithChildren, useEffect, useRef, useState } from "react";
-import { HoverEffect } from "./hover";
 
 export type SpatialMaterialProps = HTMLMotionProps<"div"> &
   PropsWithChildren<{
@@ -18,7 +19,15 @@ export type SpatialMaterialProps = HTMLMotionProps<"div"> &
     enableTap?: boolean;
   }>;
 
-export const SpatialMaterial = ({
+export const SpatialMaterial = (props: SpatialMaterialProps) => {
+  return (
+    <ClientOnly>
+      <Inner {...props} />
+    </ClientOnly>
+  );
+};
+
+const Inner = ({
   children,
   reactToMouse,
   enableTap,

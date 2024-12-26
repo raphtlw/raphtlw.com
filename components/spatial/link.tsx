@@ -1,9 +1,10 @@
 "use client";
 
 import { StaggeredText } from "@/components/spatial/staggered-text";
+import { ClientOnly } from "@/components/utils/client-only";
 import { useMediaQuery } from "@uidotdev/usehooks";
-import { motion } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
+import { motion } from "motion/react";
 import Link from "next/link";
 import { ComponentProps } from "react";
 
@@ -13,7 +14,15 @@ export type ExternalLinkProps = ComponentProps<typeof Link> & {
   iconSize?: number;
 };
 
-export const ExternalLink = ({
+export const ExternalLink = (props: ExternalLinkProps) => {
+  return (
+    <ClientOnly>
+      <Inner {...props} />
+    </ClientOnly>
+  );
+};
+
+const Inner = ({
   children,
   icon,
   iconSize = 12,

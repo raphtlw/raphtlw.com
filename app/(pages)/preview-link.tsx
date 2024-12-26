@@ -2,7 +2,7 @@
 
 import { SpatialMaterial } from "@/components/spatial/material";
 import { LINKS_QUERYResult } from "@/sanity.types";
-import { Variants } from "framer-motion";
+import { Variants } from "motion/react";
 import Link from "next/link";
 import { useState } from "react";
 

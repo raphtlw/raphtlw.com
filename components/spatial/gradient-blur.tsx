@@ -1,11 +1,16 @@
+"use client";
+
 import { cn } from "@/lib/utils";
 import {
-  CSSProperties,
-  HTMLAttributes,
-  PropsWithChildren,
-  useCallback,
-  useMemo,
-} from "react";
+  motion,
+  useMotionTemplate,
+  useMotionValue,
+  useScroll,
+  useTransform,
+} from "motion/react";
+import { HTMLAttributes, PropsWithChildren, useMemo } from "react";
+
+const HIDE_THRESHOLD = 0.8;
 
 export type GradientBlurProps = HTMLAttributes<HTMLDivElement> &
   PropsWithChildren<{
@@ -23,34 +28,48 @@ export const GradientBlur = ({
   children,
   ...props
 }: GradientBlurProps) => {
-  const getBlurStyle = useCallback(
-    (index: number): CSSProperties => {
-      const blurValue = 0.5 * Math.pow(2, index);
-      const gradientStopDelta = 100 / count;
-      const startPercentage = index * gradientStopDelta;
-      const midPercentage = startPercentage + gradientStopDelta;
-      const endPercentage = midPercentage + gradientStopDelta;
-
-      const maskGradient = `linear-gradient(
-        to bottom,
-        rgba(0, 0, 0, 0) ${startPercentage}%,
-        black ${midPercentage}%,
-        black ${endPercentage}%,
-        rgba(0, 0, 0, 0) ${endPercentage + 12.5}%
-      )`;
-
-      return {
-        position: "absolute",
-        inset: 0,
-        zIndex: index + 1,
-        WebkitBackdropFilter: `blur(${blurValue}px)`,
-        backdropFilter: `blur(${blurValue}px)`,
-        WebkitMask: maskGradient,
-        mask: maskGradient,
-      } as const;
-    },
-    [count],
+  const { scrollYProgress } = useScroll();
+  const blurMultiplier = useTransform(
+    scrollYProgress,
+    [HIDE_THRESHOLD, 1],
+    [1, 0],
   );
+
+  const GradientBlurSegment = ({ index }: { index: number }) => {
+    const originalBlurValue = useMotionValue(0.5 * Math.pow(2, index));
+    const blurValue = useTransform<number, number>(
+      [blurMultiplier, originalBlurValue],
+      ([multiplier, value]) => multiplier * value,
+    );
+
+    const gradientStopDelta = 100 / count;
+    const startPercentage = index * gradientStopDelta;
+    const midPercentage = startPercentage + gradientStopDelta;
+    const endPercentage = midPercentage + gradientStopDelta;
+
+    const backdropFilter = useMotionTemplate`blur(${blurValue}px)`;
+    const maskGradient = `linear-gradient(
+      to bottom,
+      rgba(0, 0, 0, 0) ${startPercentage}%,
+      black ${midPercentage}%,
+      black ${endPercentage}%,
+      rgba(0, 0, 0, 0) ${endPercentage + 12.5}%
+    )`;
+
+    return (
+      <motion.div
+        style={{
+          position: "absolute",
+          inset: 0,
+          zIndex: index + 1,
+          WebkitBackdropFilter: backdropFilter,
+          backdropFilter,
+          WebkitMask: maskGradient,
+          mask: maskGradient,
+        }}
+      />
+    );
+  };
 
   const gradientBlurMaterial = useMemo(() => {
     return (
@@ -69,11 +88,11 @@ export const GradientBlur = ({
         }}
       >
         {[...Array(count)].map((_, i) => (
-          <div key={i} style={getBlurStyle(i)}></div>
+          <GradientBlurSegment key={i} index={i} />
         ))}
       </div>
     );
-  }, [count, getBlurStyle, size, where, children, z, props]);
+  }, [count, size, where, children, z, props, blurMultiplier]);
 
   return children ? (
     <div {...props} className={cn("relative", props.className)}>
