@@ -1,4 +1,5 @@
-import { StaggeredText } from "@/components/spatial/staggered-text";
+import { TextScramble } from "@/components/ui/text-scramble";
+import { cn } from "@/lib/utils";
 import { QUERY_ALL_POSTSResult } from "@/sanity.types";
 import { client } from "@/sanity/lib/client";
 import { format } from "date-fns";
@@ -41,9 +42,14 @@ export default async function Page() {
                   <p className="text-neutral-600 dark:text-neutral-400 tabular-nums">
                     {format(new Date(post.publishedAt), "MMMM dd, yyyy")}
                   </p>
-                  <p className="text-neutral-900 dark:text-neutral-100 tracking-tight">
-                    <StaggeredText reactToMouse>{post.title}</StaggeredText>
-                  </p>
+                  <TextScramble
+                    className={cn(
+                      "text-neutral-900 dark:text-neutral-100 tracking-tight",
+                    )}
+                    duration={1.2}
+                  >
+                    {post.title}
+                  </TextScramble>
                 </div>
               </Link>
             ))}
