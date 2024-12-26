@@ -9,6 +9,7 @@ import Link from "next/link";
 import icon from "@/app/icon.png";
 import {
   Sheet,
+  SheetClose,
   SheetContent,
   SheetDescription,
   SheetHeader,
@@ -76,13 +77,19 @@ const Inner = () => {
               </SheetHeader>
 
               <nav className="flex flex-col gap-4 mt-16">
-                <ExternalLink href="/posts/freelancing">
-                  Need a website?
-                </ExternalLink>
-                <ExternalLink href="/posts">writing</ExternalLink>
-                <ExternalLink href="/posts/photography">
-                  photography
-                </ExternalLink>
+                <SheetClose asChild>
+                  <ExternalLink href="/posts/freelancing">
+                    Need a website?
+                  </ExternalLink>
+                </SheetClose>
+                <SheetClose asChild>
+                  <ExternalLink href="/posts">writing</ExternalLink>
+                </SheetClose>
+                <SheetClose asChild>
+                  <ExternalLink href="/posts/photography">
+                    photography
+                  </ExternalLink>
+                </SheetClose>
               </nav>
             </SheetContent>
           </Sheet>
