@@ -87,6 +87,8 @@ const Inner = ({
       ref.current.addEventListener("touchstart", () => setTap(true));
       ref.current.addEventListener("mouseup", () => setTap(false));
       ref.current.addEventListener("touchend", () => setTap(false));
+      ref.current.addEventListener("mouseleave", () => setTap(false));
+      ref.current.addEventListener("mouseout", () => setTap(false));
       ref.current.addEventListener("touchcancel", () => setTap(false));
       ref.current.addEventListener("contextmenu", () => setTap(false));
     }

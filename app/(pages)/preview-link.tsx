@@ -24,6 +24,12 @@ export const PreviewLink = ({ externalLink }: PreviewLinkProps) => {
       filter: "none",
       opacity: 1,
       scale: 1,
+      transition: {
+        type: "spring",
+        stiffness: 130,
+        damping: 25,
+        mass: 1,
+      },
     },
   };
 
@@ -35,12 +41,6 @@ export const PreviewLink = ({ externalLink }: PreviewLinkProps) => {
         variants={materialVariants}
         initial="hidden"
         animate={loaded ? "show" : "hidden"}
-        transition={{
-          type: "spring",
-          stiffness: 130,
-          damping: 25,
-          mass: 1,
-        }}
         whileHover={{
           scale: 1.05,
           transition: {
