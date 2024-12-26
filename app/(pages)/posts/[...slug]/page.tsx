@@ -11,11 +11,11 @@ import rehypeHighlight from "rehype-highlight";
 import rehypeSlug from "rehype-slug";
 import remarkGfm from "remark-gfm";
 
-export const QUERY_ALL_POST_SLUGS = defineQuery(`*[_type == "post"] {
+const QUERY_ALL_POST_SLUGS = defineQuery(`*[_type == "post"] {
   "slug": slug.current
 }`);
 
-export const QUERY_SINGLE_POST =
+const QUERY_SINGLE_POST =
   defineQuery(`*[_type == "post" && slug.current == $slug][0]{
     title,
     author,
