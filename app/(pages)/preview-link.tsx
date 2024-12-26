@@ -55,6 +55,7 @@ export const PreviewLink = ({ externalLink }: PreviewLinkProps) => {
         <video
           src={externalLink.videoUrl}
           autoPlay
+          playsInline
           loop
           muted
           preload="auto"
