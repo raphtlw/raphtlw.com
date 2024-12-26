@@ -1,12 +1,24 @@
+import { PreviewLink } from "@/app/(pages)/preview-link";
 import profile from "@/app/images/profile.jpeg";
 import { ExternalLink } from "@/components/spatial/link";
 import { SpatialMaterial } from "@/components/spatial/material";
+import { client } from "@/sanity/lib/client";
 import { ArrowUpRight } from "lucide-react";
+import { defineQuery } from "next-sanity";
 import Image from "next/image";
 import Link from "next/link";
-import { PreviewLink } from "./preview-link";
 
-export default function Page() {
+export const LINKS_QUERY = defineQuery(`*[_type == "externalLink"] {
+  title,
+  cta,
+  description,
+  "videoUrl": video.asset->url,
+  url
+}`);
+
+export default async function Page() {
+  const links = await client.fetch(LINKS_QUERY);
+
   return (
     <main className="flex flex-col px-10">
       <div className="flex gap-8">
@@ -46,14 +58,21 @@ export default function Page() {
 
       <ul className="flex flex-col gap-4">
         <li className="mt-8 relative">
-          looking to help in AI research as a self taught freelancer from
-          singapore.
+          currently building experience working in a fast-paced robotics/coding
+          teaching school.
         </li>
         <li>
-          experienced in multi-disciplinary productive applications with
-          language models.
+          experienced in delivering productive applications with large language
+          models.
         </li>
-        <li className="mt-10">📍 &nbsp; status: currently looking for work.</li>
+        <SpatialMaterial className="grid grid-cols-2 rounded-lg">
+          <div className="flex flex-col py-2 px-4 border-r">
+            <p>status</p>
+          </div>
+          <div className="flex flex-col py-2 px-4">
+            <p>working 👨🏻‍💻</p>
+          </div>
+        </SpatialMaterial>
         <li>
           💭 &nbsp; text me on{" "}
           <ExternalLink href="https://t.me/raphtlw" icon>
@@ -69,7 +88,11 @@ export default function Page() {
           <h2 className="font-medium">links</h2>
         </div>
 
-        <PreviewLink
+        {links.map((link) => (
+          <PreviewLink externalLink={link} />
+        ))}
+
+        {/* <PreviewLink
           link="https://t.me/raphgptbot"
           title="try raphGPT"
           video="38219bcf592a29900b22df3c1e8d3070"
@@ -85,7 +108,7 @@ export default function Page() {
           link="https://bento.me/raphtlw"
           title="see my bento"
           video="243c1781f605abf0b9607cd754d1b108"
-        />
+        /> */}
       </div>
     </main>
   );

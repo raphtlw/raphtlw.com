@@ -1,14 +1,17 @@
+import "@/app/globals.css";
+
+import type { Metadata } from "next";
+
 import { ThemeProvider } from "@/components/provider/theme";
 import { GradientBlur } from "@/components/spatial/gradient-blur";
 import { ExternalLink } from "@/components/spatial/link";
 import { SpatialMaterial } from "@/components/spatial/material";
 import { cn } from "@/lib/utils";
-import type { Metadata } from "next";
-import { Hanken_Grotesk, JetBrains_Mono, Syne } from "next/font/google";
+import { Hanken_Grotesk, JetBrains_Mono } from "next/font/google";
 import Image from "next/image";
 import Link from "next/link";
-import "./globals.css";
-import icon from "./icon.png";
+
+import icon from "@/app/icon.png";
 
 const hankenSans = Hanken_Grotesk({
   subsets: ["latin"],
@@ -17,10 +20,6 @@ const hankenSans = Hanken_Grotesk({
 const jetbrainsMono = JetBrains_Mono({
   subsets: ["latin"],
   variable: "--font-jetbrains",
-});
-const syne = Syne({
-  subsets: ["latin"],
-  variable: "--font-syne",
 });
 
 export const metadata: Metadata = {
@@ -36,12 +35,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={cn(
-        hankenSans.variable,
-        jetbrainsMono.variable,
-        syne.variable,
-        "antialiased",
-      )}
+      className={cn(hankenSans.variable, jetbrainsMono.variable, "antialiased")}
     >
       <head>
         <meta name="viewport" content="width=device-width" />
