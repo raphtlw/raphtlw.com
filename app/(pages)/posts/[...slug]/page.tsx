@@ -11,6 +11,7 @@ import { urlFor } from "@/sanity/lib/image";
 import { format } from "date-fns";
 import { compileMDX } from "next-mdx-remote/rsc";
 import { defineQuery } from "next-sanity";
+import { notFound } from "next/navigation";
 import rehypeHighlight from "rehype-highlight";
 import rehypeSlug from "rehype-slug";
 import remarkGfm from "remark-gfm";
@@ -47,9 +48,13 @@ type Params = {
 export default async function Page({ params }: Params) {
   const { slug } = await params;
 
-  const post: QUERY_SINGLE_POSTResult = await client.fetch(QUERY_SINGLE_POST, {
+  const post = await client.fetch<QUERY_SINGLE_POSTResult>(QUERY_SINGLE_POST, {
     slug: slug.join("/"),
   });
+
+  if (!post) {
+    notFound();
+  }
 
   const components = getMDXComponents({});
 

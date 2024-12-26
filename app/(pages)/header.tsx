@@ -15,11 +15,18 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import { ClientOnly } from "@/components/utils/client-only";
 import { HamburgerMenuIcon } from "@radix-ui/react-icons";
 import { useMediaQuery } from "@uidotdev/usehooks";
 import { motion } from "motion/react";
 
-export const Header = () => {
+export const Header = () => (
+  <ClientOnly>
+    <Inner />
+  </ClientOnly>
+);
+
+const Inner = () => {
   const isDesktop = useMediaQuery("(min-width: 768px)");
 
   return (
