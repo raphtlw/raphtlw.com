@@ -72,5 +72,3 @@ export default async function Page({ params }: Params) {
     </main>
   );
 }
-
-export const dynamicParams = false;
