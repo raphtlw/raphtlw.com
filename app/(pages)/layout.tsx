@@ -6,6 +6,7 @@ import { GradientBlur } from "@/components/spatial/gradient-blur";
 import { ExternalLink } from "@/components/spatial/link";
 import { SpatialMaterial } from "@/components/spatial/material";
 import { cn } from "@/lib/utils";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Hanken_Grotesk, JetBrains_Mono } from "next/font/google";
 import Image from "next/image";
 import Link from "next/link";
@@ -88,6 +89,8 @@ export default function RootLayout({
           count={6}
           size="16vh"
         />
+
+        <SpeedInsights />
       </body>
     </html>
   );
