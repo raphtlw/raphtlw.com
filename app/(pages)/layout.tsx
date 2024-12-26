@@ -3,16 +3,11 @@ import "@/app/globals.css";
 import type { Metadata } from "next";
 
 import { GradientBlur } from "@/components/spatial/gradient-blur";
-import { ExternalLink } from "@/components/spatial/link";
-import { SpatialMaterial } from "@/components/spatial/material";
 import { cn } from "@/lib/utils";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Hanken_Grotesk, JetBrains_Mono } from "next/font/google";
-import Image from "next/image";
-import Link from "next/link";
-
-import icon from "@/app/icon.png";
+import { Header } from "./header";
 
 const hankenSans = Hanken_Grotesk({
   subsets: ["latin"],
@@ -51,29 +46,7 @@ export default function RootLayout({
           "bg-[url(/pattern.svg)] bg-[center_top] bg-no-repeat dark",
         )}
       >
-        <header className="w-full md:max-w-screen-md px-6 pt-10 sticky top-0 z-30 mx-auto">
-          <SpatialMaterial
-            className={cn(
-              "flex flex-row items-center rounded-full px-6 py-4",
-              "bg-slate-400 bg-opacity-10 backdrop-filter backdrop-blur-2xl",
-              "border-t border-b border-t-slate-500 border-b-black border-opacity-50",
-            )}
-            initial={{ y: -160 }}
-            animate={{ y: 0 }}
-          >
-            <Link href="/" className="rounded-full overflow-hidden">
-              <Image src={icon} alt="Icon" width={32} height={32} />
-            </Link>
-            <div className="flex-1"></div>
-            <nav className="flex gap-4">
-              <ExternalLink href="/posts/freelancing">
-                Need a website?
-              </ExternalLink>
-              <ExternalLink href="/posts">writing</ExternalLink>
-              <ExternalLink href="/posts/photography">photography</ExternalLink>
-            </nav>
-          </SpatialMaterial>
-        </header>
+        <Header />
 
         {children}
 

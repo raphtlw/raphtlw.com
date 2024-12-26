@@ -66,10 +66,12 @@ export default async function Page({ params }: Params) {
 
   // Render the page
   return (
-    <main className="py-20 md:py-40">
-      <BackButton className="fixed top-[10vh] left-[5vw]" />
+    <main className="py-10 md:py-40">
+      <div className="flex px-6">
+        <BackButton className="md:fixed md:top-[10vh] md:left-[5vw]" />
+      </div>
 
-      <div className="max-w-3xl mx-auto flex flex-col gap-12">
+      <div className="px-6 pt-6 md:pt-0 md:max-w-3xl mx-auto flex flex-col gap-12">
         <div className="flex flex-col gap-4">
           <p className="text-slate-400">
             {format(new Date(post.publishedAt), "EEEE, MMMM d, yyyy")}

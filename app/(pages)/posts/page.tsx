@@ -19,7 +19,7 @@ export default async function Page() {
 
   return (
     <main className="py-16">
-      <div className="max-w-3xl mx-auto">
+      <div className="px-10 md:max-w-3xl mx-auto">
         <h1 className="text-4xl font-bold">
           blog <Link href="/posts">/ posts</Link>
         </h1>

@@ -20,11 +20,11 @@ const LINKS_QUERY = defineQuery(`*[_type == "externalLink"] {
 }`);
 
 export default async function Page() {
-  const links: LINKS_QUERYResult = await client.fetch(LINKS_QUERY);
+  const links = await client.fetch<LINKS_QUERYResult>(LINKS_QUERY);
 
   return (
-    <main className="py-12">
-      <section className="max-w-3xl mx-auto">
+    <main className="pt-20 pb-10 md:pb-20">
+      <section className="px-8 md:max-w-3xl mx-auto">
         <div className="flex gap-8">
           <div className="overflow-hidden w-28 h-28 flex items-center justify-center rounded-full">
             <Image src={profile} alt="Profile Photo" />
@@ -61,7 +61,7 @@ export default async function Page() {
         </div>
       </section>
 
-      <section className="max-w-3xl mx-auto mt-8">
+      <section className="px-8 md:max-w-3xl mx-auto">
         <ul className="flex flex-col gap-4">
           <li className="mt-8 relative">
             currently building experience working in a fast-paced
@@ -88,7 +88,7 @@ export default async function Page() {
         </ul>
       </section>
 
-      <section className="max-w-3xl mx-auto mt-8">
+      <section className="px-8 md:max-w-3xl mx-auto mt-8">
         <div className="flex flex-col gap-8 mt-16">
           <div className="flex flex-row items-center justify-between">
             <ArrowUpRight size={20} />
