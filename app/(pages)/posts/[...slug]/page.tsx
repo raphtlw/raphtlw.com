@@ -2,35 +2,17 @@ import { getMDXComponents } from "@/app/mdx-components";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { BackButton } from "@/components/ui/back-button";
 import { cn } from "@/lib/utils";
-import {
-  QUERY_ALL_POST_SLUGSResult,
-  QUERY_SINGLE_POSTResult,
-} from "@/sanity.types";
+import { QUERY_ALL_POST_SLUGSResult } from "@/sanity.types";
 import { client } from "@/sanity/lib/client";
 import { urlFor } from "@/sanity/lib/image";
+import { sanityFetch } from "@/sanity/lib/live";
+import { QUERY_ALL_POST_SLUGS, QUERY_SINGLE_POST } from "@/sanity/lib/queries";
 import { format } from "date-fns";
 import { compileMDX } from "next-mdx-remote/rsc";
-import { defineQuery } from "next-sanity";
 import { notFound } from "next/navigation";
 import rehypeHighlight from "rehype-highlight";
 import rehypeSlug from "rehype-slug";
 import remarkGfm from "remark-gfm";
-
-const QUERY_ALL_POST_SLUGS = defineQuery(`*[_type == "post"] {
-  "slug": slug.current
-}`);
-
-const QUERY_SINGLE_POST =
-  defineQuery(`*[_type == "post" && slug.current == $slug][0]{
-    title,
-    content,
-    publishedAt,
-    "author": {
-      "name": author->name,
-      "slug": author->slug,
-      "image": author->image,
-    }
-  }`);
 
 export const generateStaticParams = async () => {
   const posts =
@@ -46,14 +28,15 @@ type Params = {
 };
 
 export default async function Page({ params }: Params) {
-  const { slug } = await params;
-
-  const post = await client.fetch<QUERY_SINGLE_POSTResult>(QUERY_SINGLE_POST, {
-    slug: slug.join("/"),
+  const { data: post } = await sanityFetch({
+    query: QUERY_SINGLE_POST,
+    params: {
+      slug: (await params).slug.join("/"),
+    },
   });
 
   if (!post) {
-    notFound();
+    return notFound();
   }
 
   const components = getMDXComponents({});

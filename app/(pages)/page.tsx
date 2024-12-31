@@ -5,25 +5,16 @@ import { ExternalLink } from "@/components/spatial/link";
 import { SpatialMaterial } from "@/components/spatial/material";
 import { LINKS_QUERYResult } from "@/sanity.types";
 import { client } from "@/sanity/lib/client";
+import { LINKS_QUERY } from "@/sanity/lib/queries";
 import { ArrowUpRight } from "lucide-react";
-import { defineQuery } from "next-sanity";
 import Image from "next/image";
 import Link from "next/link";
-
-const LINKS_QUERY = defineQuery(`*[_type == "externalLink"] {
-  "id": _id,
-  title,
-  cta,
-  description,
-  "videoUrl": video.asset->url,
-  url
-}`);
 
 export default async function Page() {
   const links = await client.fetch<LINKS_QUERYResult>(LINKS_QUERY);
 
   return (
-    <main className="pt-20 pb-10 md:pb-20">
+    <main className="py-10 md:py-20">
       <section className="px-8 md:max-w-3xl mx-auto">
         <div className="flex gap-8">
           <div className="overflow-hidden w-28 h-28 flex items-center justify-center rounded-full">

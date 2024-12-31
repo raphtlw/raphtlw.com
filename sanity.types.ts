@@ -294,7 +294,7 @@ export type AllSanitySchemaTypes =
   | SanityImageMetadata
   | Markdown;
 export declare const internalGroqTypeReferenceTo: unique symbol;
-// Source: ./app/(pages)/page.tsx
+// Source: ./sanity/lib/queries.ts
 // Variable: LINKS_QUERY
 // Query: *[_type == "externalLink"] {  "id": _id,  title,  cta,  description,  "videoUrl": video.asset->url,  url}
 export type LINKS_QUERYResult = Array<{
@@ -305,8 +305,6 @@ export type LINKS_QUERYResult = Array<{
   videoUrl: string | null;
   url: string | null;
 }>;
-
-// Source: ./app/(pages)/posts/page.tsx
 // Variable: QUERY_ALL_POSTS
 // Query: *[_type == "post"] {  "id": _id,  "slug": slug.current,  title,  categories,  publishedAt}
 export type QUERY_ALL_POSTSResult = Array<{
@@ -322,8 +320,6 @@ export type QUERY_ALL_POSTSResult = Array<{
   }> | null;
   publishedAt: string | null;
 }>;
-
-// Source: ./app/(pages)/posts/[...slug]/page.tsx
 // Variable: QUERY_ALL_POST_SLUGS
 // Query: *[_type == "post"] {  "slug": slug.current}
 export type QUERY_ALL_POST_SLUGSResult = Array<{

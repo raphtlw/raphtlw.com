@@ -19,6 +19,7 @@
     "@sanity/icons": "^3.5.6",
     "@sanity/image-url": "^1.1.0",
     "@sanity/vision": "^3.68.3",
+    "@sanity/webhook": "^4.0.4",
     "@uidotdev/usehooks": "^2.4.1",
     "@vercel/analytics": "^1.4.1",
     "@vercel/speed-insights": "^1.1.0",

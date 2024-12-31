@@ -10,8 +10,10 @@ import { structureTool } from "sanity/structure";
 
 // Go to https://www.sanity.io/docs/api-versioning to learn how API versioning works
 import { apiVersion, dataset, projectId } from "@/sanity/env";
+import { resolve } from "@/sanity/presentation/resolve";
 import { schema } from "@/sanity/schemaTypes";
 import { structure } from "@/sanity/structure";
+import { presentationTool } from "sanity/presentation";
 
 import "easymde/dist/easymde.min.css";
 import { markdownSchema } from "sanity-plugin-markdown/next";
@@ -29,5 +31,13 @@ export default defineConfig({
     // https://www.sanity.io/docs/the-vision-plugin
     visionTool({ defaultApiVersion: apiVersion }),
     markdownSchema(),
+    presentationTool({
+      resolve,
+      previewUrl: {
+        previewMode: {
+          enable: "/api/draft-mode/enable",
+        },
+      },
+    }),
   ],
 });

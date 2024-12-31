@@ -1,21 +1,14 @@
 import { TextScramble } from "@/components/ui/text-scramble";
 import { cn } from "@/lib/utils";
-import { QUERY_ALL_POSTSResult } from "@/sanity.types";
-import { client } from "@/sanity/lib/client";
+import { sanityFetch } from "@/sanity/lib/live";
+import { QUERY_ALL_POSTS } from "@/sanity/lib/queries";
 import { format } from "date-fns";
-import { defineQuery } from "next-sanity";
 import Link from "next/link";
 
-const QUERY_ALL_POSTS = defineQuery(`*[_type == "post"] {
-  "id": _id,
-  "slug": slug.current,
-  title,
-  categories,
-  publishedAt
-}`);
-
 export default async function Page() {
-  const posts = await client.fetch<QUERY_ALL_POSTSResult>(QUERY_ALL_POSTS);
+  const { data: posts } = await sanityFetch({
+    query: QUERY_ALL_POSTS,
+  });
 
   return (
     <main className="py-16">
