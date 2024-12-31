@@ -5,6 +5,7 @@ import type { Metadata } from "next";
 import { Header } from "@/app/(pages)/header";
 import { DisableDraftMode, LaunchAdminButton } from "@/components/misc/sanity";
 import { GradientBlur } from "@/components/spatial/gradient-blur";
+import { isDev } from "@/lib/env";
 import { cn } from "@/lib/utils";
 import { SanityLive } from "@/sanity/lib/live";
 import { Analytics } from "@vercel/analytics/react";
@@ -55,10 +56,14 @@ export default async function RootLayout({
         <Header />
 
         <div className="fixed flex flex-row top-4 right-4">
-          <LaunchAdminButton
-            className={cn(!draftModeEnabled && "rounded-r-full")}
-          />
-          {draftModeEnabled && <DisableDraftMode />}
+          {isDev && (
+            <LaunchAdminButton
+              className={cn(!draftModeEnabled && "rounded-r-full")}
+            />
+          )}
+          {draftModeEnabled && (
+            <DisableDraftMode className={cn(!isDev && "rounded-l-full")} />
+          )}
         </div>
 
         {children}
