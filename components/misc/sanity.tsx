@@ -45,6 +45,7 @@ export const DisableDraftMode = ({
       onClick={() => router.push("/api/draft-mode/disable")}
       reactToMouse
       enableTap
+      {...props}
     >
       Disable Draft Mode
     </SpatialMaterial>
