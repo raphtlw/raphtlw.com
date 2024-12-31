@@ -27,11 +27,12 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-    // const pathToRevalidate = `/posts/${body.slug.current}`;
-
-    // console.log(`Revalidating path: ${pathToRevalidate}`);
-
     revalidatePath("/posts");
+
+    return Response.json({
+      success: true,
+      message: "Revalidated path /posts",
+    });
   } catch (e) {
     return Response.json(
       {
