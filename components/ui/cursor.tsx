@@ -62,7 +62,7 @@ export function Cursor({
     return () => {
       document.removeEventListener("mousemove", updatePosition);
     };
-  }, [cursorX, cursorY, onPositionChange]);
+  }, [cursorX, cursorY, onPositionChange, attachToParent]);
 
   const cursorXSpring = useSpring(cursorX, springConfig || { duration: 0 });
   const cursorYSpring = useSpring(cursorY, springConfig || { duration: 0 });
@@ -72,8 +72,10 @@ export function Cursor({
       setIsVisible(visible);
     };
 
-    if (attachToParent && cursorRef.current) {
-      const parent = cursorRef.current.parentElement;
+    const cursor = cursorRef.current;
+
+    if (attachToParent && cursor) {
+      const parent = cursor.parentElement;
       if (parent) {
         parent.addEventListener("mouseenter", () => {
           parent.style.cursor = "none";
@@ -87,8 +89,8 @@ export function Cursor({
     }
 
     return () => {
-      if (attachToParent && cursorRef.current) {
-        const parent = cursorRef.current.parentElement;
+      if (attachToParent && cursor) {
+        const parent = cursor.parentElement;
         if (parent) {
           parent.removeEventListener("mouseenter", () => {
             parent.style.cursor = "none";
@@ -101,7 +103,7 @@ export function Cursor({
         }
       }
     };
-  }, [attachToParent]);
+  }, [attachToParent, cursorRef]);
 
   return (
     <motion.div
