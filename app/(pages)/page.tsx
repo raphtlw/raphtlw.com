@@ -1,6 +1,6 @@
 import profile from "@/app/images/profile.jpeg";
 
-import { PreviewLink } from "@/app/(pages)/preview-link";
+import { PreviewLink } from "@/app/(pages)/components";
 import { ExternalLink } from "@/components/spatial/link";
 import { SpatialMaterial } from "@/components/spatial/material";
 import { LINKS_QUERYResult } from "@/sanity.types";

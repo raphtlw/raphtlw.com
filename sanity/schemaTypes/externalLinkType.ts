@@ -25,6 +25,9 @@ export const externalLinkType = defineType({
     defineField({
       name: "video",
       type: "file",
+      options: {
+        accept: "video/*",
+      },
     }),
     defineField({
       name: "url",

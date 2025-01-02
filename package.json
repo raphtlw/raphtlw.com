@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "sanity:typegen": "sanity schema extract && sanity typegen generate"
   },
   "dependencies": {
     "@radix-ui/react-avatar": "^1.1.2",
@@ -36,12 +37,18 @@
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "rehype-highlight": "^7.0.1",
+    "rehype-pretty-code": "^0.14.0",
     "rehype-slug": "^6.0.0",
+    "rehype-stringify": "^10.0.1",
     "remark-gfm": "^4.0.0",
+    "remark-parse": "^11.0.0",
+    "remark-rehype": "^11.1.1",
     "sanity": "^3.68.3",
     "sanity-plugin-markdown": "^5.0.0",
+    "shiki": "^1.25.1",
     "tailwind-merge": "^2.6.0",
-    "tailwindcss-animate": "^1.0.7"
+    "tailwindcss-animate": "^1.0.7",
+    "unified": "^11.0.5"
   },
   "devDependencies": {
     "@tailwindcss/typography": "^0.5.15",

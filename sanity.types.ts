@@ -46,6 +46,28 @@ export type Geopoint = {
   alt?: number;
 };
 
+export type Recipe = {
+  _id: string;
+  _type: "recipe";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  title?: string;
+  slug?: Slug;
+  preview?: {
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.fileAsset";
+    };
+    _type: "file";
+  };
+  description?: string;
+  publishedAt?: string;
+  content?: string;
+};
+
 export type ExternalLink = {
   _id: string;
   _type: "externalLink";
@@ -280,6 +302,7 @@ export type AllSanitySchemaTypes =
   | SanityImagePalette
   | SanityImageDimensions
   | Geopoint
+  | Recipe
   | ExternalLink
   | SanityFileAsset
   | Post
@@ -306,7 +329,7 @@ export type LINKS_QUERYResult = Array<{
   url: string | null;
 }>;
 // Variable: QUERY_ALL_POSTS
-// Query: *[_type == "post"] {  "id": _id,  "slug": slug.current,  title,  categories,  publishedAt}
+// Query: *[_type == "post"] | order(publishedAt desc) {    "id": _id,    "slug": slug.current,    title,    categories,    publishedAt  }
 export type QUERY_ALL_POSTSResult = Array<{
   id: string;
   slug: string | null;
@@ -326,15 +349,20 @@ export type QUERY_ALL_POST_SLUGSResult = Array<{
   slug: string | null;
 }>;
 // Variable: QUERY_SINGLE_POST
-// Query: *[_type == "post" && slug.current == $slug][0]{    title,    content,    publishedAt,    "author": {      "name": author->name,      "slug": author->slug,      "image": author->image,    }  }
+// Query: *[_type == "post" && slug.current == $slug][0]{    title,    content,    publishedAt,    author->  }
 export type QUERY_SINGLE_POSTResult = {
   title: string | null;
   content: string | null;
   publishedAt: string | null;
   author: {
-    name: string | null;
-    slug: Slug | null;
-    image: {
+    _id: string;
+    _type: "author";
+    _createdAt: string;
+    _updatedAt: string;
+    _rev: string;
+    name?: string;
+    slug?: Slug;
+    image?: {
       asset?: {
         _ref: string;
         _type: "reference";
@@ -344,8 +372,50 @@ export type QUERY_SINGLE_POSTResult = {
       hotspot?: SanityImageHotspot;
       crop?: SanityImageCrop;
       _type: "image";
-    } | null;
-  };
+    };
+    bio?: Array<{
+      children?: Array<{
+        marks?: Array<string>;
+        text?: string;
+        _type: "span";
+        _key: string;
+      }>;
+      style?: "normal";
+      listItem?: never;
+      markDefs?: Array<{
+        href?: string;
+        _type: "link";
+        _key: string;
+      }>;
+      level?: number;
+      _type: "block";
+      _key: string;
+    }>;
+  } | null;
+} | null;
+// Variable: QUERY_ALL_RECIPES
+// Query: *[_type == "recipe"] | order(publishedAt desc) {    "id": _id,    "slug": slug.current,    title,    description,    publishedAt,    "previewUrl": preview.asset->url  }
+export type QUERY_ALL_RECIPESResult = Array<{
+  id: string;
+  slug: string | null;
+  title: string | null;
+  description: string | null;
+  publishedAt: string | null;
+  previewUrl: string | null;
+}>;
+// Variable: QUERY_ALL_RECIPE_SLUGS
+// Query: *[_type == "recipe"] {  "slug": slug.current}
+export type QUERY_ALL_RECIPE_SLUGSResult = Array<{
+  slug: string | null;
+}>;
+// Variable: QUERY_SINGLE_RECIPE
+// Query: *[_type == "recipe" && slug.current == $slug][0]{    title,    description,    publishedAt,    "previewUrl": preview.asset->url,    content  }
+export type QUERY_SINGLE_RECIPEResult = {
+  title: string | null;
+  description: string | null;
+  publishedAt: string | null;
+  previewUrl: string | null;
+  content: string | null;
 } | null;
 
 // Query TypeMap
@@ -353,8 +423,11 @@ import "@sanity/client";
 declare module "@sanity/client" {
   interface SanityQueries {
     '*[_type == "externalLink"] {\n  "id": _id,\n  title,\n  cta,\n  description,\n  "videoUrl": video.asset->url,\n  url\n}': LINKS_QUERYResult;
-    '*[_type == "post"] {\n  "id": _id,\n  "slug": slug.current,\n  title,\n  categories,\n  publishedAt\n}': QUERY_ALL_POSTSResult;
+    '*[_type == "post"] | order(publishedAt desc) {\n    "id": _id,\n    "slug": slug.current,\n    title,\n    categories,\n    publishedAt\n  }': QUERY_ALL_POSTSResult;
     '*[_type == "post"] {\n  "slug": slug.current\n}': QUERY_ALL_POST_SLUGSResult;
-    '*[_type == "post" && slug.current == $slug][0]{\n    title,\n    content,\n    publishedAt,\n    "author": {\n      "name": author->name,\n      "slug": author->slug,\n      "image": author->image,\n    }\n  }': QUERY_SINGLE_POSTResult;
+    '*[_type == "post" && slug.current == $slug][0]{\n    title,\n    content,\n    publishedAt,\n    author->\n  }': QUERY_SINGLE_POSTResult;
+    '*[_type == "recipe"] | order(publishedAt desc) {\n    "id": _id,\n    "slug": slug.current,\n    title,\n    description,\n    publishedAt,\n    "previewUrl": preview.asset->url\n  }': QUERY_ALL_RECIPESResult;
+    '*[_type == "recipe"] {\n  "slug": slug.current\n}': QUERY_ALL_RECIPE_SLUGSResult;
+    '*[_type == "recipe" && slug.current == $slug][0]{\n    title,\n    description,\n    publishedAt,\n    "previewUrl": preview.asset->url,\n    content\n  }': QUERY_SINGLE_RECIPEResult;
   }
 }

@@ -10,14 +10,14 @@
     --muted: 223 47% 11%;
     --muted-foreground: 215.4 16.3% 56.9%;
 
-    --accent: 216 34% 17%;
+    --accent: 162 100% 50%;
     --accent-foreground: 210 40% 98%;
 
     --popover: 224 71% 4%;
     --popover-foreground: 215 20.2% 65.1%;
 
-    --border: 216 34% 17%;
-    --input: 216 34% 17%;
+    --border: 162 100% 50%;
+    --input: 162 100% 50%;
 
     --card: 224 71% 4%;
     --card-foreground: 213 31% 91%;
@@ -31,7 +31,7 @@
     --destructive: 0 63% 31%;
     --destructive-foreground: 210 40% 98%;
 
-    --ring: 216 34% 17%;
+    --ring: 162 100% 50%;
 
     --radius: 0.5rem;
   }
@@ -42,7 +42,7 @@
     @apply border-border;
     -webkit-tap-highlight-color: transparent;
 
-    @apply focus:outline-none focus-visible:ring-violet-600 focus-visible:rounded-lg focus-visible:ring;
+    @apply focus:outline-none focus-visible:rounded-lg focus-visible:ring-ring focus-visible:ring;
   }
   body {
     @apply bg-background text-foreground;
