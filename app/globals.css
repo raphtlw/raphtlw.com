@@ -84,4 +84,7 @@
       "rlig" 1,
       "calt" 1;
   }
+  * {
+    @apply focus:outline-none focus:outline-2 focus:outline-offset-4 focus:outline-indigo-600;
+  }
 }

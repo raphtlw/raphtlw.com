@@ -39,6 +39,16 @@ const Inner = () => {
   });
 
   const router = useRouter();
+  const pathname = usePathname();
+
+  const windowSize = useWindowSize();
+  const [hide, setHide] = useState(false);
+
+  useMotionValueEvent(scrollYProgress, "change", (current) => {
+    if (document.querySelector("main").clientHeight >= windowSize.height) {
+      setHide(current === 1);
+    }
+  });
 
   if (isDesktop) {
     return (
@@ -69,18 +79,9 @@ const Inner = () => {
       </header>
     );
   } else {
-    const pathname = usePathname();
-    const windowSize = useWindowSize();
-    const [hide, setHide] = useState(false);
-
-    useMotionValueEvent(scrollYProgress, "change", (current) => {
-      if (document.querySelector("main").clientHeight >= windowSize.height) {
-        setHide(current === 1);
-      }
-    });
-
     return (
       <motion.div
+        layout
         className="w-full px-6 pt-10 fixed left-0 z-[200]"
         initial={{ bottom: "1.5rem" }}
         animate={
@@ -88,7 +89,6 @@ const Inner = () => {
             bottom: "1rem",
           }
         }
-        layout
       >
         <SpatialMaterial
           layout
@@ -102,6 +102,10 @@ const Inner = () => {
                 }
               : { y: 0 }
           }
+          onFocusCapture={() => {
+            setHide(false);
+            setScrollDirection("up");
+          }}
         >
           <AnimatePresence>
             {scrollDirection === "up" ? (
