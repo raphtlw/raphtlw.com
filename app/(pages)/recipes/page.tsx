@@ -16,9 +16,8 @@ export default async function Page() {
 
         <div className="grid grid-cols-2 mt-10">
           {recipes.map((recipe) => (
-            <Link href={`/recipes/${recipe.slug}`}>
+            <Link href={`/recipes/${recipe.slug}`} key={recipe.slug}>
               <SpatialMaterial
-                key={recipe.slug}
                 className="flex flex-col gap-y-1 px-4 py-2 rounded-xl bg-slate-400 bg-opacity-10 backdrop-filter backdrop-blur-2xl"
                 enableTap
               >
