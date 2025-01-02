@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 import { HTMLMotionProps, motion } from "motion/react";
 import { PropsWithChildren } from "react";
 
-export type TextButtonProps = HTMLMotionProps<"button"> & PropsWithChildren<{}>;
+export type TextButtonProps = HTMLMotionProps<"button"> & PropsWithChildren;
 
 export const TextButton = ({
   children,
