@@ -2,13 +2,14 @@
 
 import { StaggeredText } from "@/components/spatial/staggered-text";
 import { ClientOnly } from "@/components/utils/client-only";
+import { cn } from "@/lib/utils";
 import { useMediaQuery } from "@uidotdev/usehooks";
 import { ArrowUpRight } from "lucide-react";
 import { motion } from "motion/react";
 import Link from "next/link";
-import { ComponentProps } from "react";
+import { ComponentPropsWithoutRef } from "react";
 
-export type ExternalLinkProps = ComponentProps<typeof Link> & {
+export type ExternalLinkProps = ComponentPropsWithoutRef<typeof Link> & {
   children: string;
   icon?: boolean;
   iconSize?: number;
@@ -26,6 +27,7 @@ const Inner = ({
   children,
   icon,
   iconSize = 12,
+  className,
   ...props
 }: ExternalLinkProps) => {
   const isDesktop = useMediaQuery("(min-device-width: 768px)");
@@ -36,7 +38,7 @@ const Inner = ({
         <motion.span
           initial="initial"
           whileHover="hover"
-          className="inline-flex items-center"
+          className={cn("inline-flex items-center", className)}
         >
           <StaggeredText reactToMouse>{children}</StaggeredText>
           {icon && (
@@ -70,7 +72,10 @@ const Inner = ({
             stiffness: 250,
             damping: 50,
           }}
-          className="inline-flex items-center touch-manipulation"
+          className={cn(
+            "inline-flex items-center touch-manipulation",
+            className,
+          )}
         >
           {children}
           {icon && <ArrowUpRight size={iconSize} />}
