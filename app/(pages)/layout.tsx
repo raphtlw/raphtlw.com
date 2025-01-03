@@ -10,6 +10,7 @@ import { SanityLive } from "@/sanity/lib/live";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Hanken_Grotesk, JetBrains_Mono } from "next/font/google";
+import { Footer } from "./footer";
 
 const hankenSans = Hanken_Grotesk({
   subsets: ["latin"],
@@ -56,12 +57,7 @@ export default function RootLayout({
         <SanityLive />
         <DraftModeComponents />
 
-        <footer className="flex flex-col px-10 py-6 border-t border-slate-600 border-opacity-70">
-          <p>
-            Designed by <a href="https://bento.me/raphtlw">@raphtlw</a> &copy;
-            2024.
-          </p>
-        </footer>
+        <Footer />
 
         <GradientBlur
           z={100}
