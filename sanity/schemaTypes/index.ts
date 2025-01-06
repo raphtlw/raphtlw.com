@@ -5,7 +5,7 @@ import { blockContentType } from "./blockContentType";
 import { categoryType } from "./categoryType";
 import { externalLinkType } from "./externalLinkType";
 import { postType } from "./postType";
-import { recipeType } from "./recipeType";
+import { raphgptPageType } from "./raphgptPageType";
 
 export const schema: { types: SchemaTypeDefinition[] } = {
   types: [
@@ -14,6 +14,6 @@ export const schema: { types: SchemaTypeDefinition[] } = {
     postType,
     authorType,
     externalLinkType,
-    recipeType,
+    raphgptPageType,
   ],
 };

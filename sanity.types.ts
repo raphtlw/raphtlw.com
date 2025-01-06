@@ -46,24 +46,13 @@ export type Geopoint = {
   alt?: number;
 };
 
-export type Recipe = {
+export type RaphgptPage = {
   _id: string;
-  _type: "recipe";
+  _type: "raphgptPage";
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
   title?: string;
-  slug?: Slug;
-  preview?: {
-    asset?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.fileAsset";
-    };
-    _type: "file";
-  };
-  description?: string;
   publishedAt?: string;
   content?: string;
 };
@@ -145,7 +134,48 @@ export type Post = {
     [internalGroqTypeReferenceTo]?: "category";
   }>;
   publishedAt?: string;
-  content?: string;
+  content?: Array<
+    | {
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }>;
+        style?:
+          | "normal"
+          | "h1"
+          | "h2"
+          | "h3"
+          | "h4"
+          | "h5"
+          | "h6"
+          | "blockquote";
+        listItem?: "bullet" | "number";
+        markDefs?: Array<{
+          href?: string;
+          _type: "link";
+          _key: string;
+        }>;
+        level?: number;
+        _type: "block";
+        _key: string;
+      }
+    | {
+        asset?: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        };
+        hotspot?: SanityImageHotspot;
+        crop?: SanityImageCrop;
+        caption?: string;
+        alt?: string;
+        _type: "image";
+        _key: string;
+      }
+  >;
 };
 
 export type Author = {
@@ -295,14 +325,12 @@ export type SanityImageMetadata = {
   isOpaque?: boolean;
 };
 
-export type Markdown = string;
-
 export type AllSanitySchemaTypes =
   | SanityImagePaletteSwatch
   | SanityImagePalette
   | SanityImageDimensions
   | Geopoint
-  | Recipe
+  | RaphgptPage
   | ExternalLink
   | SanityFileAsset
   | Post
@@ -314,8 +342,7 @@ export type AllSanitySchemaTypes =
   | SanityImageHotspot
   | SanityImageAsset
   | SanityAssetSourceData
-  | SanityImageMetadata
-  | Markdown;
+  | SanityImageMetadata;
 export declare const internalGroqTypeReferenceTo: unique symbol;
 // Source: ./sanity/lib/queries.ts
 // Variable: LINKS_QUERY
@@ -352,7 +379,48 @@ export type QUERY_ALL_POST_SLUGSResult = Array<{
 // Query: *[_type == "post" && slug.current == $slug][0]{    title,    content,    publishedAt,    author->  }
 export type QUERY_SINGLE_POSTResult = {
   title: string | null;
-  content: string | null;
+  content: Array<
+    | {
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }>;
+        style?:
+          | "blockquote"
+          | "h1"
+          | "h2"
+          | "h3"
+          | "h4"
+          | "h5"
+          | "h6"
+          | "normal";
+        listItem?: "bullet" | "number";
+        markDefs?: Array<{
+          href?: string;
+          _type: "link";
+          _key: string;
+        }>;
+        level?: number;
+        _type: "block";
+        _key: string;
+      }
+    | {
+        asset?: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        };
+        hotspot?: SanityImageHotspot;
+        crop?: SanityImageCrop;
+        caption?: string;
+        alt?: string;
+        _type: "image";
+        _key: string;
+      }
+  > | null;
   publishedAt: string | null;
   author: {
     _id: string;
@@ -395,27 +463,64 @@ export type QUERY_SINGLE_POSTResult = {
 } | null;
 // Variable: QUERY_ALL_RECIPES
 // Query: *[_type == "recipe"] | order(publishedAt desc) {    "id": _id,    "slug": slug.current,    title,    description,    publishedAt,    "previewUrl": preview.asset->url  }
-export type QUERY_ALL_RECIPESResult = Array<{
-  id: string;
-  slug: string | null;
-  title: string | null;
-  description: string | null;
-  publishedAt: string | null;
-  previewUrl: string | null;
-}>;
+export type QUERY_ALL_RECIPESResult = Array<never>;
 // Variable: QUERY_ALL_RECIPE_SLUGS
 // Query: *[_type == "recipe"] {  "slug": slug.current}
-export type QUERY_ALL_RECIPE_SLUGSResult = Array<{
-  slug: string | null;
-}>;
+export type QUERY_ALL_RECIPE_SLUGSResult = Array<never>;
 // Variable: QUERY_SINGLE_RECIPE
 // Query: *[_type == "recipe" && slug.current == $slug][0]{    title,    description,    publishedAt,    "previewUrl": preview.asset->url,    content  }
-export type QUERY_SINGLE_RECIPEResult = {
-  title: string | null;
-  description: string | null;
-  publishedAt: string | null;
-  previewUrl: string | null;
-  content: string | null;
+export type QUERY_SINGLE_RECIPEResult = null;
+// Variable: QUERY_AUTHOR
+// Query: *[_type == "author" && slug.current == $slug][0]
+export type QUERY_AUTHORResult = {
+  _id: string;
+  _type: "author";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  name?: string;
+  slug?: Slug;
+  image?: {
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    _type: "image";
+  };
+  bio?: Array<{
+    children?: Array<{
+      marks?: Array<string>;
+      text?: string;
+      _type: "span";
+      _key: string;
+    }>;
+    style?: "normal";
+    listItem?: never;
+    markDefs?: Array<{
+      href?: string;
+      _type: "link";
+      _key: string;
+    }>;
+    level?: number;
+    _type: "block";
+    _key: string;
+  }>;
+} | null;
+// Variable: QUERY_RAPHGPT_PAGE
+// Query: *[_type == "raphgptPage" && _id == $id][0]
+export type QUERY_RAPHGPT_PAGEResult = {
+  _id: string;
+  _type: "raphgptPage";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  title?: string;
+  publishedAt?: string;
+  content?: string;
 } | null;
 
 // Query TypeMap
@@ -429,5 +534,7 @@ declare module "@sanity/client" {
     '*[_type == "recipe"] | order(publishedAt desc) {\n    "id": _id,\n    "slug": slug.current,\n    title,\n    description,\n    publishedAt,\n    "previewUrl": preview.asset->url\n  }': QUERY_ALL_RECIPESResult;
     '*[_type == "recipe"] {\n  "slug": slug.current\n}': QUERY_ALL_RECIPE_SLUGSResult;
     '*[_type == "recipe" && slug.current == $slug][0]{\n    title,\n    description,\n    publishedAt,\n    "previewUrl": preview.asset->url,\n    content\n  }': QUERY_SINGLE_RECIPEResult;
+    '*[_type == "author" && slug.current == $slug][0]': QUERY_AUTHORResult;
+    '*[_type == "raphgptPage" && _id == $id][0]': QUERY_RAPHGPT_PAGEResult;
   }
 }

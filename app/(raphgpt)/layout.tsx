@@ -3,18 +3,16 @@ import "@/app/globals.css";
 import type { Metadata } from "next";
 
 import { Footer } from "@/app/(pages)/footer";
-import { Header } from "@/app/(pages)/header";
-import { DraftModeComponents, ToolbarActions } from "@/components/misc/dev";
 import { GradientBlur } from "@/components/spatial/gradient-blur";
 import { cn } from "@/lib/utils";
-import { SanityLive } from "@/sanity/lib/live";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
-import { Hanken_Grotesk, JetBrains_Mono } from "next/font/google";
+import { Inter_Tight, JetBrains_Mono } from "next/font/google";
 
-const hankenSans = Hanken_Grotesk({
+const interSans = Inter_Tight({
   subsets: ["latin"],
   variable: "--font-sans",
+  weight: "variable",
 });
 const jetbrainsMono = JetBrains_Mono({
   subsets: ["latin"],
@@ -22,8 +20,8 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "raphtlw.com",
-  description: "Raphael's home page",
+  title: "raphGPT",
+  description: "raphGPT landing",
 };
 
 export default function RootLayout({
@@ -35,7 +33,7 @@ export default function RootLayout({
     <html
       lang="en"
       className={cn(
-        hankenSans.variable,
+        interSans.variable,
         jetbrainsMono.variable,
         "antialiased",
         "scroll-smooth focus:scroll-auto",
@@ -44,18 +42,8 @@ export default function RootLayout({
       <head>
         <meta name="viewport" content="width=device-width" />
       </head>
-      <body
-        className={cn(
-          "bg-[url(/pattern.svg)] bg-[center_top] bg-no-repeat dark",
-        )}
-      >
-        <Header />
-        <ToolbarActions />
-
+      <body>
         {children}
-
-        <SanityLive />
-        <DraftModeComponents />
 
         <Footer />
 

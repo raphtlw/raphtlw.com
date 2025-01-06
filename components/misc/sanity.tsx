@@ -1,11 +1,14 @@
 "use client";
 
+import {
+  SpatialMaterial,
+  SpatialMaterialProps,
+} from "@/components/spatial/material";
+import { ClientOnly } from "@/components/utils/client-only";
 import { cn } from "@/lib/utils";
 import { useMediaQuery } from "@uidotdev/usehooks";
 import { useDraftModeEnvironment } from "next-sanity/hooks";
 import { useRouter } from "next/navigation";
-import { SpatialMaterial, SpatialMaterialProps } from "../spatial/material";
-import { ClientOnly } from "../utils/client-only";
 
 export type LaunchAdminButtonProps = SpatialMaterialProps;
 
@@ -18,14 +21,13 @@ export const LaunchAdminButton = (props: SpatialMaterialProps) => {
 };
 
 export const Inner = ({ className, ...props }: SpatialMaterialProps) => {
-  const router = useRouter();
   const isDesktop = useMediaQuery("(min-width: 768px)");
 
   if (isDesktop) {
     return (
       <SpatialMaterial
         className={cn("rounded-l-full px-4 py-2 -mr-1", className)}
-        onClick={() => router.push("/studio")}
+        onClick={() => window.open("/studio", "_blank")}
         reactToMouse
         enableTap
         {...props}

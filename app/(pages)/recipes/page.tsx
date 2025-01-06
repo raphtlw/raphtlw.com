@@ -1,13 +1,16 @@
 import { SpatialMaterial } from "@/components/spatial/material";
-import { sanityFetch } from "@/sanity/lib/live";
-import { QUERY_ALL_RECIPES } from "@/sanity/lib/queries";
+import { getAllPosts, getPost } from "@/content";
+import { CONTENT_FOLDER, Frontmatter } from "@/content/recipes";
 import { format } from "date-fns";
 import Link from "next/link";
 
 export default async function Page() {
-  const { data: recipes } = await sanityFetch({
-    query: QUERY_ALL_RECIPES,
-  });
+  const recipePaths = await getAllPosts(CONTENT_FOLDER);
+  const recipes = await Promise.all(
+    recipePaths.map((recipe) =>
+      getPost<Frontmatter>(CONTENT_FOLDER, recipe.slug),
+    ),
+  );
 
   return (
     <main className="py-16">
@@ -23,12 +26,12 @@ export default async function Page() {
               >
                 <p className="text-neutral-200 font-semibold font-mono pt-2">
                   {`<`}
-                  {recipe.title}
+                  {recipe.frontmatter.title}
                   {` />`}
                 </p>
-                {recipe.previewUrl ? (
+                {recipe.frontmatter.previewUrl ? (
                   <video
-                    src={recipe.previewUrl}
+                    src={recipe.frontmatter.previewUrl}
                     autoPlay
                     playsInline
                     loop
@@ -40,7 +43,7 @@ export default async function Page() {
                   <p className="text-neutral-300">No preview available</p>
                 )}
                 <p className="text-neutral-600 dark:text-neutral-400 tabular-nums">
-                  {format(new Date(recipe.publishedAt), "MMMM dd, yyyy")}
+                  {format(new Date(recipe.metadata.birthtime), "MMMM dd, yyyy")}
                 </p>
               </SpatialMaterial>
             </Link>

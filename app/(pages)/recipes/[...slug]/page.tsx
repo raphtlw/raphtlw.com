@@ -1,28 +1,15 @@
-import { getMDXComponents } from "@/app/mdx-components";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { BackButton } from "@/components/ui/back-button";
+import { getAllPosts, getPost } from "@/content";
+import { CONTENT_FOLDER, Frontmatter } from "@/content/recipes";
 import { cn } from "@/lib/utils";
-import { QUERY_ALL_RECIPE_SLUGSResult } from "@/sanity.types";
-import { client } from "@/sanity/lib/client";
+import { urlFor } from "@/sanity/lib/image";
 import { sanityFetch } from "@/sanity/lib/live";
-import {
-  QUERY_ALL_RECIPE_SLUGS,
-  QUERY_SINGLE_RECIPE,
-} from "@/sanity/lib/queries";
+import { QUERY_AUTHOR } from "@/sanity/lib/queries";
 import { format } from "date-fns";
-import { compileMDX } from "next-mdx-remote/rsc";
-import { notFound } from "next/navigation";
-import rehypePrettyCode from "rehype-pretty-code";
-import rehypeSlug from "rehype-slug";
-import remarkGfm from "remark-gfm";
 
 export const generateStaticParams = async () => {
-  const recipes = await client.fetch<QUERY_ALL_RECIPE_SLUGSResult>(
-    QUERY_ALL_RECIPE_SLUGS,
-  );
-
-  return recipes.map((recipe) => ({
-    params: { slug: recipe.slug.split("/") },
-  }));
+  return getAllPosts(CONTENT_FOLDER);
 };
 
 type Params = {
@@ -32,28 +19,16 @@ type Params = {
 };
 
 export default async function Page({ params }: Params) {
-  const { data: recipe } = await sanityFetch({
-    query: QUERY_SINGLE_RECIPE,
+  const { slug } = await params;
+  const { metadata, content, frontmatter } = await getPost<Frontmatter>(
+    CONTENT_FOLDER,
+    slug,
+  );
+  const { data: author } = await sanityFetch({
+    query: QUERY_AUTHOR,
     params: {
-      slug: (await params).slug.join("/"),
+      slug: frontmatter.author,
     },
-  });
-
-  if (!recipe) {
-    return notFound();
-  }
-
-  const components = getMDXComponents({});
-
-  const { content } = await compileMDX({
-    source: recipe.content,
-    options: {
-      mdxOptions: {
-        rehypePlugins: [rehypeSlug, rehypePrettyCode],
-        remarkPlugins: [remarkGfm],
-      },
-    },
-    components,
   });
 
   // Render the page
@@ -66,14 +41,16 @@ export default async function Page({ params }: Params) {
       <div className="px-6 pt-6 md:pt-0 md:max-w-3xl mx-auto flex flex-col gap-12">
         <div className="flex flex-col gap-4">
           <p className="text-slate-400">
-            {format(new Date(recipe.publishedAt), "EEEE, MMMM d, yyyy")}
+            {format(metadata.birthtime, "EEEE, MMMM d, yyyy")}
           </p>
 
-          <h1 className="text-3xl font-bold tracking-tight">{recipe.title}</h1>
+          <h1 className="text-3xl font-bold tracking-tight">
+            {frontmatter.title}
+          </h1>
 
-          {recipe.previewUrl && (
+          {frontmatter.previewUrl && (
             <video
-              src={recipe.previewUrl}
+              src={frontmatter.previewUrl}
               autoPlay
               playsInline
               loop
@@ -84,8 +61,23 @@ export default async function Page({ params }: Params) {
           )}
 
           <p className="text-lg text-gray-700 dark:text-gray-300">
-            {recipe.description}
+            {frontmatter.description}
           </p>
+
+          <div className="flex flex-row items-center gap-4">
+            <Avatar>
+              <AvatarImage src={urlFor(author.image).url()} />
+              <AvatarFallback>
+                {author.slug.current.substring(0, 2).toUpperCase()}
+              </AvatarFallback>
+            </Avatar>
+            <div className="flex flex-col">
+              <p className="text-sm text-slate-200 font-medium">
+                {author.name}
+              </p>
+              <p className="text-sm text-accent">@{author.slug.current}</p>
+            </div>
+          </div>
         </div>
 
         <article

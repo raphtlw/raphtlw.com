@@ -13,6 +13,9 @@ import {
 } from "motion/react";
 import { PropsWithChildren, useEffect, useRef, useState } from "react";
 
+export const MATERIAL_BORDER =
+  "inset 1.2px 0 0 0 rgba(255, 255, 255, 0.04), inset -1.2px 0 0 0 rgba(255, 255, 255, 0.04), inset 0 1.2px 0 0 rgba(255, 255, 255, 0.1), inset 0 0.6px 0 0 rgba(255, 255, 255, 0.1)";
+
 export type SpatialMaterialProps = HTMLMotionProps<"div"> &
   PropsWithChildren<{
     reactToMouse?: boolean;
@@ -100,8 +103,7 @@ const Inner = ({
       {...props}
       style={{
         backdropFilter: "blur(20px)",
-        boxShadow:
-          "inset 1.2px 0 0 0 rgba(255, 255, 255, 0.04), inset -1.2px 0 0 0 rgba(255, 255, 255, 0.04), inset 0 1.2px 0 0 rgba(255, 255, 255, 0.1), inset 0 0.6px 0 0 rgba(255, 255, 255, 0.1)",
+        boxShadow: MATERIAL_BORDER,
         scale: scaleSpring,
         y: posYSpring,
         cursor: props.onClick || enableTap ? "pointer" : "default",

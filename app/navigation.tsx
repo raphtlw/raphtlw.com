@@ -9,7 +9,7 @@ export type NavigationLink = {
 export const navigationLinks: NavigationLink[] = [
   {
     label: "need a website?",
-    href: "/posts/freelancing",
+    href: "/freelancing",
     icon: <GlobeIcon />,
   },
   {

@@ -1,22 +1,17 @@
-import { getMDXComponents } from "@/app/mdx-components";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { BackButton } from "@/components/ui/back-button";
 import { cn } from "@/lib/utils";
-import { QUERY_ALL_POST_SLUGSResult } from "@/sanity.types";
-import { client } from "@/sanity/lib/client";
 import { urlFor } from "@/sanity/lib/image";
 import { sanityFetch } from "@/sanity/lib/live";
 import { QUERY_ALL_POST_SLUGS, QUERY_SINGLE_POST } from "@/sanity/lib/queries";
 import { format } from "date-fns";
-import { compileMDX } from "next-mdx-remote/rsc";
+import { PortableText } from "next-sanity";
 import { notFound } from "next/navigation";
-import rehypePrettyCode from "rehype-pretty-code";
-import rehypeSlug from "rehype-slug";
-import remarkGfm from "remark-gfm";
 
 export const generateStaticParams = async () => {
-  const posts =
-    await client.fetch<QUERY_ALL_POST_SLUGSResult>(QUERY_ALL_POST_SLUGS);
+  const { data: posts } = await sanityFetch({
+    query: QUERY_ALL_POST_SLUGS,
+  });
 
   return posts.map((post) => ({ params: { slug: post.slug.split("/") } }));
 };
@@ -28,29 +23,17 @@ type Params = {
 };
 
 export default async function Page({ params }: Params) {
+  const { slug } = await params;
   const { data: post } = await sanityFetch({
     query: QUERY_SINGLE_POST,
     params: {
-      slug: (await params).slug.join("/"),
+      slug: slug.join("/"),
     },
   });
 
   if (!post) {
     return notFound();
   }
-
-  const components = getMDXComponents({});
-
-  const { content } = await compileMDX({
-    source: post.content,
-    options: {
-      mdxOptions: {
-        rehypePlugins: [rehypeSlug, rehypePrettyCode],
-        remarkPlugins: [remarkGfm],
-      },
-    },
-    components,
-  });
 
   // Render the page
   return (
@@ -88,7 +71,7 @@ export default async function Page({ params }: Params) {
             "prose lg:prose-lg prose-stone dark:prose-invert prose-img:rounded-xl",
           )}
         >
-          {content}
+          <PortableText value={post.content} />
         </article>
       </div>
     </main>

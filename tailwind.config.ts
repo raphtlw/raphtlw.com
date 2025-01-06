@@ -59,8 +59,8 @@ const config: Config = {
         sm: "calc(var(--radius) - 4px)",
       },
       fontFamily: {
-        sans: ["var(--font-hanken)"],
-        mono: ["var(--font-jetbrains)"],
+        sans: ["var(--font-sans)"],
+        mono: ["var(--font-mono)"],
       },
     },
   },

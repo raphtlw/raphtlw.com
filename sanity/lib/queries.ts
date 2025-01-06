@@ -52,3 +52,11 @@ export const QUERY_SINGLE_RECIPE =
     "previewUrl": preview.asset->url,
     content
   }`);
+
+export const QUERY_AUTHOR = defineQuery(
+  `*[_type == "author" && slug.current == $slug][0]`,
+);
+
+export const QUERY_RAPHGPT_PAGE = defineQuery(
+  `*[_type == "raphgptPage" && _id == $id][0]`,
+);
