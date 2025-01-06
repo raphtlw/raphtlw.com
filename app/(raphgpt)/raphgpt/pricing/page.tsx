@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight, CreditCard, Wallet } from "lucide-react";
 import Link from "next/link";
+import { ReactElement } from "react";
 
 export default function PricingPage() {
   return (
@@ -237,7 +238,7 @@ function PaymentOption({
   benefits,
   additionalInfo,
 }: {
-  icon: any;
+  icon: ReactElement;
   title: string;
   description: string;
   benefits: string[];
