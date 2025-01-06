@@ -93,7 +93,7 @@ export default function PricingPage() {
                 Token Pricing
               </h3>
               <p className="text-[#4b5563] mb-4">
-                We use OpenAI's token pricing structure, with an additional
+                We use OpenAI&apos;s token pricing structure, with an additional
                 $0.10 charge per message to support the project.
               </p>
               <table className="w-full text-[#4b5563]">
@@ -115,7 +115,7 @@ export default function PricingPage() {
                 </tbody>
               </table>
               <p className="text-[#4b5563] mt-4">
-                Remember, there's an additional $0.10 charge per message to
+                Remember, there&apos;s an additional $0.10 charge per message to
                 support the project.
               </p>
             </div>

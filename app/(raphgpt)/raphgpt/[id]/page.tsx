@@ -31,6 +31,7 @@ export default async function Page({ params }: Params) {
     return notFound();
   }
 
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   const components = useMDXComponents({});
 
   const { content } = await compileMDX({
