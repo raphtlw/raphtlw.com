@@ -1,6 +1,8 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { BackButton } from "@/components/ui/back-button";
 import { cn } from "@/lib/utils";
+import { QUERY_ALL_POST_SLUGSResult } from "@/sanity.types";
+import { client } from "@/sanity/lib/client";
 import { urlFor } from "@/sanity/lib/image";
 import { sanityFetch } from "@/sanity/lib/live";
 import { QUERY_ALL_POST_SLUGS, QUERY_SINGLE_POST } from "@/sanity/lib/queries";
@@ -9,9 +11,8 @@ import { PortableText } from "next-sanity";
 import { notFound } from "next/navigation";
 
 export const generateStaticParams = async () => {
-  const { data: posts } = await sanityFetch({
-    query: QUERY_ALL_POST_SLUGS,
-  });
+  const posts =
+    await client.fetch<QUERY_ALL_POST_SLUGSResult>(QUERY_ALL_POST_SLUGS);
 
   return posts.map((post) => ({ params: { slug: post.slug.split("/") } }));
 };
