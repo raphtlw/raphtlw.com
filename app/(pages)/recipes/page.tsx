@@ -17,7 +17,7 @@ export default async function Page() {
       <div className="px-10 md:max-w-3xl mx-auto">
         <h1 className="text-4xl font-bold">Recipes</h1>
 
-        <div className="grid grid-cols-2 mt-10">
+        <div className="grid md:grid-cols-2 mt-10">
           {recipes.map((recipe) => (
             <Link href={`/recipes/${recipe.slug}`} key={recipe.slug}>
               <SpatialMaterial
