@@ -156,7 +156,7 @@ export default function PricingPage() {
       <footer className="py-6 w-full shrink-0 bg-[#e6f7e6]">
         <div className="container px-4 md:px-6 flex flex-col sm:flex-row items-center justify-between">
           <p className="text-xs text-[#4b5563]">
-            © 2024 raphGPT. All rights reserved.
+            © {new Date().getFullYear()} raphGPT. All rights reserved.
           </p>
           <nav className="flex gap-4 sm:gap-6 mt-4 sm:mt-0">
             <Link
