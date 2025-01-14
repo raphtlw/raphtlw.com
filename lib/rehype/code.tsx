@@ -22,26 +22,39 @@ export const CodeBlock = (props: CodeBlockProps) => {
 const Inner = ({ children, ...props }: CodeBlockProps) => {
   const ref = useRef<HTMLDivElement | null>(null);
   const [copied, setCopied] = useState(false);
+  const [isCodeBlock, setIsCodeBlock] = useState(false);
 
   useEffect(() => {
     if (ref.current) {
       const element = ref.current.querySelector<HTMLElement>(
         "figcaption[data-rehype-pretty-code-title]",
       );
-      element.style.margin = "0";
-      element.style.display = "flex";
-      element.style.position = "absolute";
-      element.style.top = "0";
-      element.style.left = "0";
-      element.style.width = "100%";
-      element.style.height = "100%";
-      element.style.alignItems = "center";
-      element.style.justifyContent = "center";
-      ref.current
-        .querySelector("div[data-rehype-pretty-code-header]")
-        .prepend(element);
+      if (element) {
+        setIsCodeBlock(true);
+
+        element.style.margin = "0";
+        element.style.display = "flex";
+        element.style.position = "absolute";
+        element.style.top = "0";
+        element.style.left = "0";
+        element.style.width = "100%";
+        element.style.height = "100%";
+        element.style.alignItems = "center";
+        element.style.justifyContent = "center";
+        ref.current
+          .querySelector("div[data-rehype-pretty-code-header]")
+          .prepend(element);
+      }
     }
   }, []);
+
+  if (!isCodeBlock) {
+    return (
+      <figure ref={ref} {...props}>
+        {children}
+      </figure>
+    );
+  }
 
   return (
     <figure
