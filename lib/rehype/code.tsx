@@ -22,7 +22,6 @@ export const CodeBlock = (props: CodeBlockProps) => {
 const Inner = ({ children, ...props }: CodeBlockProps) => {
   const ref = useRef<HTMLDivElement | null>(null);
   const [copied, setCopied] = useState(false);
-  const [isCodeBlock, setIsCodeBlock] = useState(false);
 
   useEffect(() => {
     if (ref.current) {
@@ -30,8 +29,6 @@ const Inner = ({ children, ...props }: CodeBlockProps) => {
         "figcaption[data-rehype-pretty-code-title]",
       );
       if (element) {
-        setIsCodeBlock(true);
-
         element.style.margin = "0";
         element.style.display = "flex";
         element.style.position = "absolute";
@@ -47,14 +44,6 @@ const Inner = ({ children, ...props }: CodeBlockProps) => {
       }
     }
   }, []);
-
-  if (!isCodeBlock) {
-    return (
-      <figure ref={ref} {...props}>
-        {children}
-      </figure>
-    );
-  }
 
   return (
     <figure
