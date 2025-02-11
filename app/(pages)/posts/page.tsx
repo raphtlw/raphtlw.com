@@ -54,7 +54,7 @@ export default async function Page() {
               </div>
             </Link>
           ))}
-          <Separator className="my-4 bg-stone-700" />
+          {posts.length > 0 && <Separator className="my-4 bg-stone-700" />}
           {additionalPosts.map((post) => (
             <Link
               href={post.href}
