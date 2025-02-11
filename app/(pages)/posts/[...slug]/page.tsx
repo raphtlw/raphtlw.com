@@ -1,14 +1,19 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { BackButton } from "@/components/ui/back-button";
+import { rehypePrettyCodeOptions } from "@/lib/rehype/pretty-code";
 import { cn } from "@/lib/utils";
+import { useMDXComponents } from "@/mdx-components";
 import { QUERY_ALL_POST_SLUGSResult } from "@/sanity.types";
 import { client } from "@/sanity/lib/client";
 import { urlFor } from "@/sanity/lib/image";
 import { sanityFetch } from "@/sanity/lib/live";
 import { QUERY_ALL_POST_SLUGS, QUERY_SINGLE_POST } from "@/sanity/lib/queries";
 import { format } from "date-fns";
-import { PortableText } from "next-sanity";
+import { compileMDX } from "next-mdx-remote/rsc";
 import { notFound } from "next/navigation";
+import rehypePrettyCode from "rehype-pretty-code";
+import rehypeSlug from "rehype-slug";
+import remarkGfm from "remark-gfm";
 
 export const generateStaticParams = async () => {
   const posts =
@@ -35,6 +40,23 @@ export default async function Page({ params }: Params) {
   if (!post) {
     return notFound();
   }
+
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const components = useMDXComponents({});
+
+  const { content } = await compileMDX({
+    source: post.content,
+    options: {
+      mdxOptions: {
+        rehypePlugins: [
+          rehypeSlug,
+          [rehypePrettyCode, rehypePrettyCodeOptions],
+        ],
+        remarkPlugins: [remarkGfm],
+      },
+    },
+    components,
+  });
 
   // Render the page
   return (
@@ -72,7 +94,7 @@ export default async function Page({ params }: Params) {
             "prose lg:prose-lg prose-stone dark:prose-invert prose-img:rounded-xl",
           )}
         >
-          <PortableText value={post.content} />
+          {content}
         </article>
       </div>
     </main>
