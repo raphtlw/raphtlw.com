@@ -1,3 +1,4 @@
+import { ObsidianLogo } from "@/components/icons/obsidian";
 import { Separator } from "@/components/ui/separator";
 import { TextScramble } from "@/components/ui/text-scramble";
 import { cn } from "@/lib/utils";
@@ -27,12 +28,17 @@ export default async function Page() {
 
   return (
     <main className="py-16">
-      <div className="px-10 md:max-w-3xl mx-auto">
+      <div className="px-10 md:max-w-3xl mx-auto flex flex-col gap-4">
         <h1 className="text-4xl font-bold">
           blog <Link href="/posts">/ posts</Link>
         </h1>
+        <p>
+          Welcome to my evergreen notes. These pages are directly published from
+          my <ObsidianLogo width="1.4em" className="inline -mx-1 -mt-1" />{" "}
+          Obsidian git repo via GitHub Workflows.
+        </p>
 
-        <div className="my-10">
+        <div className="my-6">
           {posts.map((post) => (
             <Link
               href={`/posts/${post.slug}`}
