@@ -14,10 +14,11 @@ export default async function Page() {
 
   return (
     <main className="py-16">
-      <div className="px-10 md:max-w-3xl mx-auto">
+      <div className="px-10 md:max-w-3xl mx-auto flex flex-col gap-4">
         <h1 className="text-4xl font-bold">Recipes</h1>
+        <p>Short copy-and-paste code/configuration with instructions</p>
 
-        <div className="grid md:grid-cols-2 mt-10">
+        <div className="grid md:grid-cols-2 mt-6 gap-4">
           {recipes.map((recipe) => (
             <Link href={`/recipes/${recipe.slug}`} key={recipe.slug}>
               <SpatialMaterial
