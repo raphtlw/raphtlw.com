@@ -2,7 +2,6 @@ import { client } from "@/sanity/lib/client";
 
 export async function POST(req: Request) {
   const { title, content } = await req.json();
-  console.log(req.headers);
   const authorization = req.headers.get("authorization").split(" ");
 
   if (authorization.length <= 0) {
