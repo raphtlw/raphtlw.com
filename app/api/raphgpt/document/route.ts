@@ -2,7 +2,7 @@ import { client } from "@/sanity/lib/client";
 
 export async function POST(req: Request) {
   const { title, content } = await req.json();
-  const authorization = req.headers.get("Authorization").split(" ");
+  const authorization = req.headers.get("authorization").split(" ");
 
   if (authorization.length <= 0) {
     return Response.json(
@@ -13,7 +13,7 @@ export async function POST(req: Request) {
       },
       {
         status: 401,
-      },
+      }
     );
   }
 
@@ -29,7 +29,7 @@ export async function POST(req: Request) {
       },
       {
         status: 401,
-      },
+      }
     );
   }
 
@@ -41,7 +41,7 @@ export async function POST(req: Request) {
       },
       {
         status: 401,
-      },
+      }
     );
   }
 
