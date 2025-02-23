@@ -49,6 +49,7 @@ export async function POST(req: Request) {
     _type: "raphgptPage",
     title,
     content,
+    publishedAt: new Date(),
   });
 
   return Response.json({
