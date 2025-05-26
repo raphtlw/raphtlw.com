@@ -64,7 +64,7 @@ export default async function Page({ params }: Params) {
       <div className="px-6 pt-6 md:pt-10 md:max-w-3xl mx-auto flex flex-col gap-12">
         <div className="flex flex-col gap-4">
           <p className="text-slate-400">
-            {format(new Date(page.publishedAt), "EEEE, MMMM d, yyyy")}
+            {format(new Date(page.publishedAt!), "EEEE, MMMM d, yyyy")}
           </p>
 
           <h1 className="text-3xl font-bold tracking-tight">{page.title}</h1>
