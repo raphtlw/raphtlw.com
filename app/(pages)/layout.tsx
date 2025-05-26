@@ -4,7 +4,7 @@ import type { Metadata } from "next";
 
 import { Footer } from "@/app/(pages)/footer";
 import { Header } from "@/app/(pages)/header";
-import { DraftModeComponents, ToolbarActions } from "@/components/misc/dev";
+import { ToolbarActions } from "@/components/misc/dev";
 import { GradientBlur } from "@/components/spatial/gradient-blur";
 import { cn } from "@/lib/utils";
 import { SanityLive } from "@/sanity/lib/live";
@@ -53,7 +53,6 @@ export default function RootLayout({
         {children}
 
         <SanityLive />
-        <DraftModeComponents />
 
         <Footer />
 

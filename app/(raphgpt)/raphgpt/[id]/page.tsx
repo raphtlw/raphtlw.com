@@ -3,7 +3,7 @@ import { rehypePrettyCodeOptions } from "@/lib/rehype/pretty-code";
 import { cn } from "@/lib/utils";
 import { useMDXComponents } from "@/mdx-components";
 import { sanityFetch } from "@/sanity/lib/live";
-import { QUERY_RAPHGPT_PAGE } from "@/sanity/lib/queries";
+import { RAPHGPT_PAGE_QUERY } from "@/sanity/lib/queries";
 import { format } from "date-fns";
 import { TriangleAlertIcon } from "lucide-react";
 import { compileMDX } from "next-mdx-remote/rsc";
@@ -21,7 +21,7 @@ type Params = {
 export default async function Page({ params }: Params) {
   const { id } = await params;
   const { data: page } = await sanityFetch({
-    query: QUERY_RAPHGPT_PAGE,
+    query: RAPHGPT_PAGE_QUERY,
     params: {
       id,
     },
@@ -35,7 +35,7 @@ export default async function Page({ params }: Params) {
   const components = useMDXComponents({});
 
   const { content } = await compileMDX({
-    source: page.content,
+    source: page.content!,
     options: {
       mdxOptions: {
         rehypePlugins: [

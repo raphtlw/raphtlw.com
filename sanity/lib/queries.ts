@@ -11,6 +11,6 @@ export const LINKS_QUERY = defineQuery(`*[_type == "externalLink"]{
   }
 }`);
 
-export const QUERY_RAPHGPT_PAGE = defineQuery(
+export const RAPHGPT_PAGE_QUERY = defineQuery(
   `*[_type == "raphgptPage" && _id == $id][0]`,
 );

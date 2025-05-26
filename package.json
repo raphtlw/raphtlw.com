@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
-    "build": "next build",
+    "build": "bun run sanity:typegen && next build",
     "start": "next start",
     "lint": "next lint",
     "lint:fix": "eslint --fix .",
@@ -55,6 +55,8 @@
     "typescript": "^5.8.3"
   },
   "trustedDependencies": [
-    "@tailwindcss/oxide"
+    "@tailwindcss/oxide",
+    "esbuild",
+    "sharp"
   ]
 }
