@@ -1,4 +1,4 @@
-import { CameraIcon, Edit3Icon, ForkKnifeIcon, GlobeIcon } from "lucide-react";
+import { CameraIcon, Edit3Icon } from "lucide-react";
 
 export type NavigationLink = {
   label: string;
@@ -8,23 +8,13 @@ export type NavigationLink = {
 
 export const navigationLinks: NavigationLink[] = [
   {
-    label: "need a website?",
-    href: "/freelancing",
-    icon: <GlobeIcon />,
-  },
-  {
     label: "writing",
-    href: "/posts",
+    href: "https://blog.raphtlw.com",
     icon: <Edit3Icon />,
   },
   {
-    label: "recipes",
-    href: "/recipes",
-    icon: <ForkKnifeIcon />,
-  },
-  {
     label: "photography",
-    href: "/photography",
+    href: "https://instagram.com/raphtlw",
     icon: <CameraIcon />,
   },
 ];

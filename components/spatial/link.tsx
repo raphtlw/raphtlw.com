@@ -3,11 +3,11 @@
 import { StaggeredText } from "@/components/spatial/staggered-text";
 import { ClientOnly } from "@/components/utils/client-only";
 import { cn } from "@/lib/utils";
-import { useMediaQuery } from "@uidotdev/usehooks";
 import { ArrowUpRight } from "lucide-react";
 import { motion } from "motion/react";
 import Link from "next/link";
 import { ComponentPropsWithoutRef } from "react";
+import { useMediaQuery } from "usehooks-ts";
 
 export type ExternalLinkProps = ComponentPropsWithoutRef<typeof Link> & {
   children: string;

@@ -1,7 +1,7 @@
 "use client";
 
 import { SpatialMaterial } from "@/components/spatial/material";
-import { LINKS_QUERYResult } from "@/sanity.types";
+import { LINKS_QUERYResult } from "@/sanity/types";
 import { Variants } from "motion/react";
 import Link from "next/link";
 import { useState } from "react";
@@ -34,7 +34,7 @@ export const PreviewLink = ({ externalLink }: PreviewLinkProps) => {
   };
 
   return (
-    <Link href={externalLink.url}>
+    <Link href={externalLink.url!}>
       <SpatialMaterial
         className="rounded-2xl px-4 pt-2 pb-4 flex flex-col gap-2"
         enableTap
@@ -53,7 +53,7 @@ export const PreviewLink = ({ externalLink }: PreviewLinkProps) => {
       >
         <p className="font-bold">{externalLink.cta}</p>
         <video
-          src={externalLink.videoUrl}
+          src={externalLink.video?.asset?.url!}
           autoPlay
           playsInline
           loop

@@ -8,17 +8,15 @@ import { DraftModeComponents, ToolbarActions } from "@/components/misc/dev";
 import { GradientBlur } from "@/components/spatial/gradient-blur";
 import { cn } from "@/lib/utils";
 import { SanityLive } from "@/sanity/lib/live";
-import { Analytics } from "@vercel/analytics/react";
-import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Hanken_Grotesk, JetBrains_Mono } from "next/font/google";
 
 const hankenSans = Hanken_Grotesk({
   subsets: ["latin"],
-  variable: "--font-sans",
+  variable: "--font-hanken-sans",
 });
 const jetbrainsMono = JetBrains_Mono({
   subsets: ["latin"],
-  variable: "--font-mono",
+  variable: "--font-jetbrains-mono",
 });
 
 export const metadata: Metadata = {
@@ -65,9 +63,6 @@ export default function RootLayout({
           count={6}
           size="16vh"
         />
-
-        <SpeedInsights />
-        <Analytics />
       </body>
     </html>
   );

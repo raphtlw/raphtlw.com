@@ -3,7 +3,6 @@
 import { HoverEffect } from "@/components/spatial/hover";
 import { ClientOnly } from "@/components/utils/client-only";
 import { cn } from "@/lib/utils";
-import { useMediaQuery } from "@uidotdev/usehooks";
 import {
   HTMLMotionProps,
   motion,
@@ -12,6 +11,7 @@ import {
   useSpring,
 } from "motion/react";
 import { PropsWithChildren, useEffect, useRef, useState } from "react";
+import { useMediaQuery } from "usehooks-ts";
 
 export const MATERIAL_BORDER =
   "inset 1.2px 0 0 0 rgba(255, 255, 255, 0.04), inset -1.2px 0 0 0 rgba(255, 255, 255, 0.04), inset 0 1.2px 0 0 rgba(255, 255, 255, 0.1), inset 0 0.6px 0 0 rgba(255, 255, 255, 0.1)";

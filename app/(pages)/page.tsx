@@ -3,15 +3,23 @@ import profile from "@/app/images/profile.jpeg";
 import { PreviewLink } from "@/app/(pages)/components";
 import { ExternalLink } from "@/components/spatial/link";
 import { SpatialMaterial } from "@/components/spatial/material";
-import { LINKS_QUERYResult } from "@/sanity.types";
 import { client } from "@/sanity/lib/client";
 import { LINKS_QUERY } from "@/sanity/lib/queries";
-import { ArrowUpRight } from "lucide-react";
+import { LINKS_QUERYResult } from "@/sanity/types";
+import { ArrowUpRight, LinkIcon } from "lucide-react";
+import * as motion from "motion/react-client";
+import { headers } from "next/headers";
 import Image from "next/image";
 import Link from "next/link";
+import { UAParser } from "ua-parser-js";
 
 export default async function Page() {
   const links = await client.fetch<LINKS_QUERYResult>(LINKS_QUERY);
+
+  const requestHeaders = await headers();
+  const userAgent = requestHeaders.get("user-agent") || "";
+  const ua = UAParser(userAgent);
+  const isMobile = ua.device.type === "mobile";
 
   return (
     <main className="py-10 md:py-20">
@@ -54,22 +62,7 @@ export default async function Page() {
 
       <section className="px-8 md:max-w-3xl mx-auto">
         <ul className="flex flex-col gap-4">
-          <li className="mt-8 relative">
-            currently building experience working in a fast-paced
-            robotics/coding teaching school.
-          </li>
-          <li>
-            experienced in delivering productive applications with large
-            language models.
-          </li>
-          <SpatialMaterial className="grid grid-cols-2 rounded-lg">
-            <div className="flex flex-col py-2 px-4 border-r">
-              <p>status</p>
-            </div>
-            <div className="flex flex-col py-2 px-4">
-              <p>working 👨🏻‍💻</p>
-            </div>
-          </SpatialMaterial>
+          <li className="mt-8 relative">i have a dream.</li>
           <li>
             💭 &nbsp; text me on{" "}
             <ExternalLink href="https://t.me/raphtlw" icon>
@@ -79,6 +72,60 @@ export default async function Page() {
         </ul>
       </section>
 
+      {isMobile && (
+        <section className="px-8 md:max-w-3xl mx-auto mt-8">
+          <ul className="flex flex-col gap-4">
+            <Link href="https://blog.raphtlw.com">
+              <motion.li
+                className="flex flex-row justify-between items-center py-2.5 px-4 -mx-4 rounded-lg"
+                initial={{
+                  scale: 1,
+                  backgroundColor: "oklch(0.708 0 0 / 0%)",
+                }}
+                whileTap={{
+                  scale: 0.98,
+                  opacity: 0.6,
+                  backgroundColor: "oklch(0.708 0 0 / 20%)",
+                }}
+                transition={{
+                  type: "spring",
+                  stiffness: 200,
+                  damping: 16,
+                  mass: 0.4,
+                }}
+              >
+                <span>Read about my thoughts</span>
+                <LinkIcon size={16} />
+              </motion.li>
+            </Link>
+
+            <Link href="https://instagram.com/raphtlw">
+              <motion.li
+                className="flex flex-row justify-between items-center py-2.5 -my-2.5 px-4 -mx-4 rounded-lg"
+                initial={{
+                  scale: 1,
+                  backgroundColor: "oklch(0.708 0 0 / 0%)",
+                }}
+                whileTap={{
+                  scale: 0.98,
+                  opacity: 0.6,
+                  backgroundColor: "oklch(0.708 0 0 / 20%)",
+                }}
+                transition={{
+                  type: "spring",
+                  stiffness: 200,
+                  damping: 16,
+                  mass: 0.4,
+                }}
+              >
+                <span>Photos I've taken over the years</span>
+                <LinkIcon size={16} />
+              </motion.li>
+            </Link>
+          </ul>
+        </section>
+      )}
+
       <section className="px-8 md:max-w-3xl mx-auto mt-8">
         <div className="flex flex-col gap-8 mt-16">
           <div className="flex flex-row items-center justify-between">
@@ -87,7 +134,7 @@ export default async function Page() {
           </div>
 
           {links.map((link) => (
-            <PreviewLink externalLink={link} key={link.id} />
+            <PreviewLink externalLink={link} key={link._id} />
           ))}
         </div>
       </section>

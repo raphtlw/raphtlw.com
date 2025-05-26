@@ -39,7 +39,7 @@ const Inner = ({ children, ...props }: CodeBlockProps) => {
         element.style.alignItems = "center";
         element.style.justifyContent = "center";
         ref.current
-          .querySelector("div[data-rehype-pretty-code-header]")
+          .querySelector("div[data-rehype-pretty-code-header]")!
           .prepend(element);
       }
     }
@@ -74,10 +74,10 @@ const Inner = ({ children, ...props }: CodeBlockProps) => {
           }}
           enableTap
           onClick={() => {
-            const sourceCode = ref.current
-              .querySelector("div[data-shiki]")
+            const sourceCode = ref
+              .current!.querySelector("div[data-shiki]")!
               .getAttribute("data");
-            navigator.clipboard.writeText(sourceCode);
+            navigator.clipboard.writeText(sourceCode!);
             setCopied(true);
             setTimeout(() => setCopied(false), 1 * 1000);
           }}

@@ -6,9 +6,9 @@ import {
 } from "@/components/spatial/material";
 import { ClientOnly } from "@/components/utils/client-only";
 import { cn } from "@/lib/utils";
-import { useMediaQuery } from "@uidotdev/usehooks";
 import { useDraftModeEnvironment } from "next-sanity/hooks";
 import { useRouter } from "next/navigation";
+import { useMediaQuery } from "usehooks-ts";
 
 export type LaunchAdminButtonProps = SpatialMaterialProps;
 

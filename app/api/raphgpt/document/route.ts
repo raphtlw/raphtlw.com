@@ -2,8 +2,21 @@ import { client } from "@/sanity/lib/client";
 
 export async function POST(req: Request) {
   const { title, content } = await req.json();
-  const authorization = req.headers.get("authorization").split(" ");
 
+  const authorizationHeader = req.headers.get("authorization");
+  if (!authorizationHeader)
+    return Response.json(
+      {
+        success: false,
+        message:
+          "No authorization header found! Make sure to use HTTP bearer authentication.",
+      },
+      {
+        status: 401,
+      },
+    );
+
+  const authorization = authorizationHeader.split(" ");
   if (authorization.length <= 0) {
     return Response.json(
       {
@@ -13,7 +26,7 @@ export async function POST(req: Request) {
       },
       {
         status: 401,
-      }
+      },
     );
   }
 
@@ -29,7 +42,7 @@ export async function POST(req: Request) {
       },
       {
         status: 401,
-      }
+      },
     );
   }
 
@@ -41,7 +54,7 @@ export async function POST(req: Request) {
       },
       {
         status: 401,
-      }
+      },
     );
   }
 
