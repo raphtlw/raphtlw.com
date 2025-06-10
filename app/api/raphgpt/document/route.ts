@@ -1,9 +1,10 @@
 import { client } from "@/sanity/lib/client";
+import { headers } from "next/headers";
 
 export async function POST(req: Request) {
-  const { title, content } = await req.json();
+  const headersList = await headers();
 
-  const authorizationHeader = req.headers.get("authorization");
+  const authorizationHeader = headersList.get("authorization");
   if (!authorizationHeader)
     return Response.json(
       {
@@ -57,6 +58,8 @@ export async function POST(req: Request) {
       },
     );
   }
+
+  const { title, content } = await req.json();
 
   const doc = await client.create({
     _type: "raphgptPage",
