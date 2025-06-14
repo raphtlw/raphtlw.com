@@ -75,7 +75,7 @@ export default async function Page() {
       {isMobile && (
         <section className="px-8 md:max-w-3xl mx-auto mt-8">
           <ul className="flex flex-col gap-4">
-            <Link href="https://blog.raphtlw.com">
+            <Link href="/writing">
               <motion.li
                 className="flex flex-row justify-between items-center py-2.5 px-4 -mx-4 rounded-lg"
                 initial={{

@@ -9,7 +9,7 @@ export type NavigationLink = {
 export const navigationLinks: NavigationLink[] = [
   {
     label: "writing",
-    href: "https://blog.raphtlw.com",
+    href: "/writing",
     icon: <Edit3Icon />,
   },
   {

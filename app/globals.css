@@ -71,6 +71,8 @@ code[data-line-numbers-max-digits="4"] > [data-line]::before {
   width: 2.25rem;
 }
 
+@plugin "@tailwindcss/typography";
+
 :root {
   --radius: 0.625rem;
   --background: oklch(1 0 0);

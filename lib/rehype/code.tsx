@@ -5,9 +5,9 @@ import {
   SpatialMaterial,
 } from "@/components/spatial/material";
 import { ClientOnly } from "@/components/utils/client-only";
+import { cn } from "@/lib/utils";
 import { CopyCheckIcon, CopyIcon } from "lucide-react";
 import { ComponentPropsWithoutRef, useEffect, useRef, useState } from "react";
-import { cn } from "../utils";
 
 export type CodeBlockProps = ComponentPropsWithoutRef<"div">;
 
