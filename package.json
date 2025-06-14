@@ -4,12 +4,13 @@
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
-    "build": "bun run sanity:typegen && next build",
+    "build": "bun run sanity:typegen && next build --profile && bun run sanity:manifest",
     "start": "next start",
     "lint": "next lint",
-    "lint:fix": "eslint --fix .",
+    "format": "next lint --fix .",
     "sanity:typegen": "sanity schema extract --path ./sanity/schema.json && sanity typegen generate --config-path ./sanity/typegen.json",
-    "sanity:clean": "rimraf sanity/schema.json sanity/types.ts"
+    "sanity:manifest": "sanity manifest extract --path public/studio/static",
+    "sanity:clean": "rimraf sanity/schema.json sanity/types.ts public/studio/static"
   },
   "dependencies": {
     "@radix-ui/react-avatar": "^1.1.10",
