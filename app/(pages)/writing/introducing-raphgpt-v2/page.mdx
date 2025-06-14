@@ -7,6 +7,14 @@ Today, I'm launching something that's taken me almost 2 years to build now, and 
 
 raphGPT has always been something I wanted to build, ever since [DialoGPT](https://github.com/microsoft/DialoGPT) made its rounds in the open source developer community in June 2019. I still remember jogging at the park when I saw the first release, and rushed home to try it out. I was so excited.
 
+I had something going in 2020: https://github.com/raphtlw/transformers
+
+It was a web frontend to a GPT-2 transformer model running on Google Cloud Run.
+
+![Preview](https://cdn.sanity.io/media-libraries/ml7E2FKaGXGN/images/5a697e9cdcfa967cfaf851be684419cdd95f28b9-3544x2234.png)
+
+It doesn't work anymore, but it used to be able to just generate text, based on your prompt.
+
 Fast-forward to launching raphGPT on Cloud Run, and hosting turned into a puzzle: with only 2 GB of RAM available, I had to experiment relentlessly to find the sweet spot for model parameters, trim down the context size, and settle on {`<|end_of_text|>`} as the stop token to keep responses clean and prevent overruns.
 
 Fortunately these days, we have things like OpenAI, Hugging Face, and LangChain that let me plug into world-class LLMs in minutes instead of wrestling with 60 GB weights or GPU queues. I still get goosebumps when I fire off a prompt and watch the model riff back in real time—every clever turn of phrase feels like magic. With OpenAI’s API handling inference, I can sidestep RAM limits and focus on fun stuff: tweaking personality quirks, building memory graphs, and improving models using the [fine-tuning API](https://platform.openai.com/docs/guides/fine-tuning) from OpenAI.
