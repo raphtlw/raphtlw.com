@@ -2,20 +2,9 @@ import "@/app/globals.css";
 
 import type { Metadata } from "next";
 
-import { Hanken_Grotesk, JetBrains_Mono } from "next/font/google";
-
-const hankenSans = Hanken_Grotesk({
-  subsets: ["latin"],
-  variable: "--font-hanken-sans",
-});
-const jetbrainsMono = JetBrains_Mono({
-  subsets: ["latin"],
-  variable: "--font-jetbrains-mono",
-});
-
 export const metadata: Metadata = {
-  title: "raphtlw.com",
-  description: "Raphael's home page",
+  title: "Blog | raphtlw.com",
+  description: "Raphael's blog",
 };
 
 export default function RootLayout({
