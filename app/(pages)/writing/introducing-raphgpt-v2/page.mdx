@@ -5,7 +5,7 @@ Today, I'm launching something that's taken me almost 2 years to build now, and 
   Your browser does not support the video tag.
 </video>
 
-raphGPT has always been something I wanted to build, ever since [DialoGPT](https://github.com/microsoft/DialoGPT) made its rounds in the open source developer community in June 2019. I still remember jogging at the park when I saw the first release, and rushed home to try it out. I was so excited.
+raphGPT has always been something I wanted to build, ever since [gpt-2-simple](https://github.com/minimaxir/gpt-2-simple) and [DialoGPT](https://github.com/microsoft/DialoGPT) made its rounds in the open source developer community in June 2019. I still remember jogging at the park when I saw the first release, and rushed home to try it out. I was so excited.
 
 I had something going in 2020: https://github.com/raphtlw/transformers
 
@@ -49,8 +49,8 @@ This all happens in the ISP (Image Signal Processor) or on a dedicated NPUs/ISP 
 
 Coming back to the bot, it works similar too. Located inside the video-parser directory, it analyzes uploaded video (or, by analogy, multiple photo frames), finding the best frames, and summarizing contents. It mimics the phone camera’s "find the best moment" system, but does it for multiple frames, not just one. It takes a tele-bubble and extracts only the most significant frames with moments that the LLM will need to "see".
 
-- Instead of a live camera buffer, a sample frame is generated from the video every `step` frames (e.g., every 10th frame).
-- Effectively, it builds a _buffer_ of frames from which it can search for the best.
+- Instead of a live camera buffer, a sample frame is generated from the video every `step` frames (e.g., every 10th frame).
+- Effectively, it builds a _buffer_ of frames from which it can search for the best.
 
 Then, for each sampled frame:
 
@@ -85,7 +85,132 @@ It looks horrendous. It used supervisord as the init system in Docker, and both 
 
 > Running this whole setup was a matter of starting 3 terminals. One with the docker compose command launching redis, gotenberg and chromadb, the other with python running main.py, and lastly the pnpm command running main.ts.
 
-```dockerfile title=Dockerfile
+raphGPT V1 was a Telegram bot that provides:
+
+  - Conversational LLM (Large Language Model) chat capabilities (primarily using OpenAI GPT-4o and related LLMs)
+  - Multimedia message processing (voice, video, images, PDFs, stickers, documents, locations)
+  - Memory (short- and long-term) over conversations ("context window")
+  - Tool use: internet search, weather, text-to-speech, image generation, Anki deck creation, file reading, payment handling, and more
+  - Payment and credit system with Stripe and Solana blockchain wallet integrations
+  - Logging, observability, and admin personality management
+  - Extensible via a toolbox for domain-specific actions (e.g., interacting with Solana, generating Anki decks, etc.)
+
+### Containers and Services
+
+  - bot: The main TypeScript/Node.js-based Telegram bot service (plus supporting scripts).
+  - redis: Used for fast cache, pub/sub, and storing ephemeral conversational state and message history.
+  - chromadb: Persistent, fast vector database for semantic search and recall of past chat history (for context/LLM memory).
+  - gotenberg: A document conversion service, used to convert files (e.g., DOCX to PDF/Image).
+
+TypeScript/Node.js: Main bot logic, orchestration, database integration, and the majority of features.
+Python (FastAPI) (main.py, openai/training.py, openai/validation.py): For advanced video/audio/image processing, custom ML scripts, data ingestion and validation for fine-tuning.
+
+### End-to-End Workflow
+
+All services (bot, redis, chromadb, gotenberg) start via Docker Compose.
+Node and Python dependencies (see package.json and requirements.txt) are installed via the Dockerfile.
+
+main.ts (TypeScript) — launches the Telegram bot, sets up logging, browser automation (via Puppeteer+Chrome), DB connections, and registers all handlers.
+main.py (Python + FastAPI) - launches an HTTP API for lower-level video/audio frame extraction and processing via OpenCV, Numpy, ffmpeg, etc.
+
+#### Receiving Messages
+
+- Users interact via text, voice, images, documents, stickers, video messages, etc.
+- The bot (using the grammy library) processes incoming messages in bot/handler.ts.
+- Authentication/registration for new users is handled, with management of credits/free-tiers.
+
+Each message is stored short-term in Redis and long-term in ChromaDB as embeddings, enabling context-aware responses and retrieval-augmented generation.
+Recent tokens/messages are assembled into the LLM prompt, along with past highly-relevant memories fetched from ChromaDB.
+
+The bot constructs an input prompt for the current message using a Handlebars template (prompts/system.hbs) filled with current time, language, personality, memory snippets, etc, and assembles a list of CoreMessage objects for processing.
+
+The LLM (OpenAI GPT-4o or others) is invoked via ai-sdk, possibly calling "tools" (functions) if needed.
+
+"Tools" (see functions/) can perform actions such as running web searches, reading files, generating images, producing TTS output, interacting with Google Maps, etc. Tools are dynamically selected using semantic similarity via chroma tool collection based on the LLM's needs.
+
+#### Multimodal Processing
+
+- Images, videos, audio, stickers, etc., are downloaded, stored in a temp directory, processed
+- For videos: Specific frame selection and deblurring in FastAPI/Python (using FFT, OpenCV, numpy) — see main.py.
+- Audio: Transcription via Replicate/Whisper or OpenAI APIs.
+- Images: Direct use, or conversion to text/Markdown via OCR or browser automation.
+- Documents (PDF, DOCX, ZIP): Processed via gotenberg, pdf2pic, or unzipped to disk and chunked/read as needed.
+
+#### Persisting, Following Up, and Streaming
+
+- Each conversational turn is stored/memoized, both short- and long-term.
+- Streaming LLM responses (text & audio) are handled for large messages.
+- Final output is parsed, split, and sent to the user via Telegram message, possibly with voice or images.
+- Usage is metered for free tier/paid users. Payment and credit can be bought via Stripe or by topping-up via Solana wallet (wallet integration, payments, and notifications managed).
+
+#### Special Features
+
+- Personality is editable by an admin directly in Telegram (with custom inline keyboard navigation).
+- Users can buy tokens via Stripe or using Solana; bot manages wallet balances/notifications.
+- Toolbox tools auto-populate based on similarity with the query; new tools can be added easily.
+
+#### Observability
+
+Logging goes to Grafana Loki (plus pretty print in development).
+Detailed logs are generated for tracing message flow.
+
+### Fine Tuning of Custom Model
+
+Python scripts in openai/ (training.py, validation.py) prepare custom conversational data from Telegram chat export JSON, process it into OpenAI fine-tuning format, and check for data quality/errors before submitting to OpenAI for model fine-tuning.
+
+### Database and Redis
+
+`db/schema.ts` defines schema in SQLite (with Drizzle ORM):
+  - users: Telegram-user info, credits, wallet info, message count, etc.
+  - personality: Personality texts for persona injection.
+  - solana_wallets: Solana wallet info for each user.
+  - local_files: For storing uploaded file data.
+  - ChromaDB stores high-dimensional embeddings for text snippets; enables retrieval-augmented conversations and dynamic memory.
+  - Redis tracks ephemeral chat state, conversation turns, and rate limits.
+
+ChromaDB stores high-dimensional embeddings for text snippets; enables retrieval-augmented conversations and dynamic memory.
+Redis tracks ephemeral chat state, conversation turns, and rate limits.
+
+### Development
+
+- Fully containerized: Everything is made for docker compose up.
+- Cross-service orchestration: Node talks to FastAPI Python via HTTP.
+- Easy to add functionality: Add new tools to the toolbox in functions/toolbox.ts.
+- CI/CD: GitHub Actions workflow builds and pushes Docker images to GHCR.
+
+- **Dependencies**: Docker, Python 3.12+, Node 20+, pnpm
+- **Start all containers/services:**  
+  ```
+  docker compose up redis gotenberg chromadb
+  ```
+- **Start Python FastAPI service:**  
+  ```shell
+  uv venv
+  source .venv/bin/activate.fish
+  fastapi dev main.py --port 26691
+  ```
+- **Start TypeScript/Node service:**  
+  ```shell
+  pnpm dev
+  ```
+
+### What makes this project unique?
+
+- Multimodal LLM chat integrated into Telegram, with "memory" across sessions and media.
+- The LLM can call search engines, read files, synthesize speech, trigger actions like publishing or wallet payments, generate images, and more, all via function calling ("tools").
+- Blockchain & fiat payments: Supports buying tokens with both Stripe (fiat) and Solana (crypto), with on-chain event listening for wallet activity.
+- Production-grade logging and monitoring: Tied directly to modern LOKI/Grafana stacks.
+- Full-stack, extensible, research-grade codebase: Easily allows new tools to be added, with smart matching for when/what tools to invoke.
+
+### Ideology of development
+
+- Modular, extensible, designed so new capabilities ("tools") can be added at will and are discoverable automatically by the LLM or by admin action.
+- Personality, credits, payments, and state are per-user and persisted.
+- A rich set of dev, formatting, and linting tools (prettier, ESLint, TypeScript strict mode) are used to enforce code quality.
+
+Meant to be a state-of-the-art Telegram AI assistant with deep memory, multimodal (text, voice, video, documents, images) understanding, support for both fiat and crypto credits, web/real-world tool integrations, and smart conversational capabilities, all built for easy extensibility and production deployment.
+
+```dockerfile title="Dockerfile"
 # syntax=docker/dockerfile:1
 
 FROM debian:latest AS base
@@ -226,7 +351,7 @@ for await (const textPart of textStream) {
 await flushBuffer();
 ```
 
-> Buffer mechanism to allow flushing of messages generated from a stream. The model is instructed to output a series of messages in that format.
+> This is a buffer mechanism to allow flushing of messages generated from a stream. The model is instructed to output a series of messages in that format.
 
 Did I also mention _**sub-agents**_? They are entities that keep track of their own context memory (EXPIRES 1 min), can call other agents, and answers back to the main agent.
 
