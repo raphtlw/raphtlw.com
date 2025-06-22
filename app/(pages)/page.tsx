@@ -62,7 +62,7 @@ export default async function Page() {
 
       <section className="px-8 md:max-w-3xl mx-auto">
         <ul className="flex flex-col gap-4">
-          <li className="mt-8 relative">i have a dream.</li>
+          <li className="mt-8 relative">hi everyone</li>
           <li>
             💭 &nbsp; text me on{" "}
             <ExternalLink href="https://t.me/raphtlw" icon>
