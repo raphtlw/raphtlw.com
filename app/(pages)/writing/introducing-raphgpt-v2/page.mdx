@@ -89,7 +89,7 @@ V1 turned out to be worse than I ever thought. Not because of how it worked, but
 
 It looks horrendous. It used supervisord as the init system in Docker, and both the Python and Node.js code was together in the same directory, and the two runtimes were bundled together in the same docker container. This meant the two had to share one container, and that container was ever only used for production, not development. I remember at one point, as I was trying [Infisical](https://infisical.com/), I installed Infisical inside the container and tried to generate the .env file using the machine ID credentials. There were so many bad practices that were in place in the first version, and I wasn't proud to release it. I'm so thankful for the opportunity to document these down here, for anyone and myself to learn from these mistakes.
 
-> Running this whole setup was a matter of starting 3 terminals. One with the docker compose command launching redis, gotenberg and chromadb, the other with python running main.py, and lastly the pnpm command running main.ts.
+Running this whole setup was a matter of starting 3 terminals. One with the docker compose command launching redis, gotenberg and chromadb, the other with python running main.py, and lastly the pnpm command running main.ts.
 
 raphGPT V1 was a Telegram bot that provides:
 
@@ -287,7 +287,7 @@ COPY supervisord.conf /etc/supervisor/conf.d/supervisor.conf
 CMD [ "/usr/bin/supervisord" ]
 ```
 
-> Yeah, it's bad.
+Yeah, it's bad.
 
 There came a point when the bot wasn't working correctly. I was still hosting it on my home server at home, and I left it unattended for 3 months. As I moved things around in my house, I also set new systems up, and a new build to use as a home server. This is when things started to break with the bot and the 5 docker containers that were running separately from each other, and I figured it was time to start working on a better, more reliable version that could be hosted on the cloud.
 
@@ -357,13 +357,14 @@ for await (const textPart of textStream) {
 await flushBuffer();
 ```
 
-> This is a buffer mechanism to allow flushing of messages generated from a stream. The model is instructed to output a series of messages in that format.
+This is a buffer mechanism to allow flushing of messages generated from a stream. The model is instructed to output a series of messages in that format.
 
 Did I also mention _**sub-agents**_? They are entities that keep track of their own context memory (EXPIRES 1 min), can call other agents, and answers back to the main agent.
 
 These are now included in the architecture located under bot/agents.ts. It's a very cool concept, because not only do they have the ability to call tools, they can also run other agents. For example, wouldn't it be nice if an excel file modification agent could run say, the schedule_message tool? This would allow the model to schedule messages to other "contacts" based on the contents of the excel spreadsheet. For instance, you want it to go over the guest list for a concert and send each one of them a custom email.
 
 Other improvements include:
+
 - Message attachments stored in S3
 - Files are browsable and viewable any-time (by the bot)
 - /clear command allowing you to completely wipe all traces of messages in the backend (as-if you told the bot to forget you entirely)
