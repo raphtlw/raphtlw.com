@@ -35,7 +35,10 @@ export const BackButton = () => {
           transition={{ duration: 0.2 }}
           className="top-4 left-4 p-2 fixed rounded-full bg-neutral-900/10"
           enableTap
-          onClick={router.back}
+          onClick={(e) => {
+            e.preventDefault();
+            router.back();
+          }}
         >
           <ChevronLeftIcon />
         </SpatialMaterial>
