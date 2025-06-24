@@ -1,3 +1,7 @@
+import Image from 'next/image'
+
+
+
 # Introducing raphGPT v2
 
 June 24, 2025
@@ -13,9 +17,13 @@ raphGPT has always been something I wanted to build, ever since [gpt-2-simple](h
 
 I will be documenting everything that went into this bot, starting from how it works below.
 
-![Screenshot](https://cdn.sanity.io/media-libraries/ml7E2FKaGXGN/images/42ea2a907911cdeae7d91625bdcf24c5e9748d83-394x795.png)
+<Image src="https://cdn.sanity.io/media-libraries/ml7E2FKaGXGN/images/42ea2a907911cdeae7d91625bdcf24c5e9748d83-394x795.png" alt="Screenshot" width={394} height={795} />
 
 The bot is built on a multi-modal LLM architecture. It accepts text, voice, video, images, documents (pdf, docx) and files.
+
+---
+
+## From the beginning
 
 I had something going in 2020: https://github.com/raphtlw/transformers
 
@@ -28,6 +36,8 @@ It doesn't work anymore, but it used to be able to just generate text, based on 
 Fast-forward to launching raphGPT on Cloud Run, and hosting turned into a puzzle: with only 2 GB of RAM available, I had to experiment relentlessly to find the sweet spot for model parameters, trim down the context size, and settle on {`<|end_of_text|>`} as the stop token to keep responses clean and prevent overruns.
 
 Fortunately these days, we have things like OpenAI, Hugging Face, and LangChain that let me plug into world-class LLMs in minutes instead of wrestling with 60 GB weights or GPU queues. With OpenAI's API handling inference, I can forget about RAM limits and focus on fun stuff: building memory graphs, and improving models using the [fine-tuning API](https://platform.openai.com/docs/guides/fine-tuning).
+
+## What's so interesting
 
 The biggest technical achievement from this project is how it processes video messages.
 
@@ -46,18 +56,30 @@ Audio can be easily processed. Any of the 3 ways: tonal analysis, transcription,
 
 The more interesting part is how video is processed.
 
-It works similar to how a smartphone camera works, with the concept of "zero-shutter-lag" (ZSL) and anti-blur features. Relying on 2 big ideas:
+It works similar to how a smartphone camera works, with the concept of "zero-shutter-lag" (ZSL) and anti-blur features.
+
+As [@sdw, the creator of halide camera puts it](https://x.com/sdw/status/1703872763125981414), Zero Shutter Lag lets you take photos—before they are taken.
+
+![Zero Shutter Lag on Halide](https://pbs.twimg.com/media/F6Va3C6XQAAiEx4?format=jpg&name=small)
+
+Relying on 2 big ideas:
 
 1. Continuous capture into a rolling buffer
 2. Smart frame-selection (and/or multi-frame fusion)
 
 As soon as you open the camera app, the image sensor is already capturing frames into a buffer in a fast on-chip memory. When the shutter button is pressed, you tell the chip to save the buffer. The ISP freezes the ring buffer, copies it to the CPU for processing, and continues running the buffer.
 
+![](https://www.nxrte.com/wp-content/uploads/2022/11/640-25.png)
+
+> Taken from [图像处理 &bull; 实时互动网](https://www.nxrte.com/jishu/5020.html)
+
 Some code is run to extract the clearest frames in the buffer. This is done using an algorithm known as laplacian variance, which is a pre-defined 3x3 matrix that's used to calculate the degree of rapid intensity change in an image (scanning through the entire image). This allows the camera to filter out the images with the sharpest edges and least amount of blur.
 
 ![](https://cvexplained.wordpress.com/wp-content/uploads/2020/08/image-20.png)
 
 > Taken from [cvexplained.wordpress.com](https://cvexplained.wordpress.com/2020/08/16/blur-detection/)
+
+To understand how it works, it involves logic and matrix multiplication but essentially just think of it as a row of numbers that have some kind of algorithm run through each row, and then the average of the result is calculated. I won't go further into detail but you can just look up scholarly articles or explanations available on the vast web out there.
 
 A blur metric is computed on each frame, and compiled. At the end of the frame buffer, only the frames with the least amount of blur are included in the final calculation. The frame with the highest “sharpness” score—and usually best exposure/histogram gets promoted as "the" shot. On some phones, it's literally "pick one" and on others they may include the best frames for features like "top shot" or "live photo" (found on Pixels and iPhones)
 
@@ -441,7 +463,7 @@ This is a buffer mechanism to allow flushing of messages generated from a stream
 
 Did I also mention _**sub-agents**_? They are entities that keep track of their own context memory (EXPIRES 1 min), can call other agents, and answers back to the main agent.
 
-These are now included in the architecture located under bot/agents.ts. It's a very cool concept, because not only do they have the ability to call tools, they can also run other agents. For example, wouldn't it be nice if an excel file modification agent could run say, the schedule_message tool? This would allow the model to schedule messages to other "contacts" based on the contents of the excel spreadsheet. For instance, you want it to go over the guest list for a concert and send each one of them a custom email.
+These are now included in the architecture located under bot/agents.ts. It's a very cool concept, because not only do they have the ability to call tools, they can also run other agents. For example, wouldn't it be nice if an excel file modification agent could run say, the schedule_message tool? This would allow the model to schedule messages to other "contacts" based on the contents of the excel spreadsheet. For instance, you want it to go over the guest list for a birthday party and send each one of them a custom email.
 
 There is now a task queue, which allows the bot to run longer tasks that require more time to complete. For now, there is only one task defined, the codex CLI.
 

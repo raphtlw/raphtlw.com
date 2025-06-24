@@ -8,6 +8,11 @@ import remarkGfm from "remark-gfm";
 const nextConfig: NextConfig = {
   // Configure `pageExtensions` to include markdown and MDX files
   pageExtensions: ["js", "jsx", "md", "mdx", "ts", "tsx"],
+
+  // Allow images to be loaded from Sanity CMS
+  images: {
+    remotePatterns: [new URL("https://cdn.sanity.io/**")],
+  },
 };
 
 const withMDX = createMDX({
