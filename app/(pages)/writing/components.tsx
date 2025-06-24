@@ -1,6 +1,12 @@
 "use client";
 
 import { SpatialMaterial } from "@/components/spatial/material";
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 import { ChevronLeftIcon } from "lucide-react";
@@ -12,8 +18,9 @@ import {
   useScroll,
   Variants,
 } from "motion/react";
+import { default as NextImage, ImageProps as NextImageProps } from "next/image";
 import { usePathname, useRouter } from "next/navigation";
-import { ComponentProps, useEffect, useState } from "react";
+import { ComponentProps, useEffect, useMemo, useState } from "react";
 
 export const BackButton = () => {
   const router = useRouter();
@@ -106,5 +113,47 @@ export const VideoPlayer = ({ containerProps, ...props }: VideoPlayerProps) => {
         className={cn("rounded-lg pointer-events-none", props.className)}
       />
     </motion.div>
+  );
+};
+
+export type ImageProps = NextImageProps;
+
+export const Image = ({ ...props }: ImageProps) => {
+  const [width, height] = useMemo(() => {
+    // Parse out the source. If we can get the dimensions from the URL,
+    // it will be easier to use this component in the future.
+    if (typeof props.src === "string") {
+      const url = new URL(props.src);
+      if (url.host === "cdn.sanity.io") {
+        const segments = url.pathname.split("/");
+        const lastSegment = segments[segments.length - 1];
+        const filenameParts = lastSegment.split("-");
+        const lastFilenamePart = filenameParts[filenameParts.length - 1];
+        const extParts = lastFilenamePart.split(".");
+        const [width, height] = extParts[0].split("x");
+        return [parseInt(width), parseInt(height)] as const;
+      }
+    }
+
+    return [props.width, props.height] as const;
+  }, [props.src]);
+
+  return (
+    <Dialog>
+      <DialogTrigger asChild>
+        <NextImage {...props} width={width} height={height} />
+      </DialogTrigger>
+      <DialogContent>
+        <DialogTitle>{props.alt}</DialogTitle>
+        <div className="relative h-[calc(100vh-220px)] w-full overflow-clip rounded-md bg-transparent shadow-md">
+          <NextImage
+            src={props.src}
+            alt={props.alt}
+            fill
+            className={cn("h-full w-full object-contain", props.className)}
+          />
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 };
