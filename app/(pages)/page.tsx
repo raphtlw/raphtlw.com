@@ -37,7 +37,7 @@ export default async function Page() {
               <h1>Raphael Tang</h1>
             </Link>
 
-            <h2 className="text-sm font-mono">Builder</h2>
+            <h2 className="text-sm font-mono">Everything Builder</h2>
 
             <div className="flex mt-4">
               <Link
