@@ -128,7 +128,13 @@ V1 turned out to be worse than I ever thought. Not because of how it worked, but
 <img src="https://cdn.sanity.io/media-libraries/ml7E2FKaGXGN/images/7c23b517b601ccd185bb1a70c798fc45a7384643-606x2038.png" alt="raphGPT File structure" />
 </div>
 
-It looks horrendous. It used supervisord as the init system in Docker, and both the Python and Node.js code was together in the same directory, and the two runtimes were bundled together in the same docker container. This meant the two had to share one container, and that container was ever only used for production, not development. I remember at one point, as I was trying [Infisical](https://infisical.com/), I installed Infisical inside the container and tried to generate the .env file using the machine ID credentials. There were so many bad practices that were in place in the first version, and I wasn't proud to release it. I'm so thankful for the opportunity to document these down here, for anyone and myself to learn from these mistakes.
+It used supervisord as the init system in Docker, and both the Python and Node.js code was together in the same directory, and the two runtimes were bundled together in the same docker container.
+
+<img src="https://cdn.sanity.io/media-libraries/ml7E2FKaGXGN/images/bee39df32029fb34ff26f2ad5250ae45e74f5d61-637x282.png" alt="Visual" className='rounded-4xl' />
+
+This meant the two had to share one container, and that container was ever only used for production, not development.
+
+I remember at one point, as I was trying [Infisical](https://infisical.com/), I installed Infisical inside the container and tried to generate the .env file using the machine ID credentials. There were so many bad practices that were in place in the first version, and I wasn't proud to release it. I'm so thankful for the opportunity to document these down here, so I can learn from these mistakes.
 
 Running this whole setup was a matter of starting 3 terminals. One with the docker compose command launching redis, gotenberg and chromadb, the other with python running main.py, and lastly the pnpm command running main.ts.
 
