@@ -19,7 +19,7 @@ It doesn't work anymore, but it used to be able to just generate text, based on 
 
 Fast-forward to launching raphGPT on Cloud Run, and hosting turned into a puzzle: with only 2 GB of RAM available, I had to experiment relentlessly to find the sweet spot for model parameters, trim down the context size, and settle on {`<|end_of_text|>`} as the stop token to keep responses clean and prevent overruns.
 
-Fortunately these days, we have things like OpenAI, Hugging Face, and LangChain that let me plug into world-class LLMs in minutes instead of wrestling with 60 GB weights or GPU queues. I still get goosebumps when I fire off a prompt and watch the model riff back in real time—every clever turn of phrase feels like magic. With OpenAI’s API handling inference, I can sidestep RAM limits and focus on fun stuff: tweaking personality quirks, building memory graphs, and improving models using the [fine-tuning API](https://platform.openai.com/docs/guides/fine-tuning) from OpenAI.
+Fortunately these days, we have things like OpenAI, Hugging Face, and LangChain that let me plug into world-class LLMs in minutes instead of wrestling with 60 GB weights or GPU queues. With OpenAI's API handling inference, I can forget about RAM limits and focus on fun stuff: building memory graphs, and improving models using the [fine-tuning API](https://platform.openai.com/docs/guides/fine-tuning) from OpenAI.
 
 I will be documenting everything that went into this bot, starting from how it works below.
 
@@ -27,7 +27,9 @@ I will be documenting everything that went into this bot, starting from how it w
 
 The bot is built on a multi-modal LLM architecture. It accepts text, voice, video, images, documents (pdf, docx) and files.
 
-The biggest technical achievement from this project is how it processes video messages. LLMs can only take in a series of images as input. Think about it... what are videos made up of?
+The biggest technical achievement from this project is how it processes video messages. LLMs can only take in a series of images as input.
+
+Think about it... what are videos made up of?
 
 1. Audio
 2. Still frames, but they just happen to change quickly
