@@ -1,5 +1,7 @@
 import "@/app/globals.css";
 
+import { BackButton } from "@/app/(pages)/writing/back-button";
+
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -14,6 +16,7 @@ export default function RootLayout({
 }>) {
   return (
     <main className="dark">
+      <BackButton />
       <section className="px-8 md:max-w-3xl mx-auto prose prose-neutral dark:prose-invert my-10">
         {children}
       </section>
