@@ -1,3 +1,4 @@
+import { CopyToClipboard } from "@/app/(raphgpt)/raphgpt/[id]/components";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { rehypePrettyCodeOptions } from "@/lib/rehype/pretty-code";
 import { cn } from "@/lib/utils";
@@ -63,16 +64,20 @@ export default async function Page({ params }: Params) {
 
       <div className="px-6 pt-6 md:pt-10 md:max-w-3xl mx-auto flex flex-col gap-12">
         <div className="flex flex-col gap-4">
-          <p className="text-slate-400">
-            {format(new Date(page.publishedAt!), "EEEE, MMMM d, yyyy")}
-          </p>
+          <div className="flex flex-row items-center justify-between">
+            <p className="text-slate-400">
+              {format(new Date(page.publishedAt!), "EEEE, MMMM d, yyyy")}
+            </p>
+
+            <CopyToClipboard text={page.content!} />
+          </div>
 
           <h1 className="text-3xl font-bold tracking-tight">{page.title}</h1>
         </div>
 
         <article
           className={cn(
-            "prose lg:prose-lg prose-stone dark:prose-invert prose-img:rounded-xl",
+            "prose prose-stone dark:prose-invert prose-img:rounded-xl",
           )}
         >
           {content}

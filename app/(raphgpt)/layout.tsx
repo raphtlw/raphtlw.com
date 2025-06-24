@@ -40,7 +40,7 @@ export default function RootLayout({
       <head>
         <meta name="viewport" content="width=device-width" />
       </head>
-      <body className={cn("dark")}>
+      <body className="dark">
         {children}
 
         <Footer />
