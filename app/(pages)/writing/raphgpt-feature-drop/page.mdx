@@ -1,7 +1,6 @@
-import Image from 'next/image'
-import Link from 'next/link'
 import { LinkIcon } from 'lucide-react'
-import * as motion from 'motion/react-client'
+import { TappableLink } from '@/components/spatial/button'
+import Image from 'next/image'
 
 
 
@@ -59,6 +58,8 @@ Here's a breakdown in order of implementation:
 9. **Cleanup & Chores**
    - LTA agent cleanup, interruption pauses, system message tweaks, and more
 
+![](https://cdn.sanity.io/media-libraries/ml7E2FKaGXGN/images/a852df0e3a80cbe418a789a6bfea744275d30324-984x1500.png)
+
 ## What’s Next?
 
 - **Faster Response Times:** I'll profile my backend to shave off those extra milliseconds.
@@ -66,26 +67,6 @@ Here's a breakdown in order of implementation:
 - **Location Accuracy:** Partnering with mapping providers for pinpoint precision.
 - **Interactive Tutorials:** Quick in-chat demos for new features.
 
-<Link href="https://t.me/raphgptbot">
-  <motion.li
-    className="flex flex-row justify-between items-center py-2.5 px-4 -mx-4 rounded-lg"
-    initial={{
-      scale: 1,
-      backgroundColor: "oklch(0.708 0 0 / 0%)",
-    }}
-    whileTap={{
-      scale: 0.98,
-      opacity: 0.6,
-      backgroundColor: "oklch(0.708 0 0 / 20%)",
-    }}
-    transition={{
-      type: "spring",
-      stiffness: 200,
-      damping: 16,
-      mass: 0.4,
-    }}
-  >
-    <span>Try it today on Telegram</span>
-    <LinkIcon size={16} />
-  </motion.li>
-</Link>
+<TappableLink href="https://t.me/raphgptbot" icon={<LinkIcon size={16} />}>
+   <span>Try it today on Telegram</span>
+</TappableLink>

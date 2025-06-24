@@ -1,25 +1,19 @@
 import profile from "@/app/images/profile.jpeg";
 
 import { PreviewLink } from "@/app/(pages)/components";
+import { TappableLink } from "@/components/spatial/button";
 import { ExternalLink } from "@/components/spatial/link";
 import { SpatialMaterial } from "@/components/spatial/material";
+import { MobileOnly } from "@/components/utils/mobile-only";
 import { client } from "@/sanity/lib/client";
 import { LINKS_QUERY } from "@/sanity/lib/queries";
 import { LINKS_QUERYResult } from "@/sanity/types";
-import { ArrowUpRight, LinkIcon } from "lucide-react";
-import * as motion from "motion/react-client";
-import { headers } from "next/headers";
+import { ArrowUpRight, LinkIcon, NotebookPenIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { UAParser } from "ua-parser-js";
 
 export default async function Page() {
   const links = await client.fetch<LINKS_QUERYResult>(LINKS_QUERY);
-
-  const requestHeaders = await headers();
-  const userAgent = requestHeaders.get("user-agent") || "";
-  const ua = UAParser(userAgent);
-  const isMobile = ua.device.type === "mobile";
 
   return (
     <main className="py-10 md:py-20">
@@ -72,59 +66,22 @@ export default async function Page() {
         </ul>
       </section>
 
-      {isMobile && (
+      <MobileOnly>
         <section className="px-8 md:max-w-3xl mx-auto mt-8">
-          <ul className="flex flex-col gap-4">
-            <Link href="/writing">
-              <motion.li
-                className="flex flex-row justify-between items-center py-2.5 px-4 -mx-4 rounded-lg"
-                initial={{
-                  scale: 1,
-                  backgroundColor: "oklch(0.708 0 0 / 0%)",
-                }}
-                whileTap={{
-                  scale: 0.98,
-                  opacity: 0.6,
-                  backgroundColor: "oklch(0.708 0 0 / 20%)",
-                }}
-                transition={{
-                  type: "spring",
-                  stiffness: 200,
-                  damping: 16,
-                  mass: 0.4,
-                }}
-              >
-                <span>Read about my thoughts</span>
-                <LinkIcon size={16} />
-              </motion.li>
-            </Link>
+          <ul className="flex flex-col gap-2">
+            <TappableLink href="/writing" icon={<NotebookPenIcon size={16} />}>
+              <span>Read about my thoughts</span>
+            </TappableLink>
 
-            <Link href="https://instagram.com/raphtlw">
-              <motion.li
-                className="flex flex-row justify-between items-center py-2.5 -my-2.5 px-4 -mx-4 rounded-lg"
-                initial={{
-                  scale: 1,
-                  backgroundColor: "oklch(0.708 0 0 / 0%)",
-                }}
-                whileTap={{
-                  scale: 0.98,
-                  opacity: 0.6,
-                  backgroundColor: "oklch(0.708 0 0 / 20%)",
-                }}
-                transition={{
-                  type: "spring",
-                  stiffness: 200,
-                  damping: 16,
-                  mass: 0.4,
-                }}
-              >
-                <span>Photos I've taken over the years</span>
-                <LinkIcon size={16} />
-              </motion.li>
-            </Link>
+            <TappableLink
+              href="https://instagram.com/raphtlw"
+              icon={<LinkIcon size={16} />}
+            >
+              <span>Photos I've taken over the years</span>
+            </TappableLink>
           </ul>
         </section>
-      )}
+      </MobileOnly>
 
       <section className="px-8 md:max-w-3xl mx-auto mt-8">
         <div className="flex flex-col gap-8 mt-16">

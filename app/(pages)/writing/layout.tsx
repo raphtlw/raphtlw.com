@@ -1,6 +1,6 @@
 import "@/app/globals.css";
 
-import { BackButton } from "@/app/(pages)/writing/back-button";
+import { BackButton } from "@/app/(pages)/writing/components";
 
 import type { Metadata } from "next";
 
