@@ -1,5 +1,7 @@
 # Introducing raphGPT v2
 
+June 24, 2025
+
 Today, I'm launching something that's taken me almost 2 years to build now, and today marks the biggest release of this telegram bot that I've always envisioned.
 
 <video autoPlay muted loop playsInline className='overflow-hidden rounded-2xl'>
@@ -8,6 +10,12 @@ Today, I'm launching something that's taken me almost 2 years to build now, and 
 </video>
 
 raphGPT has always been something I wanted to build, ever since [gpt-2-simple](https://github.com/minimaxir/gpt-2-simple) and [DialoGPT](https://github.com/microsoft/DialoGPT) made its rounds in the open source developer community in June 2019. I still remember jogging at the park when I saw the first release, and rushed home to try it out. I was so excited.
+
+I will be documenting everything that went into this bot, starting from how it works below.
+
+![Screenshot](https://cdn.sanity.io/media-libraries/ml7E2FKaGXGN/images/42ea2a907911cdeae7d91625bdcf24c5e9748d83-394x795.png)
+
+The bot is built on a multi-modal LLM architecture. It accepts text, voice, video, images, documents (pdf, docx) and files.
 
 I had something going in 2020: https://github.com/raphtlw/transformers
 
@@ -19,22 +27,26 @@ It doesn't work anymore, but it used to be able to just generate text, based on 
 
 Fast-forward to launching raphGPT on Cloud Run, and hosting turned into a puzzle: with only 2 GB of RAM available, I had to experiment relentlessly to find the sweet spot for model parameters, trim down the context size, and settle on {`<|end_of_text|>`} as the stop token to keep responses clean and prevent overruns.
 
-Fortunately these days, we have things like OpenAI, Hugging Face, and LangChain that let me plug into world-class LLMs in minutes instead of wrestling with 60 GB weights or GPU queues. With OpenAI's API handling inference, I can forget about RAM limits and focus on fun stuff: building memory graphs, and improving models using the [fine-tuning API](https://platform.openai.com/docs/guides/fine-tuning) from OpenAI.
+Fortunately these days, we have things like OpenAI, Hugging Face, and LangChain that let me plug into world-class LLMs in minutes instead of wrestling with 60 GB weights or GPU queues. With OpenAI's API handling inference, I can forget about RAM limits and focus on fun stuff: building memory graphs, and improving models using the [fine-tuning API](https://platform.openai.com/docs/guides/fine-tuning).
 
-I will be documenting everything that went into this bot, starting from how it works below.
+The biggest technical achievement from this project is how it processes video messages.
 
-![Screenshot](https://cdn.sanity.io/media-libraries/ml7E2FKaGXGN/images/42ea2a907911cdeae7d91625bdcf24c5e9748d83-394x795.png)
+![](https://miro.medium.com/v2/resize:fit:1400/1*-goPY__Yp_SRWiDivANqsA.png)
 
-The bot is built on a multi-modal LLM architecture. It accepts text, voice, video, images, documents (pdf, docx) and files.
+> From [Multimodal Large Language Models (MLLMs) transforming Computer Vision](https://medium.com/@tenyks_blogger/multimodal-large-language-models-mllms-transforming-computer-vision-76d3c5dd267f)
 
-The biggest technical achievement from this project is how it processes video messages. LLMs can only take in a series of images as input.
+LLMs can only take in a series of images as input.
 
 Think about it... what are videos made up of?
 
 1. Audio
 2. Still frames, but they just happen to change quickly
 
-The video processor works similar to how a smartphone camera works, with the concept of "zero-shutter-lag" (ZSL) and anti-blur features. Relying on 2 big ideas:
+Audio can be easily processed. Any of the 3 ways: tonal analysis, transcription, emotional analysis.
+
+The more interesting part is how video is processed.
+
+It works similar to how a smartphone camera works, with the concept of "zero-shutter-lag" (ZSL) and anti-blur features. Relying on 2 big ideas:
 
 1. Continuous capture into a rolling buffer
 2. Smart frame-selection (and/or multi-frame fusion)
@@ -43,17 +55,37 @@ As soon as you open the camera app, the image sensor is already capturing frames
 
 Some code is run to extract the clearest frames in the buffer. This is done using an algorithm known as laplacian variance, which is a pre-defined 3x3 matrix that's used to calculate the degree of rapid intensity change in an image (scanning through the entire image). This allows the camera to filter out the images with the sharpest edges and least amount of blur.
 
+![](https://cvexplained.wordpress.com/wp-content/uploads/2020/08/image-20.png)
+
+> Taken from [cvexplained.wordpress.com](https://cvexplained.wordpress.com/2020/08/16/blur-detection/)
+
 A blur metric is computed on each frame, and compiled. At the end of the frame buffer, only the frames with the least amount of blur are included in the final calculation. The frame with the highest “sharpness” score—and usually best exposure/histogram gets promoted as "the" shot. On some phones, it's literally "pick one" and on others they may include the best frames for features like "top shot" or "live photo" (found on Pixels and iPhones)
+
+![](https://www.sony-semicon.com/files/62/t-22_6_HDR_04_en.png)
+
+> Taken from [High Dynamic Range (HDR) Technology for Mobile](https://www.sony-semicon.com/en/technology/mobile/hdr.html)
 
 The resulting frames are then stabilized and fused together, to create the best image possible. This is known as HDR on some devices. The more images the device is able to align together in the same frame, the higher the dynamic range of the shot. The ISP's multi-frame noise-reduction and de-motion-blur engine aligns and merges them into one final image. This is also how your phone sometimes "sees" more than you can in the dark, or when some phones have "night mode" which allows photos to be clearer and more detailed at night.
 
 Full "still-photo" pipeline on the chosen/merged frame(s) all happen on the ISP.
 
+![](https://10xengineers.ai/wp-content/uploads/Group-38295-min.png)
+
+> Taken from [Image Signal Processing](https://10xengineers.ai/image-signal-processing/)
+
 Demosaic raw Bayer data → white balance → lens-shading correction → tone-mapping → sharpening → JPEG/HEIC encode.
 
 This all happens in the ISP (Image Signal Processor) or on a dedicated NPUs/ISP pipelines for sub-100 ms turnaround.
 
-Coming back to the bot, it works similar too. Located inside the video-parser directory, it analyzes uploaded video (or, by analogy, multiple photo frames), finding the best frames, and summarizing contents. It mimics the phone camera’s "find the best moment" system, but does it for multiple frames, not just one. It takes a tele-bubble and extracts only the most significant frames with moments that the LLM will need to "see".
+![](https://github.com/cruxopen/openISP/raw/master/images/Image%20Signal%20Processor.png)
+
+> Taken from [Open Image Signal Processor (openISP)](https://github.com/cruxopen/openISP)
+
+The bot works in a similar way.
+
+Located inside the video-parser directory, it analyzes uploaded video (or, by analogy, multiple photo frames), finding the best frames, and summarizing contents.
+
+It mimics the phone camera’s "find the best moment" system, but does it for multiple frames, not just one. It takes a tele-bubble and extracts only the most significant frames with moments that the LLM will need to "see".
 
 - Instead of a live camera buffer, a sample frame is generated from the video every `step` frames (e.g., every 10th frame).
 - Effectively, it builds a _buffer_ of frames from which it can search for the best.
@@ -63,12 +95,9 @@ Then, for each sampled frame:
 - Uses Laplacian variance (classic sharpness detector) to calculate a blur score.
 - Looks for over/under-exposed areas to calculate an exposure metric.
 - Uses Mediapipe to count faces (e.g., prioritize human subjects).
-
 - Scores all sampled frames; sorts and keeps the top 5 by the score above.
 
 Face detection has higher priority because humans possess a remarkable ability for face recognition, and I wanted to achieve a similar effect in the bot.
-
-![Excalidraw Illustration of Video to frames](https://cdn.sanity.io/media-libraries/ml7E2FKaGXGN/images/bac2eea7a7ffb5ff9a20afdb4a4e8203d4e71594-1048x237.png)
 
 See it in action:
 
@@ -77,19 +106,106 @@ See it in action:
   Your browser does not support the video tag.
 </video>
 
+![Excalidraw Illustration of Video to frames](https://cdn.sanity.io/media-libraries/ml7E2FKaGXGN/images/bac2eea7a7ffb5ff9a20afdb4a4e8203d4e71594-1048x237.png)
+
 After processing:
 
 ![Result filmstrip](https://cdn.sanity.io/media-libraries/ml7E2FKaGXGN/images/9aecb0fd7cf260798f818835d26ad90be2f6c463-1675x421.png)
+
+## Why did I make this?
+
+First, for myself to use. I gotta be honest, this whole thing was started because I wanted to build something that could do things for me, allow me to get up to write code, so you could send a ZIP file of your project, ask for some changes and get it back in a zipped file. This is possible now with the codex_agent tool.
+
+I've always been fascinated with LLMs and how they worked. At the end of the day, they're just autocomplete machines. If we can get them to do useful and beneficial things for the good of humanity, I consider the pursuit of this whole industry a success.
+
+More importantly, the foundations are complete. This means I can now experiment with tools built into the bot that people might find useful. Things like getting directions, setting reminders, and being able to simply just forward a message, or send a photo to ask for information about something that they are talking about with their friends. I have seen it help my thought processes and decision making in a way that could not have been possible without it. That's why I'll continue to keep this project alive, and it will always be something that I can work on if I want to.
 
 ## V1
 
 V1 turned out to be worse than I ever thought. Not because of how it worked, but how the project was executed. A quick look at the file structure tells you plenty:
 
-![raphGPT File structure](https://cdn.sanity.io/media-libraries/ml7E2FKaGXGN/images/7c23b517b601ccd185bb1a70c798fc45a7384643-606x2038.png)
+<div className='w-40'>
+<img src="https://cdn.sanity.io/media-libraries/ml7E2FKaGXGN/images/7c23b517b601ccd185bb1a70c798fc45a7384643-606x2038.png" alt="raphGPT File structure" />
+</div>
 
 It looks horrendous. It used supervisord as the init system in Docker, and both the Python and Node.js code was together in the same directory, and the two runtimes were bundled together in the same docker container. This meant the two had to share one container, and that container was ever only used for production, not development. I remember at one point, as I was trying [Infisical](https://infisical.com/), I installed Infisical inside the container and tried to generate the .env file using the machine ID credentials. There were so many bad practices that were in place in the first version, and I wasn't proud to release it. I'm so thankful for the opportunity to document these down here, for anyone and myself to learn from these mistakes.
 
 Running this whole setup was a matter of starting 3 terminals. One with the docker compose command launching redis, gotenberg and chromadb, the other with python running main.py, and lastly the pnpm command running main.ts.
+
+<details>
+<summary>This was the Dockerfile from V1</summary>
+
+```dockerfile title="Dockerfile"
+# syntax=docker/dockerfile:1
+
+FROM debian:latest AS base
+
+RUN apt-get update \
+ && apt-get install -y locales gnupg wget curl ca-certificates coreutils \
+  # Install Infisical
+ && curl -1sLf 'https://dl.cloudsmith.io/public/infisical/infisical-cli/setup.deb.sh' | bash \
+ && apt-get update \
+ && apt-get install -y infisical \
+  # Note: this installs the necessary libs to make the bundled version of Chrome that Puppeteer
+  # installs, work.
+ && wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | gpg --dearmor -o /usr/share/keyrings/googlechrome-linux-keyring.gpg \
+ && sh -c 'echo "deb [arch=amd64 signed-by=/usr/share/keyrings/googlechrome-linux-keyring.gpg] https://dl-ssl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list' \
+ && apt-get update \
+ && apt-get install -y google-chrome-stable fonts-ipafont-gothic fonts-wqy-zenhei fonts-thai-tlwg fonts-khmeros fonts-kacst fonts-freefont-ttf libxss1 dbus dbus-x11 \
+    --no-install-recommends \
+ && apt-get update \
+ && apt-get install -y make git zlib1g-dev libssl-dev gperf cmake clang libc++-dev libc++abi-dev \
+    --no-install-recommends \
+  # Install runtime dependencies
+ && apt-get install -y zip unzip ghostscript graphicsmagick ffmpeg \
+  # Install process manager
+ && apt-get install -y supervisor \
+ && rm -rf /var/lib/apt/lists/*
+
+RUN localedef -i en_US -c -f UTF-8 -A /usr/share/locale/locale.alias en_US.UTF-8
+ENV LANG=en_US.UTF-8
+
+RUN rm -f /etc/machine-id \
+ && dbus-uuidgen --ensure=/etc/machine-id
+
+COPY . /app
+WORKDIR /app
+
+# Generate .env file
+RUN --mount=type=secret,id=infisical-token,env=INFISICAL_TOKEN \
+    infisical export \
+    --projectId 6fd5cbbf-ddf0-47b5-938b-ff752c3c6889 \
+    --env prod \
+    > .env
+
+# Install Python + dependencies
+RUN git clone --depth=1 https://github.com/pyenv/pyenv.git "$HOME/.pyenv"
+ENV PYENV_ROOT="/root/.pyenv"
+ENV PATH="$PYENV_ROOT/bin:$PATH"
+ENV PATH="$PYENV_ROOT/shims:$PYENV_ROOT/bin:$PATH"
+RUN pyenv install $(cat .python-version)
+
+RUN --mount=type=cache,id=pip,target=/root/.cache/pip pip install -r requirements.txt
+
+# Install Volta
+RUN curl https://get.volta.sh | bash
+ENV VOLTA_HOME="/root/.volta"
+ENV PATH="$VOLTA_HOME/bin:$PATH"
+
+# Install Node.js and PNPM
+RUN volta install node@latest
+RUN volta install pnpm@latest
+ENV PNPM_HOME="/root/.local/share/pnpm"
+
+RUN --mount=type=cache,id=pnpm,target=/root/.local/share/pnpm pnpm install --frozen-lockfile
+
+# Setup process manager
+RUN mkdir -p /var/log/supervisor
+COPY supervisord.conf /etc/supervisor/conf.d/supervisor.conf
+
+CMD [ "/usr/bin/supervisord" ]
+```
+</details>
 
 raphGPT V1 was a Telegram bot that provides:
 
@@ -185,30 +301,22 @@ Redis tracks ephemeral chat state, conversation turns, and rate limits.
 - CI/CD: GitHub Actions workflow builds and pushes Docker images to GHCR.
 
 - **Dependencies**: Docker, Python 3.12+, Node 20+, pnpm
-- **Start all containers/services:**  
+- **Start all containers/services:**
   ```
   docker compose up redis gotenberg chromadb
   ```
-- **Start Python FastAPI service:**  
+- **Start Python FastAPI service:**
   ```shell
   uv venv
   source .venv/bin/activate.fish
   fastapi dev main.py --port 26691
   ```
-- **Start TypeScript/Node service:**  
+- **Start TypeScript/Node service:**
   ```shell
   pnpm dev
   ```
 
-### What makes this project unique?
-
-- Multimodal LLM chat integrated into Telegram, with "memory" across sessions and media.
-- The LLM can call search engines, read files, synthesize speech, trigger actions like publishing or wallet payments, generate images, and more, all via function calling ("tools").
-- Blockchain & fiat payments: Supports buying tokens with both Stripe (fiat) and Solana (crypto), with on-chain event listening for wallet activity.
-- Production-grade logging and monitoring: Tied directly to modern LOKI/Grafana stacks.
-- Full-stack, extensible, research-grade codebase: Easily allows new tools to be added, with smart matching for when/what tools to invoke.
-
-### Ideology of development
+#### Ideology of development
 
 - Modular, extensible, designed so new capabilities ("tools") can be added at will and are discoverable automatically by the LLM or by admin action.
 - Personality, credits, payments, and state are per-user and persisted.
@@ -216,82 +324,11 @@ Redis tracks ephemeral chat state, conversation turns, and rate limits.
 
 Meant to be a state-of-the-art Telegram AI assistant with deep memory, multimodal (text, voice, video, documents, images) understanding, support for both fiat and crypto credits, web/real-world tool integrations, and smart conversational capabilities, all built for easy extensibility and production deployment.
 
-```dockerfile title="Dockerfile"
-# syntax=docker/dockerfile:1
-
-FROM debian:latest AS base
-
-RUN apt-get update \
- && apt-get install -y locales gnupg wget curl ca-certificates coreutils \
-  # Install Infisical
- && curl -1sLf 'https://dl.cloudsmith.io/public/infisical/infisical-cli/setup.deb.sh' | bash \
- && apt-get update \
- && apt-get install -y infisical \
-  # Note: this installs the necessary libs to make the bundled version of Chrome that Puppeteer
-  # installs, work.
- && wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | gpg --dearmor -o /usr/share/keyrings/googlechrome-linux-keyring.gpg \
- && sh -c 'echo "deb [arch=amd64 signed-by=/usr/share/keyrings/googlechrome-linux-keyring.gpg] https://dl-ssl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list' \
- && apt-get update \
- && apt-get install -y google-chrome-stable fonts-ipafont-gothic fonts-wqy-zenhei fonts-thai-tlwg fonts-khmeros fonts-kacst fonts-freefont-ttf libxss1 dbus dbus-x11 \
-    --no-install-recommends \
- && apt-get update \
- && apt-get install -y make git zlib1g-dev libssl-dev gperf cmake clang libc++-dev libc++abi-dev \
-    --no-install-recommends \
-  # Install runtime dependencies
- && apt-get install -y zip unzip ghostscript graphicsmagick ffmpeg \
-  # Install process manager
- && apt-get install -y supervisor \
- && rm -rf /var/lib/apt/lists/*
-
-RUN localedef -i en_US -c -f UTF-8 -A /usr/share/locale/locale.alias en_US.UTF-8
-ENV LANG=en_US.UTF-8
-
-RUN rm -f /etc/machine-id \
- && dbus-uuidgen --ensure=/etc/machine-id
-
-COPY . /app
-WORKDIR /app
-
-# Generate .env file
-RUN --mount=type=secret,id=infisical-token,env=INFISICAL_TOKEN \
-    infisical export \
-    --projectId 6fd5cbbf-ddf0-47b5-938b-ff752c3c6889 \
-    --env prod \
-    > .env
-
-# Install Python + dependencies
-RUN git clone --depth=1 https://github.com/pyenv/pyenv.git "$HOME/.pyenv"
-ENV PYENV_ROOT="/root/.pyenv"
-ENV PATH="$PYENV_ROOT/bin:$PATH"
-ENV PATH="$PYENV_ROOT/shims:$PYENV_ROOT/bin:$PATH"
-RUN pyenv install $(cat .python-version)
-
-RUN --mount=type=cache,id=pip,target=/root/.cache/pip pip install -r requirements.txt
-
-# Install Volta
-RUN curl https://get.volta.sh | bash
-ENV VOLTA_HOME="/root/.volta"
-ENV PATH="$VOLTA_HOME/bin:$PATH"
-
-# Install Node.js and PNPM
-RUN volta install node@latest
-RUN volta install pnpm@latest
-ENV PNPM_HOME="/root/.local/share/pnpm"
-
-RUN --mount=type=cache,id=pnpm,target=/root/.local/share/pnpm pnpm install --frozen-lockfile
-
-# Setup process manager
-RUN mkdir -p /var/log/supervisor
-COPY supervisord.conf /etc/supervisor/conf.d/supervisor.conf
-
-CMD [ "/usr/bin/supervisord" ]
-```
-
-Yeah, it's bad.
+### It was time for a revamp
 
 There came a point when the bot wasn't working correctly. I was still hosting it on my home server at home, and I left it unattended for 3 months. As I moved things around in my house, I also set new systems up, and a new build to use as a home server. This is when things started to break with the bot and the 5 docker containers that were running separately from each other, and I figured it was time to start working on a better, more reliable version that could be hosted on the cloud.
 
-The bot's original intentions were to make it easier for me to access a LLM whenever I needed access to it, to assist me with everything I would typically use _ChatGPT_ for.
+It was a matter of "this architecture and file structure" just wouldn't cut it any further, and it was past its experimentation stages. This brought me back to the reason why I made this bot: so more people can have access to a useful and guided AI agent. So I can also use the tools that are built in to perform tasks that would otherwise require downloading other apps or working on a computer.
 
 So that's what I did with V2.
 
@@ -299,7 +336,38 @@ So that's what I did with V2.
 
 This was the real deal. It was the production copy. Everything I wanted to include in a swiss-army knife toolbox for my ideal LLM that would be able to help me throughout the day was built in this implementation from the ground up.
 
-Everything is now within Docker, and the Dockerfiles are written in a way that allows them to be cache-dependent, which means developing is easier now. Just saving the file causes docker to sync the files from the local machine into the running container. The puppeteer headless chromium browser is now part of the setup too, and so the container need not be so "fat".
+Everything is now within Docker, and the Dockerfiles are written in a way that allows them to be cache-dependent, which means developing is easier now. Just saving the file causes docker to sync the files from the local machine into the running container. Puppeteer from the previous setup is now a browserless Docker container defined in compose, and so the container need not be so "fat".
+
+So what can it do?
+
+1. Telegram bots are notorious for privacy concerns. I wanted to put privacy first, so I implemented a /clear command, which wipes the database completely of your messages and I will never be able to see it.
+2. Media groups &mdash;you can send groups of photos and the bot would take it as one big message.
+3. Interruptions. You can keep sending more and more messages, and as long as the bot didn't finish what it was about to say, it will start over, taking the newer messages into account.
+4. Places and Navigation tools allow you to quickly find a place, find restaurants near you, look up the location of the most popular place in town, and even get directions to that place, right from within the bot.
+5. Message scheduling. You can now schedule messages for sending later.
+6. LTA DataMall API. It now has connectivity to LTA's data APIs which (if you live in Singapore), you can benefit from the vast availability of transportation devices and methods. The bot can now tell you:
+
+    - Which bus stops are available near your location
+    - How to get to a bus stop
+    - What time the bus will arrive
+    - What time the next 3 buses will arrive
+    - What is the passenger volume of the bus
+    - What is the passenger volume of the train
+    - When the first train will be arriving (at your location)
+    - When the last train will be arriving (at your location)
+    - What stops a specific bus number goes through
+    - What bus numbers are available for a specific stop
+
+7. Failure and error handling. If a message fails to process for any technical reasons due to connectivity, the bot keeps the message in redis and refers back to it when you send another message, telling it to retry.
+8. Solana blockchain integration. You can look up any wallet by address or .sol Bonafide address and have it tell you things like:
+
+    - Last 10 transactions, and value
+    - Top 15 transactions, and value
+    - How recent their last transaction was
+    - Current wallet value in SOL or USDC
+
+9. [agentic.so](https://agentic.so) integration, which consists various LLM tools that are useful for general questions
+10. Codex CLI integration. It's also able to operate on a zip file you send in to the bot, work on your project per your instructions, and send it back. It's really cool and I'd love for you to try it out.
 
 Now, to get up and running with development, all I need to do is to open up a terminal and run:
 
@@ -363,14 +431,18 @@ Did I also mention _**sub-agents**_? They are entities that keep track of their 
 
 These are now included in the architecture located under bot/agents.ts. It's a very cool concept, because not only do they have the ability to call tools, they can also run other agents. For example, wouldn't it be nice if an excel file modification agent could run say, the schedule_message tool? This would allow the model to schedule messages to other "contacts" based on the contents of the excel spreadsheet. For instance, you want it to go over the guest list for a concert and send each one of them a custom email.
 
-Other improvements include:
+There is now a task queue, which allows the bot to run longer tasks that require more time to complete. For now, there is only one task defined, the codex CLI.
 
-- Message attachments stored in S3
-- Files are browsable and viewable any-time (by the bot)
-- /clear command allowing you to completely wipe all traces of messages in the backend (as-if you told the bot to forget you entirely)
+Other changes include:
+
+- Message attachments stored in S3, all files are handled as S3 keys
+- Files are browsable and viewable any-time (by the bot) by S3 key
 - Dedicated image generation agent
-- LTA DataMall API connectivity
-- Google Maps
+- LTA DataMall API connectivity + agent
+- Google Maps Directions API
+- Google Maps Places API
+- Crontab for improved scheduling
+- Middleware which creates a tempDir for the session, and deletes it after the run is complete
 
 I just want to thank you if you read this post this far. Building this was a huge technical feat for me and it allowed me to learn all the ins and outs of LLMs.
 
