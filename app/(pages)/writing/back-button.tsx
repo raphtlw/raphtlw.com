@@ -3,11 +3,12 @@
 import { SpatialMaterial } from "@/components/spatial/material";
 import { ChevronLeftIcon } from "lucide-react";
 import { AnimatePresence, useMotionValueEvent, useScroll } from "motion/react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export const BackButton = () => {
   const router = useRouter();
+  const pathname = usePathname();
 
   const [shown, setShown] = useState(false);
 
@@ -22,7 +23,7 @@ export const BackButton = () => {
 
   useEffect(() => {
     setShown(false);
-  }, []);
+  }, [pathname]);
 
   return (
     <AnimatePresence>
