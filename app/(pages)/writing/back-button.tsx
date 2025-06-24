@@ -4,7 +4,7 @@ import { SpatialMaterial } from "@/components/spatial/material";
 import { ChevronLeftIcon } from "lucide-react";
 import { AnimatePresence, useMotionValueEvent, useScroll } from "motion/react";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export const BackButton = () => {
   const router = useRouter();
@@ -20,6 +20,10 @@ export const BackButton = () => {
     }
   });
 
+  useEffect(() => {
+    setShown(false);
+  }, []);
+
   return (
     <AnimatePresence>
       {shown && (
@@ -30,10 +34,7 @@ export const BackButton = () => {
           transition={{ duration: 0.2 }}
           className="top-4 left-4 p-2 fixed rounded-full bg-neutral-900/10"
           enableTap
-          onClick={() => {
-            router.back();
-            setShown(false);
-          }}
+          onClick={router.back}
         >
           <ChevronLeftIcon />
         </SpatialMaterial>
