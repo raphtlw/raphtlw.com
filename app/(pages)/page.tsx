@@ -1,9 +1,11 @@
 import profile from "@/app/images/profile.jpeg";
 
 import { PreviewLink } from "@/app/(pages)/components";
+import { SpotifyNowPlaying } from "@/components/misc/spotify";
 import { TappableLink } from "@/components/spatial/button";
 import { ExternalLink } from "@/components/spatial/link";
 import { SpatialMaterial } from "@/components/spatial/material";
+import { Skeleton } from "@/components/ui/skeleton";
 import { MobileOnly } from "@/components/utils/mobile-only";
 import { client } from "@/sanity/lib/client";
 import { LINKS_QUERY } from "@/sanity/lib/queries";
@@ -11,6 +13,7 @@ import { LINKS_QUERYResult } from "@/sanity/types";
 import { ArrowUpRight, LinkIcon, NotebookPenIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { Suspense } from "react";
 
 export default async function Page() {
   const links = await client.fetch<LINKS_QUERYResult>(LINKS_QUERY);
@@ -94,6 +97,14 @@ export default async function Page() {
             <PreviewLink externalLink={link} key={link._id} />
           ))}
         </div>
+      </section>
+
+      <section className="px-8 md:max-w-3xl mx-auto mt-20">
+        <Suspense
+          fallback={<Skeleton className="h-[1.2em] w-[200px] rounded-full" />}
+        >
+          <SpotifyNowPlaying />
+        </Suspense>
       </section>
     </main>
   );
