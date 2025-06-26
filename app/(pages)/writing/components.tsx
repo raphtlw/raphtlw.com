@@ -68,7 +68,7 @@ export type VideoPlayerProps = ComponentProps<"video"> & {
 };
 
 export const VideoPlayer = ({ containerProps, ...props }: VideoPlayerProps) => {
-  const [loaded, setLoaded] = useState(true);
+  const [loaded, setLoaded] = useState(false);
 
   const materialVariants: Variants = {
     hidden: {
