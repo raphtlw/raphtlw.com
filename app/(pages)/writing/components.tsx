@@ -69,6 +69,7 @@ export type VideoPlayerProps = ComponentProps<"video"> & {
 
 export const VideoPlayer = ({ containerProps, ...props }: VideoPlayerProps) => {
   const [loaded, setLoaded] = useState(false);
+  const [playing, setPlaying] = useState(false);
 
   const materialVariants: Variants = {
     hidden: {
@@ -99,7 +100,7 @@ export const VideoPlayer = ({ containerProps, ...props }: VideoPlayerProps) => {
       )}
       variants={materialVariants}
       initial="hidden"
-      animate={loaded ? "show" : "hidden"}
+      animate={loaded && playing ? "show" : "hidden"}
     >
       {!loaded && <Skeleton className="absolute inset-0 rounded-2xl" />}
       <video
@@ -109,6 +110,7 @@ export const VideoPlayer = ({ containerProps, ...props }: VideoPlayerProps) => {
         playsInline
         preload="auto"
         onLoadedData={() => setLoaded(true)}
+        onPlaying={() => setPlaying(true)}
         {...props}
         className={cn("rounded-lg pointer-events-none", props.className)}
       />
