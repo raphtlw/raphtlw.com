@@ -21,7 +21,7 @@ export const PreviewLink = ({ externalLink }: PreviewLinkProps) => {
     },
     show: {
       y: 0,
-      filter: "none",
+      filter: "blur(0px)",
       opacity: 1,
       scale: 1,
       transition: {
