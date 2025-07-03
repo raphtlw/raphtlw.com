@@ -118,14 +118,15 @@ export const VideoPlayer = ({ containerProps, ...props }: VideoPlayerProps) => {
   );
 };
 
-export type ImageProps = NextImageProps;
+export type ImageProps = ComponentProps<"img">;
 
-export const Image = ({ ...props }: ImageProps) => {
-  const [width, height] = useMemo(() => {
+export const Image = ({ src, alt, width, height, className }: ImageProps) => {
+  // Try optimizing image
+  const nextImage = useMemo<NextImageProps | undefined>(() => {
     // Parse out the source. If we can get the dimensions from the URL,
     // it will be easier to use this component in the future.
-    if (typeof props.src === "string") {
-      const url = new URL(props.src);
+    if (typeof src === "string") {
+      const url = new URL(src);
       if (url.host === "cdn.sanity.io") {
         const segments = url.pathname.split("/");
         const lastSegment = segments[segments.length - 1];
@@ -133,27 +134,43 @@ export const Image = ({ ...props }: ImageProps) => {
         const lastFilenamePart = filenameParts[filenameParts.length - 1];
         const extParts = lastFilenamePart.split(".");
         const [width, height] = extParts[0].split("x");
-        return [parseInt(width), parseInt(height)] as const;
+        return {
+          src,
+          alt,
+          width: parseInt(width),
+          height: parseInt(height),
+        } as NextImageProps;
       }
     }
-
-    return [props.width, props.height] as const;
-  }, [props.src]);
+  }, [src, alt]);
 
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <NextImage {...props} width={width} height={height} />
+        {nextImage ? (
+          <NextImage {...nextImage} />
+        ) : (
+          <img src={src} alt={alt} width={width} height={height} />
+        )}
       </DialogTrigger>
       <DialogContent>
-        <DialogTitle>{props.alt}</DialogTitle>
+        <DialogTitle>{alt}</DialogTitle>
         <div className="relative h-[calc(100vh-220px)] w-full overflow-clip rounded-md bg-transparent shadow-md">
-          <NextImage
-            src={props.src}
-            alt={props.alt}
-            fill
-            className={cn("h-full w-full object-contain", props.className)}
-          />
+          {nextImage ? (
+            <NextImage
+              {...nextImage}
+              fill
+              className={cn("h-full w-full object-contain", className)}
+            />
+          ) : (
+            <img
+              src={src}
+              alt={alt}
+              width={width}
+              height={height}
+              className={cn("h-full w-full object-contain", className)}
+            />
+          )}
         </div>
       </DialogContent>
     </Dialog>

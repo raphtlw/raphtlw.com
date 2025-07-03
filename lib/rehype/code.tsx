@@ -4,22 +4,13 @@ import {
   MATERIAL_BORDER,
   SpatialMaterial,
 } from "@/components/spatial/material";
-import { ClientOnly } from "@/components/utils/client-only";
 import { cn } from "@/lib/utils";
 import { CopyCheckIcon, CopyIcon } from "lucide-react";
 import { ComponentPropsWithoutRef, useEffect, useRef, useState } from "react";
 
 export type CodeBlockProps = ComponentPropsWithoutRef<"div">;
 
-export const CodeBlock = (props: CodeBlockProps) => {
-  return (
-    <ClientOnly>
-      <Inner {...props} />
-    </ClientOnly>
-  );
-};
-
-const Inner = ({ children, ...props }: CodeBlockProps) => {
+export const CodeBlock = ({ children, ...props }: CodeBlockProps) => {
   const ref = useRef<HTMLDivElement | null>(null);
   const [copied, setCopied] = useState(false);
 

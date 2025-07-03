@@ -1,3 +1,4 @@
+import { Image } from "@/app/(pages)/writing/components";
 import { ExternalLink } from "@/components/spatial/link";
 import { CodeBlock } from "@/lib/rehype/code";
 import type { MDXComponents } from "mdx/types";
@@ -10,6 +11,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
       </ExternalLink>
     ),
     figure: CodeBlock,
+    img: Image,
     ...components,
   };
 }

@@ -40,7 +40,7 @@ Fortunately these days, we have things like OpenAI, Hugging Face, and LangChain 
 
 The biggest technical achievement from this project is how it processes video messages.
 
-![](https://miro.medium.com/v2/resize:fit:1400/1*-goPY__Yp_SRWiDivANqsA.png)
+![Multimodal Architecture Diagram](https://miro.medium.com/v2/resize:fit:1400/1*-goPY__Yp_SRWiDivANqsA.png)
 
 > From [Multimodal Large Language Models (MLLMs) transforming Computer Vision](https://medium.com/@tenyks_blogger/multimodal-large-language-models-mllms-transforming-computer-vision-76d3c5dd267f)
 
@@ -68,13 +68,13 @@ Relying on 2 big ideas:
 
 As soon as you open the camera app, the image sensor is already capturing frames into a buffer in a fast on-chip memory. When the shutter button is pressed, you tell the chip to save the buffer. The ISP freezes the ring buffer, copies it to the CPU for processing, and continues running the buffer.
 
-![](https://www.nxrte.com/wp-content/uploads/2022/11/640-25.png)
+![Frame buffer visualisation](https://www.nxrte.com/wp-content/uploads/2022/11/640-25.png)
 
 > Taken from [图像处理 &bull; 实时互动网](https://www.nxrte.com/jishu/5020.html)
 
 Some code is run to extract the clearest frames in the buffer. This is done using an algorithm known as laplacian variance, which is a pre-defined 3x3 matrix that's used to calculate the degree of rapid intensity change in an image (scanning through the entire image). This allows the camera to filter out the images with the sharpest edges and least amount of blur.
 
-![](https://cvexplained.wordpress.com/wp-content/uploads/2020/08/image-20.png)
+![Computer vision explained](https://cvexplained.wordpress.com/wp-content/uploads/2020/08/image-20.png)
 
 > Taken from [cvexplained.wordpress.com](https://cvexplained.wordpress.com/2020/08/16/blur-detection/)
 
@@ -82,7 +82,7 @@ To understand how it works, it involves logic and matrix multiplication but esse
 
 A blur metric is computed on each frame, and compiled. At the end of the frame buffer, only the frames with the least amount of blur are included in the final calculation. The frame with the highest “sharpness” score—and usually best exposure/histogram gets promoted as "the" shot. On some phones, it's literally "pick one" and on others they may include the best frames for features like "top shot" or "live photo" (found on Pixels and iPhones)
 
-![](https://www.sony-semicon.com/files/62/t-22_6_HDR_04_en.png)
+![HDR visualisation](https://www.sony-semicon.com/files/62/t-22_6_HDR_04_en.png)
 
 > Taken from [High Dynamic Range (HDR) Technology for Mobile](https://www.sony-semicon.com/en/technology/mobile/hdr.html)
 
@@ -90,7 +90,7 @@ The resulting frames are then stabilized and fused together, to create the best 
 
 Full "still-photo" pipeline on the chosen/merged frame(s) all happen on the ISP.
 
-![](https://10xengineers.ai/wp-content/uploads/Group-38295-min.png)
+![Image signal processing pipeline](https://10xengineers.ai/wp-content/uploads/Group-38295-min.png)
 
 > Taken from [Image Signal Processing](https://10xengineers.ai/image-signal-processing/)
 
@@ -98,7 +98,7 @@ Demosaic raw Bayer data → white balance → lens-shading correction → tone-m
 
 This all happens in the ISP (Image Signal Processor) or on a dedicated NPUs/ISP pipelines for sub-100 ms turnaround.
 
-![](https://github.com/cruxopen/openISP/raw/master/images/Image%20Signal%20Processor.png)
+![Image signal processing pipeline](https://github.com/cruxopen/openISP/raw/master/images/Image%20Signal%20Processor.png)
 
 > Taken from [Open Image Signal Processor (openISP)](https://github.com/cruxopen/openISP)
 

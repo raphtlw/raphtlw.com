@@ -4,39 +4,9 @@ import {
   SpatialMaterial,
   SpatialMaterialProps,
 } from "@/components/spatial/material";
-import { ClientOnly } from "@/components/utils/client-only";
 import { cn } from "@/lib/utils";
 import { useDraftModeEnvironment } from "next-sanity/hooks";
 import { useRouter } from "next/navigation";
-import { useMediaQuery } from "usehooks-ts";
-
-export type LaunchAdminButtonProps = SpatialMaterialProps;
-
-export const LaunchAdminButton = (props: SpatialMaterialProps) => {
-  return (
-    <ClientOnly>
-      <Inner {...props} />
-    </ClientOnly>
-  );
-};
-
-export const Inner = ({ className, ...props }: SpatialMaterialProps) => {
-  const isDesktop = useMediaQuery("(min-width: 768px)");
-
-  if (isDesktop) {
-    return (
-      <SpatialMaterial
-        className={cn("rounded-l-full px-4 py-2 -mr-1", className)}
-        onClick={() => window.open("/studio", "_blank")}
-        reactToMouse
-        enableTap
-        {...props}
-      >
-        Open Sanity
-      </SpatialMaterial>
-    );
-  }
-};
 
 export type DisableDraftModeProps = SpatialMaterialProps;
 

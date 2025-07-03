@@ -1,7 +1,6 @@
 "use client";
 
 import { HoverEffect } from "@/components/spatial/hover";
-import { ClientOnly } from "@/components/utils/client-only";
 import { cn } from "@/lib/utils";
 import {
   HTMLMotionProps,
@@ -22,15 +21,7 @@ export type SpatialMaterialProps = HTMLMotionProps<"div"> &
     enableTap?: boolean;
   }>;
 
-export const SpatialMaterial = (props: SpatialMaterialProps) => {
-  return (
-    <ClientOnly>
-      <Inner {...props} />
-    </ClientOnly>
-  );
-};
-
-const Inner = ({
+export const SpatialMaterial = ({
   children,
   reactToMouse,
   enableTap,
