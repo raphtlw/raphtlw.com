@@ -21,7 +21,17 @@ export type SpatialMaterialProps = HTMLMotionProps<"div"> &
     enableTap?: boolean;
   }>;
 
-export const SpatialMaterial = ({
+export const SpatialMaterial = (props: SpatialMaterialProps) => {
+  const [clientLoaded, setLoaded] = useState(false);
+
+  useEffect(() => {
+    setLoaded(true);
+  }, []);
+
+  return clientLoaded ? <Inner {...props} /> : <></>;
+};
+
+const Inner = ({
   children,
   reactToMouse,
   enableTap,
