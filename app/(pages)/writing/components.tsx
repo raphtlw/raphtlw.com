@@ -76,6 +76,7 @@ export const VideoPlayer = ({ containerProps, ...props }: VideoPlayerProps) => {
       y: 40,
       filter: "blur(16px)",
       opacity: 0,
+      scale: 0,
     },
     show: {
       y: 0,
