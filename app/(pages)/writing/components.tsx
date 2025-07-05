@@ -63,9 +63,10 @@ export const BackButton = () => {
   );
 };
 
-export type VideoPlayerProps = ComponentProps<"video"> & {
-  containerProps?: MotionProps & ComponentProps<"div">;
-};
+export type VideoPlayerProps = MotionProps &
+  ComponentProps<"video"> & {
+    containerProps?: MotionProps & ComponentProps<"div">;
+  };
 
 export const VideoPlayer = ({ containerProps, ...props }: VideoPlayerProps) => {
   const [loaded, setLoaded] = useState(false);
@@ -76,7 +77,7 @@ export const VideoPlayer = ({ containerProps, ...props }: VideoPlayerProps) => {
       y: 40,
       filter: "blur(16px)",
       opacity: 0,
-      scale: 0,
+      scale: 0.9,
     },
     show: {
       y: 0,
@@ -93,29 +94,31 @@ export const VideoPlayer = ({ containerProps, ...props }: VideoPlayerProps) => {
   };
 
   return (
-    <motion.div
+    <div
       {...containerProps}
       className={cn(
-        "overflow-hidden rounded-2xl relative",
+        "overflow-hidden rounded-2xl",
         containerProps && containerProps.className,
       )}
-      variants={materialVariants}
-      initial="hidden"
-      animate={loaded && playing ? "show" : "hidden"}
     >
-      {!loaded && <Skeleton className="absolute inset-0 rounded-2xl" />}
-      <video
+      {!(loaded || playing) && (
+        <Skeleton className="rounded-2xl w-full h-[400px]" />
+      )}
+      <motion.video
         autoPlay
         muted
         loop
         playsInline
         preload="auto"
+        variants={materialVariants}
+        initial="hidden"
+        animate={loaded || playing ? "show" : "hidden"}
         onLoadedData={() => setLoaded(true)}
         onPlaying={() => setPlaying(true)}
         {...props}
         className={cn("rounded-lg pointer-events-none", props.className)}
       />
-    </motion.div>
+    </div>
   );
 };
 
