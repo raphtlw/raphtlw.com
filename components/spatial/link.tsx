@@ -25,7 +25,7 @@ export const ExternalLink = ({
       <motion.span
         initial="initial"
         whileHover="hover"
-        className={cn("md:inline-flex sm:hidden items-center", className)}
+        className={cn("hidden md:inline-flex items-center", className)}
       >
         <StaggeredText reactToMouse>{children}</StaggeredText>
         {icon && (
@@ -60,7 +60,7 @@ export const ExternalLink = ({
           damping: 50,
         }}
         className={cn(
-          "sm:inline-flex md:hidden items-center touch-manipulation",
+          "inline-flex md:hidden items-center touch-manipulation",
           className,
         )}
       >
