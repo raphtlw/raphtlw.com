@@ -116,7 +116,11 @@ export const VideoPlayer = ({ containerProps, ...props }: VideoPlayerProps) => {
         onLoadedData={() => setLoaded(true)}
         onPlaying={() => setPlaying(true)}
         {...props}
-        className={cn("rounded-lg pointer-events-none", props.className)}
+        className={cn(
+          "rounded-lg pointer-events-none",
+          !(loaded || playing) && "hidden",
+          props.className,
+        )}
       />
     </div>
   );
