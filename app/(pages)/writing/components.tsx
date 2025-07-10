@@ -151,20 +151,21 @@ export const Image = ({ src, alt, width, height, className }: ImageProps) => {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <div className="inline-flex h-full">
+        <span className="inline-flex h-full">
           {nextImage ? (
             <NextImage {...nextImage} />
           ) : (
             <img src={src} alt={alt} width={width} height={height} />
           )}
-        </div>
+        </span>
       </DialogTrigger>
       <DialogContent>
         <DialogTitle>{alt}</DialogTitle>
         <div className="relative h-[calc(100vh-220px)] w-full overflow-clip rounded-md bg-transparent shadow-md">
           {nextImage ? (
             <NextImage
-              {...nextImage}
+              src={nextImage.src}
+              alt={nextImage.alt}
               fill
               className={cn("h-full w-full object-contain", className)}
             />
