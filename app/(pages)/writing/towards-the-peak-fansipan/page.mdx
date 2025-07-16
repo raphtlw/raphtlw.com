@@ -1,81 +1,210 @@
 import { LinkIcon } from 'lucide-react'
 import { TappableLink } from '@/components/spatial/button'
 import { Image, VideoPlayer } from '@/app/(pages)/writing/components'
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel"
 
 
 
-# Towards the peak: Mount Fansipan
+# Towards the Peak: Mount Fansipan
 
-26 June 2025
+16 July 2025
+
+When I first sat down to write this, I was not sure how to begin.
+This trip was not life-changing. It was not particularly dramatic. But it mattered.
+It still fills my mind days later, and if you are reading this, you are probably:
+
+- thinking of visiting Sapa and wondering if Fansipan is worth the climb
+- already preparing for the trek and looking for what to expect
+- or maybe, like me, you have already done it and you just want to remember
+
+This is not a guidebook. It is simply my experience, shared the way I would over tea, without filters.
+If something here helps you plan or reflect, I am glad. If you need more info, feel free to reach out.
 
 <VideoPlayer src="https://cdn.sanity.io/media-libraries/ml7E2FKaGXGN/files/a13961863cb7422378daf7d6e46eddb54735ef10.mp4" />
 
-When beginning to write this I just wanted to sit down and share my raw thoughts and feelings from this climb. It wasn't life changing, but I believe it is a good experience that would be beneficial for these 3 groups of people:
+---
 
-- people who are looking to start travelling, unsure of where to go
-- people who are planning for their trip, with mount fansipan in the itinerary
-- people who have conquered the mountain, and wonder how the experience was different for others.
+## What is Mount Fansipan?
 
-Therefore, this is just going to be a post where I share my experience. Feel free to reach out if you need anything!
+Mount Fansipan sits at 3,143 meters above sea level – the highest peak in Vietnam and the entire Indochina region.
+Locally it is called Phan Xi Păng. It is part of the Hoàng Liên Sơn range in Lào Cai province, just outside Sapa.
 
-    <pre>Thursday, 27 March</pre>
+In recent years most tourists reach the summit by cable car. It is fast, convenient, and impressive.
+But if you choose to hike instead, the experience feels different: the air is heavier, the mornings sharper, and the memories more lasting.
 
-Woke up at 7 am, had breakfast and headed down to the Hoang Lien national park.
+<VideoPlayer src="https://cdn.sanity.io/media-libraries/ml7E2FKaGXGN/files/4b0d425b4720b8c6a627acbc2138447eb275a916.mp4" />
 
-{/* ![Breakfast]() */}
+---
 
-In order to hike to Phang Xi Pang, there are 3 trails that lead you to the summit:
+## The Trails to Mount Fansipan
 
-### Tram Ton Trail
+There are three main routes, each with pros and challenges:
 
-The Tram Ton trail starts near Vietnam's highest mountain pass, Tram Ton Pass (also called Heaven's Gate), at about 1,850 meters above sea level. This is the most commonly used and accessible trail, especially for guided hikes. It's around 11 kilometers to the summit, with a mix of gradual and undulating sections, especially near the end. Most groups do it over two days with a night camp at 2,800 meters, though experienced hikers can complete it in one. This is the trail we and many others used for our descent from Fansipan.
+- Tram Ton Trail
+  • Start at 1,850 m (Heaven’s Gate)
+  • 11 km to summit, usually done in 2 days with an overnight at 2,800 m
+  • Staircases, man-made paths, broad tracks
 
-### Sin Chai Trail
+- Sin Chai Trail
+  • Start at 1,380 m at Sin Chai village
+  • 9 km but very steep and overgrown
+  • Not for beginners
 
-Beginning at the Hmong village of Sin Chai (1,380 meters), this is the shortest but steepest and most rugged route. It's the least used and parts of the trail are heavily overgrown, making it easy to lose the path. Though challenging, it doesn't require ropes or special climbing gear. It's roughly 9 kilometers long and known for being the most difficult and wild.
+- Cat Cat Trail
+  • Start at 1,300 m at Cat Cat village
+  • Longest but very scenic
+  • Gradual in places, still physically exhausting
 
-### Cat Cat Trail
+I hiked up via the Cat Cat Trail and descended on the Tram Ton Trail.
 
-This trail starts from Cat Cat village near Sapa, at about 1,300 meters elevation, and is the longest route to the summit. While it's also steep and demanding, it's considered safer than the Sin Chai trail. However, there's limited information available and it's less frequently hiked.
+<Carousel opts={{ loop: true }}>
+    <CarouselContent className='items-center'>
+        <CarouselItem>
+            <Image
+            src="https://statics.vinpearl.com/tram-ton-pass-07_1682854761.jpg"
+            alt="Tram Ton Pass"
+            className="rounded-lg not-prose"
+            />
+        </CarouselItem>
 
-Our starting point was from Hoang Lien National Park, which starts us from an altitude of ~1,800 meters.
+        <CarouselItem>
+            <Image
+            src="https://sapanomad.com/wp-content/uploads/Location-of-Sin-Chai-Village.jpg"
+            alt="Sin Chai Village"
+            className="rounded-lg not-prose"
+            />
+        </CarouselItem>
 
-We were all happy and excited to start the hike, fearless, while also feeling a little nervous for what was about to come.
+        <CarouselItem>
+            <Image
+            src="https://lilystravelagency.com/wp-content/uploads/2022/09/sapa-duong-7.jpg"
+            alt="Sapa Duong 7"
+            className="rounded-lg not-prose"
+            />
+        </CarouselItem>
+    </CarouselContent>
+</Carousel>
 
-The rocks were not as slippery as Mount Rinjani, which meant the way up was easier as we got closer to the top.
+## Setting Off
 
-The problem with Mount Fansipan is while the altitude difference is little, the total elevation gain is a lot higher than 3000m because the route upwards isn't just _upwards_. It's a long spaghetti of windy ups and downs. So maybe you have climbed for an hour but you may just only gain 100m in elevation. I wouldn't say it's an encouraging route, at all.
+We woke up early on Thursday, 27 March, had breakfast at Sapa Yen Hotel, and prepared to enter Hoàng Liên National Park.
+Our guide Minh arrived at 9 am. He is H’Mong (Miao) ethnic, grew up in a nearby village, and learned his tribe’s language at home before Vietnamese in school. His uncle served as our porter.
 
-The temperature was still alright (16 degrees) at the national park so we didn't feel the need to wear a jacket, in fact we felt hot while making the ascend.
+Each of us carried:
+- a wooden hiking stick
+- a bottle of water
+- a heavy sense of anticipation
 
-Mount Fansipan isn't a smooth upwards climb. There are tons of different sized rocks, and slippery moss which might make it harder to climb. Along the side of the way up you also see streams of spring water flowing throughout coming from the crevices of the many fissure springs.
+The sun had not broken past the clouds. The air was cool, about 16 °C, as we started climbing.
 
-The difference between Rinjani and Fansipan is, the level and amount of slopes going up and down. There are more of these I encountered when climbing Fansipan.
+---
 
-There are no toilets along the way so if you need to relieve yourself you need to use the bushes.
+## The Climb
 
-I used the time we took to rest to put on my sunglasses and neck warmer. The neck warmer will help you the most when you feel cold, because that's where blood flows the most throughout the body.
+Fansipan never offers a gentle slope. The trail dips and climbs through thick tree lines, mossy rocks, root-carved steps, sudden ascents, and more sudden descents.
 
-During the hike, our guide introduced himself as Minh, a Hmong speaking person who is part of the Miao ethnic group, the largest ethnic minority group in China.
+One of the first things I noticed was how loud silence can get. No traffic, no phone beeps, no hum of modern life – just birds, wind, water, breath, and boots.
 
-The H'Mong are the largest ethnic minority group in Hoang Lien National Park. You will also encounter other ethnic communities such as the Dao and Day. Starting a conversation with them is often easy because many of them speak English well. They have learned different languages through interactions with tourists or from school. By getting to know them, you may hear fascinating stories, enjoy a shared meal, and experience genuine hospitality if they invite you into their home. Even spending just one day with them can offer a memorable and meaningful cultural experience.
+<VideoPlayer src="https://cdn.sanity.io/media-libraries/ml7E2FKaGXGN/files/9ebd61cee1a9dd5743130f53f28ad03ba6e9c0a9.mp4" muted={false} onlyWhenVisible />
 
-Together with him as a porter was his uncle, also from the same ethnic tribe as himself.
+We passed cold mountain streams flowing through jagged fissures. The water was so clear you could see each shimmer in the ripple. The soil shifted from dry crunch to slick moss. Near springs it was slippery, and I leaned on my stick for balance.
 
-We were handed a hiking stick for each of the three of us and each a large bottle of water.
+I remember one moment clearly. I looked back expecting a grand view, but the forest had already swallowed it. It was just another memory softened by mist.
 
-Along the way up, we saw water buffalos, wild vegetables growing on the raw soil of the national park, and the amazing streams of spring water flowing down from the many fissure springs.
+{/* IMAGE: hiker looking back into misty forest */}
 
-They both kept speaking to each other in some sort of dialect. At first I thought it was just Vietnamese spoken a different way, but it turns out as I talked to him more he explained in Vietnam there are 54 different tribes, and his family migrated from China when he was 4.
+---
 
-He learned the Hmong language from his parents (like teaching simple words like eat dinner, etc etc) first before spending 12 years learning the Vietnamese language in school.
+## The People
 
-The ethnic locals in Vietnam have their own language but they learn the national language so they can speak to each other with a common language.
+Along the trail we met other guides and porters. Many were on phones, coordinating logistics with a signal stronger than back in Sapa town.
 
-On the way up we saw the cable car, which the guide explained its construction was completed in 2013 and takes only about 20 minutes from Fansipan to Sapa Central
+There was something reassuring about that invisible network of people watching over each other through signal, tradition, and routine.
 
-Every day the cable car runs from 7:30 AM to 3:30 PM.
+Minh spoke mostly with his uncle in their dialect. When I asked, he said Vietnam has 54 ethnic groups, each with its own tongue, identity, and story. He said it as a simple fact, no pride or complaint.
 
-Along the way up we saw other guides part of the group which maintains the hiking trips for tourists. They all keep in touch using their phones, calling each other when necessary.
+---
 
-We approached the first base camp at 12:45 PM and ate lunch there.
+## Lunch at 2,400 m
+
+At around 12:45 pm we reached our midday stop. Lunch was wrapped in banana leaves:
+
+- colored sticky rice
+- slices of mango
+- fried fish cakes
+- lime and salt for seasoning
+
+We drank spring water captured directly from nearby flows. No purifiers, no plastic bottles – just cold, mineral-rich water fresh from Fansipan itself.
+
+{/* IMAGE: banana-leaf lunch spread */}
+
+---
+
+## Steamboat in the Sky
+
+By late afternoon we reached camp 2 at 2,800 m. The wind had picked up and fog curled around our clothing and eyes. There was no electricity, only firelight.
+
+Minh’s uncle cooked outdoors over charcoal in metal pots. What looked like plain soup became a full steamboat meal: bamboo shoots, mushrooms, pork, mystery greens, and local herbs. They poured me a glass of homemade rice wine.
+
+It was not just the flavor but the setting that struck me. Sipping that basil-powered broth, I could taste the care behind every ingredient.
+
+That night a thin orange cat slipped into our cabin. At some point I woke to find it curled against my sleeping bag. It stayed until dawn.
+
+{/* IMAGE: night-camp steamboat and cat */}
+
+---
+
+## Summit Day
+
+We woke at 4:30 am. It was dark and cold outside. No talking, just slow movement: zip up, step out, breathe.
+
+The final push was all stairs and ladders – carved stone steps alternating with metal ramps. We passed a giant Buddha statue and felt how close we were to something sacred.
+
+By 6 am we reached the summit. The fog parted just enough to reveal the triangular monument marking the highest point in Southeast Asia. The sky was matte gray and the wind was strong but calm.
+
+We did not scream or shout. We just stood, bodies catching breath, souls catching stillness. I opened the soju I had carried up and took a sip – still cold from the mountain.
+
+{/* IMAGE: summit monument and soju sip */}
+
+---
+
+## The Descent
+
+We descended on the Tram Ton Trail. It was less wild but still rough. Midway Minh and his uncle froze at a rustle in the bushes. They returned holding a bamboo rat trapped in a plastic bucket. It hissed in anger. Minh said it would become dinner.
+
+After that, the trail felt quieter. Each step was lighter, each silence deeper.
+
+{/* IMAGE: bamboo rat in bucket */}
+
+---
+
+## Final Thoughts
+
+Mount Fansipan did not offer a grand revelation but it gave me small, meaningful reminders:
+
+- that presence can be louder than words
+- that silence has different shades
+- that reaching a peak is more about everything you went through to get there
+
+On the outside we climbed a mountain.
+Inside something softened and returned to stillness.
+
+---
+
+## Practical Details
+
+- Trail used for ascent – Cat Cat Trail via Hoàng Liên National Park
+- Trail used for descent – Tram Ton Trail
+- Guide – Local H’Mong guide, one of the best decisions we made
+- Accommodation – Sapa Yen Hotel and My Gallery Boutique Hotel
+- Must-have gear – waterproof hiking shoes, trekking poles, thermal base layer, gloves, headlamp, neck warmer
+- Total elevation gain – about 3,000 m due to constant up and down terrain
+- Cable car (if preferred) – available 7:30 am to 3:30 pm daily, reaches summit in about 20 minutes
+
+If you are planning to hike Mount Fansipan, feel free to reach out.

@@ -20,7 +20,8 @@ import {
 } from "motion/react";
 import { default as NextImage, ImageProps as NextImageProps } from "next/image";
 import { usePathname, useRouter } from "next/navigation";
-import { ComponentProps, useEffect, useMemo, useState } from "react";
+import { ComponentProps, useEffect, useMemo, useRef, useState } from "react";
+import { useIntersectionObserver } from "usehooks-ts";
 
 export const BackButton = () => {
   const router = useRouter();
@@ -66,11 +67,31 @@ export const BackButton = () => {
 export type VideoPlayerProps = MotionProps &
   ComponentProps<"video"> & {
     containerProps?: MotionProps & ComponentProps<"div">;
+    onlyWhenVisible?: boolean;
   };
 
-export const VideoPlayer = ({ containerProps, ...props }: VideoPlayerProps) => {
+export const VideoPlayer = ({
+  containerProps,
+  onlyWhenVisible,
+  ...props
+}: VideoPlayerProps) => {
+  const videoRef = useRef<HTMLVideoElement>(null);
+
   const [loaded, setLoaded] = useState(false);
   const [playing, setPlaying] = useState(false);
+
+  const { isIntersecting, ref } = useIntersectionObserver({ threshold: 0.5 });
+
+  useEffect(() => {
+    if (!videoRef.current) return;
+    if (onlyWhenVisible) {
+      if (isIntersecting) {
+        videoRef.current.play();
+      } else {
+        videoRef.current.pause();
+      }
+    }
+  }, [isIntersecting, videoRef.current]);
 
   const materialVariants: Variants = {
     hidden: {
@@ -95,6 +116,7 @@ export const VideoPlayer = ({ containerProps, ...props }: VideoPlayerProps) => {
 
   return (
     <div
+      ref={ref}
       {...containerProps}
       className={cn(
         "overflow-hidden rounded-2xl",
@@ -105,6 +127,7 @@ export const VideoPlayer = ({ containerProps, ...props }: VideoPlayerProps) => {
         <Skeleton className="rounded-2xl w-full h-[400px]" />
       )}
       <motion.video
+        ref={videoRef}
         autoPlay
         muted
         loop
@@ -118,7 +141,7 @@ export const VideoPlayer = ({ containerProps, ...props }: VideoPlayerProps) => {
         {...props}
         className={cn(
           "rounded-lg pointer-events-none",
-          !(loaded || playing) && "hidden",
+          !(loaded || playing) && "h-0 overflow-clip",
           props.className,
         )}
       />
@@ -157,15 +180,25 @@ export const Image = ({ src, alt, width, height, className }: ImageProps) => {
       <DialogTrigger asChild>
         <span className="inline-flex h-full">
           {nextImage ? (
-            <NextImage {...nextImage} />
+            <NextImage
+              style={{ transform: "translate3d(0, 0, 0)" }}
+              className={className}
+              {...nextImage}
+            />
           ) : (
-            <img src={src} alt={alt} width={width} height={height} />
+            <img
+              src={src}
+              alt={alt}
+              width={width}
+              height={height}
+              className={className}
+            />
           )}
         </span>
       </DialogTrigger>
       <DialogContent>
         <DialogTitle>{alt}</DialogTitle>
-        <div className="relative h-[calc(100vh-220px)] w-full overflow-clip rounded-md bg-transparent shadow-md">
+        <div className="overflow-clip rounded-md bg-transparent shadow-md">
           {nextImage ? (
             <NextImage
               src={nextImage.src}

@@ -31,12 +31,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={cn(
-        hankenSans.variable,
-        jetbrainsMono.variable,
-        "antialiased",
-        "scroll-smooth focus:scroll-auto",
-      )}
+      className={cn(hankenSans.variable, jetbrainsMono.variable, "antialiased")}
     >
       <head>
         <meta name="viewport" content="width=device-width" />
