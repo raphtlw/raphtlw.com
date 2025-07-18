@@ -4,6 +4,7 @@ import { SpatialMaterial } from "@/components/spatial/material";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
@@ -200,7 +201,10 @@ export const Image = ({ src, alt, width, height, className }: ImageProps) => {
       <DialogContent
         className={cn("p-0 h-fit w-full md:max-h-[calc(100vh-216px)]")}
       >
-        <DialogTitle className="sr-only">{alt}</DialogTitle>
+        <DialogTitle className="sr-only">
+          raphtlw.com blog post image
+        </DialogTitle>
+        <DialogDescription className="sr-only">{alt}</DialogDescription>
         <div className="overflow-clip rounded-md bg-transparent shadow-md">
           {nextImage ? (
             <NextImage
