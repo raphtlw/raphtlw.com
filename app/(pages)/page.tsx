@@ -38,7 +38,7 @@ export default async function Page() {
 
             <div className="flex mt-4">
               <Link
-                href="mailto:hey@raphtlw.com"
+                href="mailto:hi@raphtlw.com"
                 className="flex flex-row items-center gap-4"
               >
                 <SpatialMaterial
