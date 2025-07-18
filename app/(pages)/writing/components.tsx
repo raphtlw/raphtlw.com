@@ -197,7 +197,7 @@ export const Image = ({ src, alt, width, height, className }: ImageProps) => {
           )}
         </span>
       </DialogTrigger>
-      <DialogContent className="h-fit md:h-[calc(100vh-300px)] md:min-w-[calc(100vw-400px)] p-0">
+      <DialogContent className="h-fit p-0 md:min-w-7xl">
         <DialogTitle className="sr-only">{alt}</DialogTitle>
         <div className="overflow-clip rounded-md bg-transparent shadow-md">
           {nextImage ? (
