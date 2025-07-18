@@ -464,55 +464,7 @@ Did I also mention _**agents that call other agents**_? They are entities that k
 
 ![Diagram that illustrates the agent architecture in this bot](https://cdn.sanity.io/media-libraries/ml7E2FKaGXGN/images/ae3e662339ca7ede36493f4badcf2b8f9bda4488-1296x778.png)
 
-Imagine a magical little café run entirely by cats. But these aren’t ordinary cats — each one is a specialist, trained to help you with specific tasks. This café is your computer, and these cats are your AI agents.
-
-🧁 1. Chef Whiskers – the Task Agent
-
-Chef Whiskers is great at baking the perfect cake. Give her a recipe or a goal (“make a chocolate soufflé”), and she’ll get straight to work, step by step, until your dessert is done.
-
-Like an AI agent executing a to-do list or solving a problem end-to-end.
-
-☕ 2. Barista Mittens – the Planning Agent
-
-Mittens doesn’t do the baking, but she’s a genius at organizing. If you ask her, “How can I plan a birthday party?”, she’ll gather the shopping list, schedule the timing, and assign tasks to the others.
-
-Like a planner agent who breaks down goals into smaller actions.
-
-📦 3. Runner Paws – the Action Agent
-
-Paws is fast. You tell her to deliver milk to Chef Whiskers or fetch more catnip tea, and she zips off and gets it done.
-
-Like an agent that interacts with the outside world or APIs.
-
-🧠 4. Professor Meowstein – the Memory Agent
-
-Old and wise, Meowstein remembers every customer who came in, what they liked, and where they sat. Ask her anything about the past and she’ll give you a purrcise answer.
-
-Like an agent storing and recalling long-term memory for better context.
-
-🎤 5. Host Luna – the Communication Agent
-
-Elegant and chatty, Luna greets every visitor, listens to their requests, and decides which cat should help. She’s the bridge between customers and the rest of the team.
-
-Like a front-end conversational agent that delegates to others.
-
-### How They Work Together
-
-Let’s say a customer walks in and says:
-
-“I want a customized birthday cupcake, with a card, and a delivery tonight.”
-
-	1.	Luna hears the request and alerts Mittens.
-	2.	Mittens creates a plan: Bake, write card, schedule delivery.
-	3.	Chef Whiskers bakes the cupcake.
-	4.	Runner Paws delivers it.
-	5.	Meowstein logs the order for future loyalty rewards.
-
-They all work together, quietly collaborating behind the scenes. You, the human, just sit back and enjoy your tea. 🍵
-
-![](https://cdn.sanity.io/media-libraries/ml7E2FKaGXGN/images/7b5427cfba9774c75ba91396736e7fa3a6acabb2-1365x1024.webp)
-
-These are now included in the architecture located under bot/agents.ts. It's a very cool concept, because not only do these AI models have the ability to call tools, they can also run other agents. For example, wouldn't it be nice if an excel file modification agent could run say, the schedule_message tool? This would allow the model to schedule messages to other "contacts" based on the contents of the excel spreadsheet. For instance, you want it to go over the guest list for a birthday party and send each one of them a custom email.
+It's a very cool concept, because not only do these AI models have the ability to call tools, they can also run other agents. For example, wouldn't it be nice if an excel file modification agent could run say, the schedule_message tool? This would allow the model to schedule messages to other "contacts" based on the contents of the excel spreadsheet. For instance, you want it to go over the guest list for a birthday party and send each one of them a custom email.
 
 There is now a task queue, which allows the bot to run longer tasks that require more time to complete. For now, there is only one task defined, the codex CLI. Once a run is complete, and the CLI has finished working with your project, it zips the entire project and sends it back to you.
 
