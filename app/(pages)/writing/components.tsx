@@ -32,7 +32,9 @@ export const BackButton = () => {
   const { scrollY } = useScroll();
   useMotionValueEvent(scrollY, "change", (latest) => {
     if (latest > 100) {
-      setShown(true);
+      if (history.length > 1) {
+        setShown(true);
+      }
     } else {
       setShown(false);
     }
