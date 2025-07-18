@@ -131,7 +131,6 @@ export const VideoPlayer = ({
       <motion.video
         ref={videoRef}
         autoPlay
-        muted
         loop
         playsInline
         preload="auto"
