@@ -199,7 +199,9 @@ export const Image = ({ src, alt, width, height, className }: ImageProps) => {
         </span>
       </DialogTrigger>
       <DialogContent
-        className={cn("p-0 h-fit w-full md:max-h-[calc(100vh-216px)]")}
+        className={cn(
+          "flex flex-col items-center justify-center p-0 h-fit w-full max-h-[calc(100vh-216px)]",
+        )}
       >
         <DialogTitle className="sr-only">
           raphtlw.com blog post image
