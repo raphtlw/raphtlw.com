@@ -1,10 +1,19 @@
 "use client";
 
 import { SpatialMaterial } from "@/components/spatial/material";
+import { StaggeredText } from "@/components/spatial/staggered-text";
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { cn } from "@/lib/utils";
 import { LINKS_QUERYResult } from "@/sanity/types";
+import Cal, { getCalApi } from "@calcom/embed-react";
 import { Variants } from "motion/react";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export type PreviewLinkProps = {
   externalLink: LINKS_QUERYResult[0];
@@ -64,5 +73,44 @@ export const PreviewLink = ({ externalLink }: PreviewLinkProps) => {
         ></video>
       </SpatialMaterial>
     </Link>
+  );
+};
+
+export type BookingSchedulerProps = {};
+
+export const BookingScheduler = ({}: BookingSchedulerProps) => {
+  useEffect(() => {
+    (async function () {
+      const cal = await getCalApi({ namespace: "15min" });
+      cal("ui", {
+        hideEventTypeDetails: false,
+        layout: "month_view",
+      });
+    })();
+  }, []);
+
+  return (
+    <Dialog>
+      <DialogTrigger asChild>
+        <div className="cursor-pointer">
+          🌱 &nbsp; book a call{" "}
+          <StaggeredText reactToMouse>with me</StaggeredText>
+        </div>
+      </DialogTrigger>
+      <DialogContent
+        showCloseButton={false}
+        className={cn(
+          "flex flex-col max-h-[calc(100vh-216px)] bg-none border-none shadow-none md:max-w-2xl lg:max-w-4xl",
+        )}
+      >
+        <DialogTitle className="sr-only">Hi</DialogTitle>
+        <Cal
+          namespace="15min"
+          calLink="raphw/15min"
+          style={{ width: "100%", height: "100%", overflow: "scroll" }}
+          config={{ layout: "month_view" }}
+        />
+      </DialogContent>
+    </Dialog>
   );
 };

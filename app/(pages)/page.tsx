@@ -1,6 +1,6 @@
 import profile from "@/app/images/profile.jpeg";
 
-import { PreviewLink } from "@/app/(pages)/components";
+import { BookingScheduler, PreviewLink } from "@/app/(pages)/components";
 import { SpotifyNowPlaying } from "@/components/misc/spotify";
 import { TappableLink } from "@/components/spatial/button";
 import { ExternalLink } from "@/components/spatial/link";
@@ -65,6 +65,9 @@ export default async function Page() {
             <ExternalLink href="https://t.me/raphtlw" icon>
               Telegram
             </ExternalLink>
+          </li>
+          <li>
+            <BookingScheduler />
           </li>
         </ul>
       </section>
