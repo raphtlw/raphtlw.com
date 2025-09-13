@@ -33,7 +33,7 @@ export const metadata: Metadata = {
     siteName: "Raphael Tang",
     images: [
       {
-        url: `/api/og?title=${encodeURIComponent("Raphael Tang - Fullstack Developer")}`,
+        url: `https://www.raphtlw.com/api/og?title=${encodeURIComponent("Raphael Tang - Fullstack Developer")}`,
         width: 1200,
         height: 630,
       },

@@ -37,7 +37,7 @@ export async function GET(request: Request) {
             display: "flex",
             flexDirection: "column",
             backgroundColor: "white",
-            backgroundImage: "url(http://localhost:3000/images/og.png)",
+            backgroundImage: "url(https://www.raphtlw.com/images/og.png)",
             fontFamily: "Instrument Serif",
           }}
           tw="px-10 py-12"
