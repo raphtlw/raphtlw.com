@@ -20,7 +20,31 @@ const jetbrainsMono = JetBrains_Mono({
 
 export const metadata: Metadata = {
   title: "raphtlw.com",
-  description: "Raphael's home page",
+  description:
+    "Experienced fullstack developer specializing in Next.js, React, and modern web technologies. Building scalable web applications and user experiences.",
+  keywords:
+    "fullstack developer, Next.js developer, React developer, web developer, JavaScript, TypeScript, TailwindCSS",
+  authors: [{ name: "Raphael Tang" }],
+  openGraph: {
+    title: "Raphael Tang - Fullstack Developer",
+    description:
+      "Experienced fullstack developer specializing in Next.js, React, and modern web technologies.",
+    url: "https://www.raphtlw.com",
+    siteName: "Raphael Tang",
+    images: [
+      {
+        url: `/api/og?title=${encodeURIComponent("Raphael Tang - Fullstack Developer")}`,
+        width: 1200,
+        height: 630,
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Raphael Tang - Fullstack Developer",
+    description:
+      "Experienced fullstack developer specializing in Next.js, React, and modern web technologies.",
+  },
 };
 
 export default function RootLayout({
