@@ -32,7 +32,6 @@ export default function Home() {
             陳樂宇
           </span>
         </div>
-
         <main className="flex flex-col gap-3">
           <p>
             Hello, I&apos;m a digital native, previously working for The Straits
@@ -42,7 +41,7 @@ export default function Home() {
 
           <p>
             My time was meaningfully spent working on 9 projects,{" "}
-            <Link className="underline" href="/portfolio">
+            <Link className="underline link-button" href="/portfolio">
               4 of which have been published so far.
             </Link>
           </p>
@@ -54,9 +53,17 @@ export default function Home() {
           interaction&emdash;design, playing the guitar, and rock climbing.*/}
           </p>
         </main>
-
         <LinkButton href="/cv">Copy of my CV</LinkButton>
-
+        <p>
+          You can email me at{" "}
+          <a
+            href="mailto:hi@raphtlw.com?subject=Hi"
+            className="underline link-button"
+          >
+            hi@raphtlw.com
+          </a>
+          .
+        </p>
         <div className="flex flex-row justify-between lg:hidden">
           <p>Swipe left to see my posts</p>
           <motion.div
@@ -74,9 +81,7 @@ export default function Home() {
             <CircleIcon />
           </motion.div>
         </div>
-
         <div className="flex-1"></div>
-
         <p className="font-sans text-sm dark:text-neutral-600 text-stone-400 font-light">
           This site does not contain AI generated content.
         </p>
@@ -116,7 +121,7 @@ export default function Home() {
           <p>
             For starters, I recommend checking out{" "}
             <LinkButton href="/posts/mount-fansipan-in-videos">
-              this post (fansipan)
+              this post
             </LinkButton>
           </p>
         </main>

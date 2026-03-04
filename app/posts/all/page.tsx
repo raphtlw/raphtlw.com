@@ -2,7 +2,7 @@ import Image from "@/components/image";
 import Link from "next/link";
 import { findPosts } from "./find";
 
-export default async function Page() {
+export default async function AllPage() {
   const posts = await findPosts();
 
   return (
