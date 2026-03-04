@@ -14,7 +14,7 @@ export default function Layout({
     <div
       className={cn(
         "grid grid-cols-1 md:place-items-center",
-        scrollSnap && "h-dvh overflow-y-scroll snap-y snap-mandatory",
+        scrollSnap && "min-h-screen overflow-y-scroll snap-y snap-mandatory",
         className,
       )}
     >
