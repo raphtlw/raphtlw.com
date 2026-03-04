@@ -11,7 +11,13 @@ export default function Layout({
   scrollSnap,
 }: LayoutProps) {
   return (
-    <div className={cn("grid grid-cols-1 md:place-items-center", className)}>
+    <div
+      className={cn(
+        "grid grid-cols-1 md:place-items-center",
+        scrollSnap && "h-dvh overflow-hidden",
+        className,
+      )}
+    >
       <article
         className={cn(
           "prose font-serif prose-lg dark:prose-invert prose-stone",
