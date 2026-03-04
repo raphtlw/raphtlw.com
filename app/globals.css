@@ -135,18 +135,30 @@
   body {
     @apply bg-background text-foreground;
   }
-  [lang="zh"] {
+
+  [lang="zh"],
+  [lang^="zh-"] {
     @apply font-cjk;
   }
+
   html {
     -webkit-tap-highlight-color: transparent;
     -webkit-user-select: text;
     user-select: text;
   }
+
   ::selection {
     background: oklch(0.67 0.185 35);
-    color: white;
+    background: color(display-p3 0.72 0.38 0.2);
+    background: oklch(0.67 0.185 35);
+    color: #fff;
   }
+
+  ::-moz-selection {
+    background: oklch(0.67 0.185 35);
+    color: #fff;
+  }
+
   a,
   button,
   input,
