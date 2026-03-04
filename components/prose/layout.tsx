@@ -23,7 +23,6 @@ export default function Layout({
           "prose font-serif prose-lg dark:prose-invert prose-stone",
           "prose-headings:font-headline prose-headings:font-extralight",
           "prose-a:in-prose-headings:font-bold",
-          "prose-h1:text-4xl",
           "prose-headings:scroll-mt-6 prose-h1:mt-6",
           "prose-figure:font-sans",
           "*:px-4 prose-ol:ml-4",
