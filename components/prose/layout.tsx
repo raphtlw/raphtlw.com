@@ -21,7 +21,8 @@ export default function Layout({
           "prose-headings:scroll-mt-6 prose-h1:mt-6",
           "prose-figure:font-sans",
           "*:px-4 prose-ol:ml-4",
-          scrollSnap && "h-dvh overflow-y-scroll snap-y snap-mandatory",
+          scrollSnap &&
+            "h-dvh overflow-y-scroll snap-y snap-mandatory overscroll-none",
         )}
       >
         {children}
