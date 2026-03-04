@@ -14,7 +14,7 @@ export default function Layout({
     <div
       className={cn(
         "flex flex-col md:items-center",
-        scrollSnap && "h-screen overflow-y-scroll snap-y snap-mandatory",
+        scrollSnap && "h-dvh overflow-y-scroll snap-y snap-mandatory",
         className,
       )}
     >
