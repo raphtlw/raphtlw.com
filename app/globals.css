@@ -148,15 +148,24 @@
   }
 
   ::selection {
-    background: oklch(0.67 0.185 35);
-    background: color(display-p3 0.72 0.38 0.2);
-    background: oklch(0.67 0.185 35);
+    background: #e06030;
     color: #fff;
   }
 
   ::-moz-selection {
-    background: oklch(0.67 0.185 35);
+    background: #e06030;
     color: #fff;
+  }
+
+  /* oklch only where natively supported — no display-p3 middleman */
+  @supports (background: oklch(0 0 0)) {
+    ::selection {
+      background: oklch(0.67 0.185 35 / 0.99);
+    }
+
+    ::-moz-selection {
+      background: oklch(0.67 0.185 35);
+    }
   }
 
   a,
