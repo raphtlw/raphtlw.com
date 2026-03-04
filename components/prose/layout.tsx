@@ -11,16 +11,23 @@ export default function Layout({
   scrollSnap,
 }: LayoutProps) {
   return (
-    <div className={cn("grid grid-cols-1 md:place-items-center", className)}>
+    <div
+      className={cn(
+        "grid grid-cols-1 md:place-items-center",
+        scrollSnap && "h-dvh overflow-y-scroll snap-y snap-mandatory",
+        className,
+      )}
+    >
       <article
         className={cn(
           "prose font-serif prose-lg dark:prose-invert prose-stone",
           "prose-headings:font-headline prose-headings:font-extralight",
           "prose-a:in-prose-headings:font-bold",
+          "prose-h1:text-4xl",
           "prose-headings:scroll-mt-6 prose-h1:mt-6",
           "prose-figure:font-sans",
-          "*:px-4 prose-ol:ml-4 *:not-prose-figure:mt-4",
-          scrollSnap && "h-dvh overflow-y-scroll snap-y snap-mandatory",
+          "*:px-4 prose-ol:ml-4",
+          scrollSnap && "snap-start snap-always",
         )}
       >
         {children}
