@@ -10,11 +10,11 @@ export const PostFrontmatter = z.object({
   image: z.string().optional(),
   imagealt: z.string().optional(),
   pubdate: z.string(),
+  readingTime: z.number(),
 });
 
 export const Post = z.object({
   slug: z.string(),
-  readingTime: z.number(),
   frontmatter: PostFrontmatter,
 });
 
@@ -22,13 +22,8 @@ export const processPost = async (slugPath: string) => {
   const file = await read(`./app/posts/${slugPath}`);
   matter(file);
 
-  const wordsPerMinute = 200;
-  const content = String(file.value);
-  const words = content.trim().split(/\s+/).length;
-
   return {
     slug: slugPath.replace(/(\/page)?\.mdx$/, ""),
-    readingTime: Math.ceil(words / wordsPerMinute),
     frontmatter: PostFrontmatter.parse(file.data.matter),
   };
 };

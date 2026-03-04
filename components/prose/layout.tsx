@@ -26,6 +26,7 @@ export default function Layout({
           "prose-headings:scroll-mt-6",
           "prose-figure:font-sans",
           "p-4",
+          scrollSnap && "snap-start snap-always",
         )}
       >
         {children}
