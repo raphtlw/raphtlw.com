@@ -1,31 +1,27 @@
-import { rehypePrettyCodeOptions } from "@/lib/rehype/pretty-code";
 import createMDX from "@next/mdx";
+import withPlaiceholder from "@plaiceholder/next";
 import type { NextConfig } from "next";
-import rehypePrettyCode from "rehype-pretty-code";
-import rehypeSlug from "rehype-slug";
-import remarkGfm from "remark-gfm";
-import remarkSmartyPants from "remark-smartypants";
 
 const nextConfig: NextConfig = {
-  // Configure `pageExtensions` to include markdown and MDX files
   pageExtensions: ["js", "jsx", "md", "mdx", "ts", "tsx"],
-
-  // Allow images to be loaded from Sanity CMS
   images: {
-    remotePatterns: [new URL("https://cdn.sanity.io/**")],
+    loader: "custom",
+    loaderFile: "./lib/image-loader.ts",
   },
+  cacheComponents: true,
+  cacheMaxMemorySize: 0,
 };
 
 const withMDX = createMDX({
   extension: /\.mdx?$/,
   options: {
-    remarkPlugins: [remarkGfm],
-    rehypePlugins: [
-      rehypeSlug,
-      [rehypePrettyCode, rehypePrettyCodeOptions],
-      remarkSmartyPants,
+    remarkPlugins: [
+      "remark-smartypants",
+      "remark-frontmatter",
+      "remark-mdx-frontmatter",
     ],
+    rehypePlugins: ["rehype-slug"],
   },
 });
 
-export default withMDX(nextConfig);
+export default withMDX(withPlaiceholder(nextConfig));

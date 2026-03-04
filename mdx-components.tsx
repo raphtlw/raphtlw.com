@@ -1,17 +1,15 @@
-import { Image } from "@/app/(pages)/writing/components";
-import { ExternalLink } from "@/components/spatial/link";
-import { CodeBlock } from "@/lib/rehype/code";
+import Layout from "@/components/prose/layout";
+import { ImageMedia, VideoMedia } from "@/components/prose/media";
 import type { MDXComponents } from "mdx/types";
+import { ArticleMeta } from "./components/prose/head";
 
-export function useMDXComponents(components: MDXComponents): MDXComponents {
-  return {
-    a: ({ href, children }) => (
-      <ExternalLink href={href} icon>
-        {children as string}
-      </ExternalLink>
-    ),
-    figure: CodeBlock,
-    img: Image,
-    ...components,
-  };
-}
+const components: MDXComponents = {
+  ImageMedia,
+  VideoMedia,
+  Layout,
+  ArticleMeta,
+};
+
+export const useMDXComponents = (): MDXComponents => {
+  return components;
+};
