@@ -62,8 +62,8 @@ const UploadResponseSchema = z.object({
 });
 
 type AuthorizeAccount = z.infer<typeof AuthorizeAccountSchema>;
-type UploadUrlResponse = z.infer<typeof UploadUrlSchema>;
 type UploadResponse = z.infer<typeof UploadResponseSchema>;
+type Manifest = Record<string, MediaMeta>;
 
 const IMAGE_EXTS = new Set([
   ".jpg",
@@ -93,52 +93,175 @@ const MIME_MAP = {
 
 function extname(p: string): string {
   const dot = p.lastIndexOf(".");
-  const slash = p.lastIndexOf("/");
-  return dot > slash ? p.slice(dot).toLowerCase() : "";
+  return dot > p.lastIndexOf("/") ? p.slice(dot).toLowerCase() : "";
 }
 
 function basename(p: string): string {
   return p.slice(p.lastIndexOf("/") + 1);
 }
 
-function mimeType(ext: string): string {
-  return (
-    (MIME_MAP as Record<string, string>)[ext] ?? "application/octet-stream"
-  );
+function mimeType(e: string): string {
+  return (MIME_MAP as Record<string, string>)[e] ?? "application/octet-stream";
 }
 
-function fileKind(ext: string): "image" | "video" | "unknown" {
-  if (IMAGE_EXTS.has(ext)) return "image";
-  if (VIDEO_EXTS.has(ext)) return "video";
+function fileKind(e: string): "image" | "video" | "unknown" {
+  if (IMAGE_EXTS.has(e)) return "image";
+  if (VIDEO_EXTS.has(e)) return "video";
   return "unknown";
 }
 
-async function computeImageMeta(filePath: string): Promise<ImageMeta> {
-  const identify = Bun.spawnSync(
-    ["magick", "identify", "-format", "%wx%h", `${filePath}[0]`],
-    { stdout: "pipe", stderr: "pipe" },
-  );
-  if (identify.exitCode !== 0)
-    throw new Error(
-      `magick identify failed: ${Buffer.from(identify.stderr).toString()}`,
-    );
+function posterFileName(b2VideoName: string, useAvif: boolean): string {
+  const dot = b2VideoName.lastIndexOf(".");
+  const stem = dot !== -1 ? b2VideoName.slice(0, dot) : b2VideoName;
+  return `${stem}_poster.${useAvif ? "avif" : "jpg"}`;
+}
 
-  const [w, h] = Buffer.from(identify.stdout)
-    .toString()
-    .trim()
-    .split("x")
-    .map(Number);
+async function sha1(buf: ArrayBuffer): Promise<string> {
+  const hash = await crypto.subtle.digest("SHA-1", buf);
+  return Array.from(new Uint8Array(hash))
+    .map((b) => b.toString(16).padStart(2, "0"))
+    .join("");
+}
+
+async function spawnCapture(
+  cmd: string[],
+): Promise<{ stdout: Buffer; stderr: Buffer; ok: boolean }> {
+  const proc = Bun.spawn(cmd, { stdout: "pipe", stderr: "pipe" });
+  const [stdoutBuf, stderrBuf, exitCode] = await Promise.all([
+    new Response(proc.stdout).arrayBuffer().then(Buffer.from),
+    new Response(proc.stderr).arrayBuffer().then(Buffer.from),
+    proc.exited,
+  ]);
+  return { stdout: stdoutBuf, stderr: stderrBuf, ok: exitCode === 0 };
+}
+
+async function detectAv1Encoder(): Promise<string | null> {
+  const { stdout } = await spawnCapture(["ffmpeg", "-encoders", "-v", "quiet"]);
+  const out = stdout.toString();
+  if (out.includes("libsvtav1")) return "libsvtav1";
+  if (out.includes("libaom-av1")) return "libaom-av1";
+  return null;
+}
+
+let _apiUrl: string | null = null;
+let _authToken: string | null = null;
+
+async function authorize(): Promise<AuthorizeAccount> {
+  const res = await fetch(
+    "https://api.backblazeb2.com/b2api/v3/b2_authorize_account",
+    {
+      headers: { Authorization: `Basic ${btoa(`${B2_KEY_ID}:${B2_APP_KEY}`)}` },
+    },
+  );
+  if (!res.ok) throw new Error(`Auth failed: ${await res.text()}`);
+  return AuthorizeAccountSchema.parse(await res.json());
+}
+
+async function getUploadUrl(): Promise<{
+  uploadUrl: string;
+  uploadToken: string;
+}> {
+  if (!_apiUrl || !_authToken) throw new Error("Not authorized");
+  const res = await fetch(`${_apiUrl}/b2api/v3/b2_get_upload_url`, {
+    method: "POST",
+    headers: { Authorization: _authToken, "Content-Type": "application/json" },
+    body: JSON.stringify({ bucketId: B2_BUCKET_ID }),
+  });
+  if (!res.ok) throw new Error(`Get upload URL failed: ${await res.text()}`);
+  const { uploadUrl, authorizationToken: uploadToken } = UploadUrlSchema.parse(
+    await res.json(),
+  );
+  return { uploadUrl, uploadToken };
+}
+
+async function fileExists(b2FileName: string): Promise<boolean> {
+  if (!_apiUrl || !_authToken) throw new Error("Not authorized");
+  const res = await fetch(`${_apiUrl}/b2api/v3/b2_list_file_names`, {
+    method: "POST",
+    headers: { Authorization: _authToken, "Content-Type": "application/json" },
+    body: JSON.stringify({
+      bucketId: B2_BUCKET_ID,
+      prefix: b2FileName,
+      maxFileCount: 1,
+    }),
+  });
+  if (!res.ok) throw new Error(`List files failed: ${await res.text()}`);
+  const { files } = (await res.json()) as { files: { fileName: string }[] };
+  return files.some((f) => f.fileName === b2FileName);
+}
+
+async function uploadFile(
+  filePath: string,
+  b2FileName: string,
+): Promise<UploadResponse> {
+  const { uploadUrl, uploadToken } = await getUploadUrl();
+  const fileBuffer = await Bun.file(filePath).arrayBuffer();
+  const hash = await sha1(fileBuffer);
+  const res = await fetch(uploadUrl, {
+    method: "POST",
+    headers: {
+      Authorization: uploadToken,
+      "X-Bz-File-Name": encodeURIComponent(b2FileName),
+      "Content-Type": mimeType(extname(b2FileName)),
+      "Content-Length": String(fileBuffer.byteLength),
+      "X-Bz-Content-Sha1": hash,
+    },
+    body: fileBuffer,
+  });
+  if (!res.ok) throw new Error(`Upload failed: ${await res.text()}`);
+  return UploadResponseSchema.parse(await res.json());
+}
+
+async function uploadBuffer(
+  buf: Buffer,
+  b2FileName: string,
+): Promise<UploadResponse> {
+  const { uploadUrl, uploadToken } = await getUploadUrl();
+  const ab = buf.buffer.slice(
+    buf.byteOffset,
+    buf.byteOffset + buf.byteLength,
+  ) as ArrayBuffer;
+  const hash = await sha1(ab);
+  const res = await fetch(uploadUrl, {
+    method: "POST",
+    headers: {
+      Authorization: uploadToken,
+      "X-Bz-File-Name": encodeURIComponent(b2FileName),
+      "Content-Type": mimeType(extname(b2FileName)),
+      "Content-Length": String(buf.byteLength),
+      "X-Bz-Content-Sha1": hash,
+    },
+    body: ab,
+  });
+  if (!res.ok) throw new Error(`Upload failed: ${await res.text()}`);
+  return UploadResponseSchema.parse(await res.json());
+}
+
+async function computeImageMeta(filePath: string): Promise<ImageMeta> {
+  const identify = await spawnCapture([
+    "magick",
+    "identify",
+    "-format",
+    "%wx%h",
+    `${filePath}[0]`,
+  ]);
+  if (!identify.ok)
+    throw new Error(`magick identify failed: ${identify.stderr.toString()}`);
+
+  const [w, h] = identify.stdout.toString().trim().split("x").map(Number);
   if (!w || !h) throw new Error(`Could not read dimensions: ${filePath}`);
 
   const tmpPath = `${import.meta.dir}/.blur_${crypto.randomUUID()}.png`;
-  const convert = Bun.spawnSync(
-    ["magick", `${filePath}[0]`, "-resize", "10x", "-strip", tmpPath],
-    { stdout: "pipe", stderr: "pipe" },
-  );
-  if (convert.exitCode !== 0)
-    throw new Error(
-      `magick convert failed: ${Buffer.from(convert.stderr).toString()}`,
-    );
+  const convert = await spawnCapture([
+    "magick",
+    `${filePath}[0]`,
+    "-resize",
+    "10x",
+    "-strip",
+    tmpPath,
+  ]);
+  if (!convert.ok)
+    throw new Error(`magick convert failed: ${convert.stderr.toString()}`);
 
   const tmpFile = Bun.file(tmpPath);
   const blurBuf = await tmpFile.arrayBuffer();
@@ -152,42 +275,104 @@ async function computeImageMeta(filePath: string): Promise<ImageMeta> {
   };
 }
 
-async function computeVideoMeta(filePath: string): Promise<VideoMeta> {
-  const proc = Bun.spawnSync(
-    [
-      "ffprobe",
-      "-v",
-      "quiet",
-      "-print_format",
-      "json",
-      "-show_streams",
-      filePath,
-    ],
-    { stdout: "pipe", stderr: "pipe" },
-  );
+async function computeVideoMeta(
+  filePath: string,
+  b2FileName: string,
+  av1Encoder: string | null,
+): Promise<VideoMeta> {
+  const probe = await spawnCapture([
+    "ffprobe",
+    "-v",
+    "quiet",
+    "-print_format",
+    "json",
+    "-show_streams",
+    filePath,
+  ]);
+  if (!probe.ok) throw new Error(`ffprobe failed: ${probe.stderr.toString()}`);
 
-  if (proc.exitCode !== 0) {
-    throw new Error(
-      `ffprobe failed (exit ${proc.exitCode}): ${Buffer.from(proc.stderr).toString()}`,
-    );
-  }
-
-  const json = JSON.parse(Buffer.from(proc.stdout).toString()) as {
+  const { streams } = JSON.parse(probe.stdout.toString()) as {
     streams: { codec_type: string; width?: number; height?: number }[];
   };
-  const vs = json.streams.find((s) => s.codec_type === "video");
+  const vs = streams.find((s) => s.codec_type === "video");
   if (!vs?.width || !vs?.height)
     throw new Error(`No video stream found in: ${filePath}`);
+
+  const useAvif = av1Encoder !== null;
+  const posterB2Name = posterFileName(b2FileName, useAvif);
+  const tmpPoster = `${import.meta.dir}/.poster_${crypto.randomUUID()}.${useAvif ? "avif" : "jpg"}`;
+  let poster: string | undefined;
+
+  const ffmpegArgs = useAvif
+    ? [
+        "ffmpeg",
+        "-y",
+        "-i",
+        filePath,
+        "-ss",
+        "00:00:00",
+        "-vframes",
+        "1",
+        "-vf",
+        "scale=640:-2",
+        "-pix_fmt",
+        "yuv420p10le",
+        "-c:v",
+        av1Encoder!,
+        ...(av1Encoder === "libaom-av1" ? ["-still-picture", "1"] : []),
+        "-crf",
+        av1Encoder === "libsvtav1" ? "38" : "35",
+        "-b:v",
+        "0",
+        tmpPoster,
+      ]
+    : [
+        "ffmpeg",
+        "-y",
+        "-i",
+        filePath,
+        "-ss",
+        "00:00:00",
+        "-vframes",
+        "1",
+        "-vf",
+        "scale=640:-2",
+        "-q:v",
+        "6",
+        tmpPoster,
+      ];
+
+  const ffmpeg = await spawnCapture(ffmpegArgs);
+
+  if (!ffmpeg.ok) {
+    console.warn(`  ⚠️   ffmpeg failed for ${basename(filePath)}`);
+    if (ffmpeg.stdout.length)
+      console.warn(`  stdout: ${ffmpeg.stdout.toString()}`);
+    if (ffmpeg.stderr.length)
+      console.warn(`  stderr: ${ffmpeg.stderr.toString()}`);
+  } else {
+    try {
+      const posterBuf = Buffer.from(await Bun.file(tmpPoster).arrayBuffer());
+      console.log(`  🖼️   Uploading poster → ${posterB2Name}`);
+      await uploadBuffer(posterBuf, posterB2Name);
+      poster = posterB2Name;
+      console.log(`  ✅  Poster uploaded`);
+    } catch (err) {
+      console.warn(`  ⚠️   Poster upload failed: ${(err as Error).message}`);
+    } finally {
+      await Bun.file(tmpPoster)
+        .delete()
+        .catch(() => {});
+    }
+  }
 
   return {
     kind: "video",
     width: vs.width,
     height: vs.height,
-    aspectRatio: `${vs.width}/${vs.height}`,
+    ...(poster ? { poster } : {}),
   };
 }
-
-type Manifest = Record<string, MediaMeta>;
 
 async function loadManifest(): Promise<Manifest> {
   const f = Bun.file(MANIFEST_PATH);
@@ -197,91 +382,6 @@ async function loadManifest(): Promise<Manifest> {
   } catch {
     return {};
   }
-}
-
-async function saveManifest(manifest: Manifest): Promise<void> {
-  await Bun.write(MANIFEST_PATH, JSON.stringify(manifest, null, 2) + "\n");
-}
-
-async function sha1(filePath: string): Promise<string> {
-  const hash = await crypto.subtle.digest(
-    "SHA-1",
-    await Bun.file(filePath).arrayBuffer(),
-  );
-  return Array.from(new Uint8Array(hash))
-    .map((b) => b.toString(16).padStart(2, "0"))
-    .join("");
-}
-
-async function authorize(): Promise<AuthorizeAccount> {
-  const res = await fetch(
-    "https://api.backblazeb2.com/b2api/v3/b2_authorize_account",
-    {
-      headers: { Authorization: `Basic ${btoa(`${B2_KEY_ID}:${B2_APP_KEY}`)}` },
-    },
-  );
-  if (!res.ok) throw new Error(`Auth failed: ${await res.text()}`);
-  return AuthorizeAccountSchema.parse(await res.json());
-}
-
-async function getUploadUrl(
-  apiUrl: string,
-  authToken: string,
-): Promise<UploadUrlResponse> {
-  const res = await fetch(`${apiUrl}/b2api/v3/b2_get_upload_url`, {
-    method: "POST",
-    headers: { Authorization: authToken, "Content-Type": "application/json" },
-    body: JSON.stringify({ bucketId: B2_BUCKET_ID }),
-  });
-  if (!res.ok) throw new Error(`Get upload URL failed: ${await res.text()}`);
-  return UploadUrlSchema.parse(await res.json());
-}
-
-async function fileExists(
-  apiUrl: string,
-  authToken: string,
-  b2FileName: string,
-): Promise<boolean> {
-  const res = await fetch(`${apiUrl}/b2api/v3/b2_list_file_names`, {
-    method: "POST",
-    headers: { Authorization: authToken, "Content-Type": "application/json" },
-    body: JSON.stringify({
-      bucketId: B2_BUCKET_ID,
-      prefix: b2FileName,
-      maxFileCount: 1,
-    }),
-  });
-  if (!res.ok) throw new Error(`List files failed: ${await res.text()}`);
-  const { files } = (await res.json()) as { files: { fileName: string }[] };
-  return files.some((f) => f.fileName === b2FileName);
-}
-
-async function uploadFile(
-  uploadUrl: string,
-  uploadAuthToken: string,
-  filePath: string,
-  b2FileName: string,
-): Promise<UploadResponse> {
-  const bunFile = Bun.file(filePath);
-  const [fileBuffer, hash] = await Promise.all([
-    bunFile.arrayBuffer(),
-    sha1(filePath),
-  ]);
-
-  const res = await fetch(uploadUrl, {
-    method: "POST",
-    headers: {
-      Authorization: uploadAuthToken,
-      "X-Bz-File-Name": encodeURIComponent(b2FileName),
-      "Content-Type": mimeType(extname(filePath)),
-      "Content-Length": String(bunFile.size),
-      "X-Bz-Content-Sha1": hash,
-    },
-    body: fileBuffer,
-  });
-
-  if (!res.ok) throw new Error(`Upload failed: ${await res.text()}`);
-  return UploadResponseSchema.parse(await res.json());
 }
 
 function mdxTag(
@@ -337,14 +437,18 @@ if (files.length === 0) {
   process.exit(1);
 }
 
+const av1Encoder = await detectAv1Encoder();
+if (!av1Encoder) {
+  console.warn(
+    "⚠️   No AV1 encoder found (libaom-av1 / libsvtav1) — posters will be JPEG.\n",
+  );
+}
+
 console.log("🔑  Authorizing with Backblaze B2…");
 const auth = await authorize();
+_apiUrl = auth.apiInfo.storageApi.apiUrl;
+_authToken = auth.authorizationToken;
 console.log("✅  Authorized\n");
-
-const { uploadUrl, authorizationToken: uploadToken } = await getUploadUrl(
-  auth.apiInfo.storageApi.apiUrl,
-  auth.authorizationToken,
-);
 
 const manifest = await loadManifest();
 
@@ -352,22 +456,28 @@ type Result = { id: string; url: string; meta: MediaMeta | null; tag: string };
 const results: Result[] = [];
 
 for (const filePath of files) {
-  const ext = extname(filePath);
-  const kind = fileKind(ext);
-  const hash = await sha1(filePath);
-  const b2FileName = `${prefix}${hash}${ext}`;
+  const e = extname(filePath);
+  const kind = fileKind(e);
+  const fileBuffer = await Bun.file(filePath).arrayBuffer();
+  const hash = Array.from(
+    new Uint8Array(await crypto.subtle.digest("SHA-1", fileBuffer)),
+  )
+    .map((b) => b.toString(16).padStart(2, "0"))
+    .join("");
+  const b2FileName = `${prefix}${hash}${e}`;
   const originalName = basename(filePath);
 
   let meta: MediaMeta | null = manifest[b2FileName] ?? null;
+  const missingPoster = meta?.kind === "video" && !meta.poster;
 
-  if (!meta) {
+  if (!meta || missingPoster) {
     try {
       if (kind === "image") {
         console.log(`📐  Computing image metrics for ${originalName}…`);
         meta = await computeImageMeta(filePath);
       } else if (kind === "video") {
         console.log(`📐  Computing video metrics for ${originalName}…`);
-        meta = await computeVideoMeta(filePath);
+        meta = await computeVideoMeta(filePath, b2FileName, av1Encoder);
       }
     } catch (err) {
       console.warn(
@@ -378,11 +488,7 @@ for (const filePath of files) {
     console.log(`📋  Using cached metrics for ${originalName}`);
   }
 
-  const exists = await fileExists(
-    auth.apiInfo.storageApi.apiUrl,
-    auth.authorizationToken,
-    b2FileName,
-  );
+  const exists = await fileExists(b2FileName);
 
   if (exists) {
     console.log(
@@ -390,7 +496,7 @@ for (const filePath of files) {
     );
   } else {
     console.log(`⬆️   Uploading ${originalName} → ${b2FileName}`);
-    await uploadFile(uploadUrl, uploadToken, filePath, b2FileName);
+    await uploadFile(filePath, b2FileName);
     console.log(`✅  Done  hash=${hash}`);
   }
 
@@ -398,8 +504,7 @@ for (const filePath of files) {
 
   const publicUrl = `${cdnUrl}/${b2FileName}`;
   const tag = mdxTag(b2FileName, "This is an example alt.", meta);
-
-  results.push({ id: hash, url: publicUrl, meta, tag } satisfies Result);
+  results.push({ id: hash, url: publicUrl, meta, tag });
 
   console.log(`    URL         : ${publicUrl}`);
   if (meta?.kind === "image") {
@@ -407,14 +512,13 @@ for (const filePath of files) {
     console.log(`    blurDataURL : ${meta.blurDataURL.slice(0, 60)}…`);
   }
   if (meta?.kind === "video") {
-    console.log(
-      `    Dimensions  : ${meta.width}×${meta.height}  (${meta.aspectRatio})`,
-    );
+    console.log(`    Dimensions  : ${meta.width}×${meta.height}`);
+    if (meta.poster) console.log(`    Poster      : ${cdnUrl}/${meta.poster}`);
   }
   console.log(`    Tag         : ${tag}\n`);
 }
 
-await saveManifest(manifest);
+await Bun.write(MANIFEST_PATH, JSON.stringify(manifest, null, 2) + "\n");
 console.log(`💾  Manifest saved → ${MANIFEST_PATH}\n`);
 
 const divider = "─".repeat(60);

@@ -69,6 +69,11 @@ const ListFilesResponseSchema = z.object({
 
 type Auth = z.infer<typeof AuthSchema>;
 type FileVersion = z.infer<typeof FileVersionSchema>;
+type ManifestEntry = {
+  kind: "image" | "video";
+  poster?: string;
+  [key: string]: unknown;
+};
 
 async function authorize(): Promise<Auth> {
   const res = await fetch(
@@ -102,7 +107,6 @@ async function listAllFiles(
       headers: { Authorization: authToken, "Content-Type": "application/json" },
       body: JSON.stringify(body),
     });
-
     if (!res.ok) throw new Error(`List files failed: ${await res.text()}`);
 
     const data = ListFilesResponseSchema.parse(await res.json());
@@ -143,37 +147,12 @@ async function collectSourceFiles(dir: string): Promise<string[]> {
   );
 }
 
-async function buildSearchCorpus(sourceFiles: string[]): Promise<string> {
-  const parts = await Promise.all(
-    sourceFiles.map((f) =>
-      Bun.file(f)
-        .text()
-        .catch(() => ""),
-    ),
-  );
-  return parts.join("\n");
-}
-
 function isReferenced(corpus: string, fileName: string): boolean {
   if (corpus.includes(fileName)) return true;
   const bare = fileName.includes("/")
     ? fileName.slice(fileName.lastIndexOf("/") + 1)
     : null;
   return bare ? corpus.includes(bare) : false;
-}
-
-async function loadManifest(): Promise<Record<string, unknown>> {
-  const f = Bun.file(MANIFEST_PATH);
-  if (!(await f.exists())) return {};
-  try {
-    return (await f.json()) as Record<string, unknown>;
-  } catch {
-    return {};
-  }
-}
-
-async function saveManifest(manifest: Record<string, unknown>): Promise<void> {
-  await Bun.write(MANIFEST_PATH, JSON.stringify(manifest, null, 2) + "\n");
 }
 
 function formatBytes(bytes: number): string {
@@ -219,13 +198,46 @@ if (bucketFiles.length === 0) {
 console.log("📄  Scanning project source files…");
 const sourceFiles = await collectSourceFiles(".");
 console.log(`    Found ${sourceFiles.length} source file(s) to scan.\n`);
-const corpus = await buildSearchCorpus(sourceFiles);
+
+const corpus = (
+  await Promise.all(
+    sourceFiles.map((f) =>
+      Bun.file(f)
+        .text()
+        .catch(() => ""),
+    ),
+  )
+).join("\n");
+
+const manifest = (
+  (await Bun.file(MANIFEST_PATH).exists())
+    ? await Bun.file(MANIFEST_PATH)
+        .json()
+        .catch(() => ({}))
+    : {}
+) as Record<string, ManifestEntry>;
+
+const posterFileNames = new Set<string>();
+for (const [key, entry] of Object.entries(manifest)) {
+  if (entry.kind === "video" && entry.poster && isReferenced(corpus, key)) {
+    posterFileNames.add(entry.poster);
+  }
+}
+
+if (posterFileNames.size > 0) {
+  console.log(
+    `🖼️   Found ${posterFileNames.size} poster(s) linked to referenced videos (auto-protected).\n`,
+  );
+}
 
 const unused: FileVersion[] = [];
 const used: FileVersion[] = [];
 
 for (const f of bucketFiles) {
-  (isReferenced(corpus, f.fileName) ? used : unused).push(f);
+  (isReferenced(corpus, f.fileName) || posterFileNames.has(f.fileName)
+    ? used
+    : unused
+  ).push(f);
 }
 
 const unusedBytes = unused.reduce((sum, f) => sum + f.contentLength, 0);
@@ -240,7 +252,6 @@ console.log(
 );
 console.log("─".repeat(52) + "\n");
 
-const manifest = await loadManifest();
 const manifestKeys = Object.keys(manifest);
 const unusedFileNames = new Set(unused.map((f) => f.fileName));
 const manifestOrphans = manifestKeys.filter((key) => unusedFileNames.has(key));
@@ -307,27 +318,32 @@ if (unused.length > 0) {
   console.log();
 }
 
-const keysToRemove = [
+const keysToRemove = new Set([
   ...manifestGhosts,
   ...manifestOrphans.filter((k) => actuallyDeleted.has(k)),
-];
+]);
 
-if (keysToRemove.length > 0) {
+for (const key of [...keysToRemove]) {
+  const entry = manifest[key];
+  if (entry?.kind === "video" && entry.poster) keysToRemove.add(entry.poster);
+}
+
+if (keysToRemove.size > 0) {
   console.log(
-    `📋  Pruning ${keysToRemove.length} stale entry/entries from manifest…`,
+    `📋  Pruning ${keysToRemove.size} stale entry/entries from manifest…`,
   );
   for (const key of keysToRemove) {
     delete manifest[key];
     console.log(`  ✅  Removed: ${key}`);
   }
-  await saveManifest(manifest);
+  await Bun.write(MANIFEST_PATH, JSON.stringify(manifest, null, 2) + "\n");
   console.log(`\n💾  Manifest saved → ${MANIFEST_PATH}\n`);
 }
 
 console.log("─".repeat(52));
 console.log(`  B2 deleted      : ${deleted}`);
 console.log(`  B2 failed       : ${failed}`);
-console.log(`  Manifest pruned : ${keysToRemove.length}`);
+console.log(`  Manifest pruned : ${keysToRemove.size}`);
 console.log(`  Freed           : ${formatBytes(unusedBytes)}`);
 console.log("─".repeat(52));
 

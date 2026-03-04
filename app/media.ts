@@ -9,7 +9,7 @@ export type VideoMeta = {
   kind: "video";
   width: number;
   height: number;
-  aspectRatio: string;
+  poster?: string;
 };
 
 export type MediaMeta = ImageMeta | VideoMeta;
