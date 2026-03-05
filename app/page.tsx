@@ -34,9 +34,9 @@ export default function Home() {
         </div>
         <main className="flex flex-col gap-3">
           <p>
-            Hello, I&apos;m a digital native, previously working for The Straits
-            Times&rsquo; graphics team, helping produce multimedia content and
-            data-driven stories.
+            I want to use design to make the world a better place. I previously
+            worked for The Straits Times&rsquo; graphics team, helping produce
+            multimedia content and data-driven stories.
           </p>
 
           <p>
