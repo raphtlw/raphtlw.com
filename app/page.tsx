@@ -8,7 +8,7 @@ export default function Home() {
   return (
     <div
       className={cn(
-        "overflow-x-scroll snap-x snap-mandatory",
+        "overflow-x-scroll snap-x snap-mandatory no-scrollbar",
         "flex flex-row min-w-screen min-h-dvh",
         "lg:grid lg:grid-cols-2",
       )}
