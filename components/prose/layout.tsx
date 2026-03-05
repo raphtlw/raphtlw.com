@@ -23,6 +23,7 @@ export default function Layout({
           scrollSnap &&
             "h-screen overflow-y-scroll snap-y snap-mandatory overscroll-none",
           scrollSnap && "prose-headings:snap-always prose-headings:snap-start",
+          scrollSnap && "lg:no-scrollbar",
         )}
       >
         {children}

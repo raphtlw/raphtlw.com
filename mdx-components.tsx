@@ -1,12 +1,14 @@
+import { ArticleMeta } from "@/components/prose/head";
 import Layout from "@/components/prose/layout";
 import { ImageMedia, VideoMedia } from "@/components/prose/media";
+import { Signature } from "@/components/prose/signature";
 import type { MDXComponents } from "mdx/types";
-import { ArticleMeta } from "./components/prose/head";
 
 const components: MDXComponents = {
   ImageMedia,
   VideoMedia,
   Layout,
+  Signature,
   ArticleMeta,
 };
 

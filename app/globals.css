@@ -157,7 +157,6 @@
     color: #fff;
   }
 
-  /* oklch only where natively supported — no display-p3 middleman */
   @supports (background: oklch(0 0 0)) {
     ::selection {
       background: oklch(0.67 0.185 35 / 0.99);
