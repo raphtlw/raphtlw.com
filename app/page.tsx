@@ -9,7 +9,7 @@ export default function Home() {
     <div
       className={cn(
         "overflow-x-scroll snap-x snap-mandatory",
-        "flex flex-row min-w-screen min-h-screen",
+        "flex flex-row min-w-screen min-h-dvh",
         "lg:grid lg:grid-cols-2",
       )}
     >
@@ -17,7 +17,7 @@ export default function Home() {
         className={cn(
           "flex flex-col font-serif px-6 py-20 gap-5",
           "snap-start snap-always",
-          "min-h-screen min-w-screen",
+          "min-h-dvh min-w-screen",
           "md:px-10",
           "lg:min-w-auto lg:min-h-auto",
           "lg:p-20 lg:border-white lg:border-2",
@@ -91,7 +91,7 @@ export default function Home() {
         className={cn(
           "flex flex-col font-serif px-6 py-20 gap-5",
           "snap-start snap-always",
-          "min-h-screen min-w-screen",
+          "min-h-dvh min-w-screen",
           "md:px-10",
           "lg:min-w-auto lg:min-h-auto",
           "lg:p-20",
