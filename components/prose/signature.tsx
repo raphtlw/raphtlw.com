@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, useAnimation, useInView } from "motion/react";
-import { useEffect, useRef } from "react";
+import { ComponentProps, useEffect, useRef } from "react";
 
 const paths = [
   {
@@ -53,7 +53,11 @@ const paths = [
 
 const penEase = [0.25, 0.1, 0.25, 1] as const;
 
-export const Signature = ({ className = "", replay = false }) => {
+export type SignatureProps = ComponentProps<"div"> & {
+  replay?: boolean;
+};
+
+export const Signature = ({ replay = false, ...props }: SignatureProps) => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: !replay, amount: 0.5 });
   const controls = useAnimation();
@@ -67,7 +71,7 @@ export const Signature = ({ className = "", replay = false }) => {
   }, [isInView, controls, replay]);
 
   return (
-    <div ref={ref} className={className}>
+    <div ref={ref} {...props}>
       <svg
         className="aspect-[1.8378378378]"
         viewBox="0 0 544 296"
