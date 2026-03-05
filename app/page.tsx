@@ -34,10 +34,17 @@ export default function Home() {
         </div>
         <main className="flex flex-col gap-3">
           <p>
-            I want to use design to make the world a better place. I previously
-            worked for The Straits Times&rsquo; graphics team, helping produce
+            Bridging the gap between design and engineering. I previously worked
+            for The Straits Times&rsquo; graphics team, helping produce
             multimedia content and data-driven stories.
           </p>
+
+          {/*<p className="dark:text-stone-400">
+            I am currently interested in:{" "}
+            <span className="dark:text-stone-100 font-light">
+              Interaction Design
+            </span>
+          </p>*/}
 
           <p>
             My time was meaningfully spent working on 9 projects,{" "}
@@ -66,11 +73,11 @@ export default function Home() {
           </a>
           .
         </p>
-        <div className="flex flex-row justify-between lg:hidden">
+        <div className="flex justify-between lg:hidden">
           <p>Swipe left to see my posts</p>
           <motion.div
             animate={{
-              x: [-10, -20, -10],
+              x: [-50, -80, -50],
               opacity: [1, 0.3, 1],
             }}
             transition={{
