@@ -20,7 +20,7 @@ export default function Home() {
           "min-h-dvh min-w-screen",
           "md:px-10",
           "lg:min-w-auto lg:min-h-auto",
-          "lg:p-20 lg:border-white lg:border-2",
+          "lg:p-20 lg:border-neutral-100 lg:border-2",
         )}
       >
         <div className="flex flex-col gap-3">
@@ -103,7 +103,7 @@ export default function Home() {
           "min-h-dvh min-w-screen",
           "md:px-10",
           "lg:min-w-auto lg:min-h-auto",
-          "lg:p-20",
+          "lg:p-20 lg:border-neutral-400 lg:border-y-2 lg:border-r-2",
         )}
         id="posts"
       >
