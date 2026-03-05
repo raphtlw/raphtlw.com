@@ -6,7 +6,7 @@ import { motion } from "motion/react";
 import NextLink from "next/link";
 import { ComponentProps } from "react";
 
-const Link = motion(NextLink);
+const Link = motion.create(NextLink);
 
 export type LinkButtonProps = ComponentProps<typeof Link> & {
   children: React.ReactNode;

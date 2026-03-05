@@ -53,7 +53,7 @@ export const useLazyVideo = (src: string, alwaysPlay = false) => {
     const bufferObserver = new IntersectionObserver(
       ([entry]) => (entry.isIntersecting ? load() : unload()),
       {
-        rootMargin: `${window.innerHeight}px 0px ${window.innerHeight * 4}px 0px`,
+        rootMargin: `${window.innerHeight}px 0px ${window.innerHeight * 3}px 0px`,
         threshold: 0,
       },
     );
