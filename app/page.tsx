@@ -1,4 +1,4 @@
-import { LinkButton } from "@/components/prose/link";
+import { LinkButton } from "@/components/ui/button.client";
 import { cn } from "@/lib/utils";
 import { CircleIcon } from "lucide-react";
 import * as motion from "motion/react-client";
@@ -53,7 +53,9 @@ export default function Home() {
           interaction&emdash;design, playing the guitar, and rock climbing.*/}
           </p>
         </main>
-        <LinkButton href="/cv">Copy of my CV</LinkButton>
+        <LinkButton href="/cv" external>
+          Copy of my CV
+        </LinkButton>
         <p>
           You can email me at{" "}
           <a
