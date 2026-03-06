@@ -21,7 +21,7 @@ export const ArticleMeta = ({
     <LinkButton
       href="/"
       className={cn(
-        "inline-flex flex-row gap-1",
+        "inline-flex flex-row gap-1 underline",
         "text-stone-600",
         "dark:text-stone-400",
       )}

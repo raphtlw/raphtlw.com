@@ -2,7 +2,6 @@ import { LinkButton } from "@/components/ui/button.client";
 import { cn } from "@/lib/utils";
 import { CircleIcon } from "lucide-react";
 import * as motion from "motion/react-client";
-import Link from "next/link";
 
 export default function Home() {
   return (
@@ -48,9 +47,9 @@ export default function Home() {
 
           <p>
             My time was meaningfully spent working on 9 projects,{" "}
-            <Link className="underline link-button" href="/portfolio">
+            <LinkButton className="underline" href="/portfolio">
               4 of which have been published so far.
-            </Link>
+            </LinkButton>
           </p>
 
           <p>
@@ -60,17 +59,17 @@ export default function Home() {
           interaction&emdash;design, playing the guitar, and rock climbing.*/}
           </p>
         </main>
-        <LinkButton href="/cv" external>
+        <LinkButton href="/cv" external className="underline">
           Copy of my CV
         </LinkButton>
         <p>
           You can email me at{" "}
-          <a
+          <LinkButton
             href="mailto:hi@raphtlw.com?subject=Hi"
-            className="underline link-button"
+            className="underline"
           >
             hi@raphtlw.com
-          </a>
+          </LinkButton>
           .
         </p>
         <div className="flex justify-between lg:hidden">
