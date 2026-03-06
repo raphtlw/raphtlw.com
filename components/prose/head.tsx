@@ -15,13 +15,13 @@ export const ArticleMeta = ({
   ...props
 }: ArticleMetaProps) => (
   <div
-    className={cn("not-prose text-base flex flex-col gap-1", className)}
+    className={cn("not-prose text-base flex flex-col gap-2", className)}
     {...props}
   >
     <LinkButton
       href="/"
       className={cn(
-        "inline-flex flex-row gap-1 underline",
+        "inline-flex flex-row gap-1 border-b border-b-stone-600",
         "text-stone-600",
         "dark:text-stone-400",
       )}
@@ -31,7 +31,7 @@ export const ArticleMeta = ({
       <p>Raphael Tang</p>
     </LinkButton>
 
-    <p className="text-sm text-stone-600 dark:text-stone-400">
+    <p className="text-sm text-stone-600 dark:text-stone-400 font-light">
       {frontmatter.readingTime ?? 0} min. read
     </p>
   </div>
