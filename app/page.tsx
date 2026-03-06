@@ -2,6 +2,26 @@ import { LinkButton } from "@/components/ui/button.client";
 import { cn } from "@/lib/utils";
 import { CircleIcon } from "lucide-react";
 import * as motion from "motion/react-client";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "raphael's space",
+  description: "Bridging the gap between design and engineering",
+  metadataBase: new URL("https://www.raphtlw.com"),
+  openGraph: {
+    type: "website",
+    title: "raphael's space",
+    description: "Bridging the gap between design and engineering",
+    url: "https://www.raphtlw.com",
+    siteName: "raphael's space",
+    locale: "en_SG",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "raphael's space",
+    description: "Bridging the gap between design and engineering",
+  },
+};
 
 export default function Home() {
   return (
