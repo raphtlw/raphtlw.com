@@ -1,25 +1,41 @@
 import { LinkButton } from "@/components/ui/button.client";
 import { cn } from "@/lib/utils";
-import { CircleIcon } from "lucide-react";
 import * as motion from "motion/react-client";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "raphael's space",
   description: "Bridging the gap between design and engineering",
-  metadataBase: new URL("https://www.raphtlw.com"),
+  metadataBase: new URL("https://raphtlw.com"),
   openGraph: {
     type: "website",
+    url: "https://raphtlw.com",
+    siteName: "raphael's space",
     title: "raphael's space",
     description: "Bridging the gap between design and engineering",
-    url: "https://www.raphtlw.com",
-    siteName: "raphael's space",
     locale: "en_SG",
+    images: [
+      {
+        url: "/opengraph-image.png",
+        width: 1200,
+        height: 627,
+        type: "image/png",
+        alt: "Raphael Tang",
+      },
+    ],
   },
+
   twitter: {
     card: "summary_large_image",
+    site: "@raphtlw",
+    creator: "@raphtlw",
     title: "raphael's space",
     description: "Bridging the gap between design and engineering",
+    images: ["/opengraph-image.png"],
+  },
+
+  appleWebApp: {
+    title: "raphael's space",
   },
 };
 
@@ -28,7 +44,7 @@ export default function Home() {
     <div
       className={cn(
         "overflow-x-scroll snap-x snap-mandatory no-scrollbar",
-        "flex flex-row min-w-screen min-h-dvh",
+        "flex flex-row h-lvh",
         "lg:grid lg:grid-cols-2",
       )}
     >
@@ -43,7 +59,7 @@ export default function Home() {
         )}
       >
         <div className="flex flex-col gap-3">
-          <h1 className="text-4xl font-light font-headline">Raphael Tang</h1>
+          <h1 className="text-3xl font-thin font-headline">Raphael Tang</h1>
           <span
             lang="zh"
             className="tracking-widest text-stone-500 dark:text-stone-400"
