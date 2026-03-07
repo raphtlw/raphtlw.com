@@ -1,6 +1,5 @@
 import { LinkButton } from "@/components/ui/button.client";
 import { cn } from "@/lib/utils";
-import * as motion from "motion/react-client";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -41,21 +40,15 @@ export const metadata: Metadata = {
 
 export default function Home() {
   return (
-    <div
-      className={cn(
-        "overflow-x-scroll snap-x snap-mandatory no-scrollbar",
-        "flex flex-row h-lvh",
-        "lg:grid lg:grid-cols-2",
-      )}
-    >
+    <div className={cn("flex flex-col h-lvh w-lvw overscroll-none")}>
       <div
         className={cn(
-          "flex flex-col font-serif px-6 py-20 gap-5",
+          "flex flex-col font-serif px-8 py-16 gap-5",
           "snap-start snap-always",
-          "min-h-dvh min-w-screen",
+          "h-lvh w-lvw",
           "md:px-10",
           "lg:min-w-auto lg:min-h-auto",
-          "lg:p-20 lg:border-neutral-100 lg:border-2",
+          "lg:m-20 lg:border-neutral-100 lg:border-2",
         )}
       >
         <div className="flex flex-col gap-3">
@@ -67,11 +60,15 @@ export default function Home() {
             陳樂宇
           </span>
         </div>
-        <main className="flex flex-col gap-3">
+        <main className="flex flex-col gap-4">
           <p>
-            Bridging the gap between design and engineering. I previously worked
-            for The Straits Times&rsquo; graphics team, helping produce
-            multimedia content and data-driven stories.
+            I&apos;m a <LinkButton>design engineer</LinkButton>. Previously, I
+            interned at{" "}
+            <LinkButton href="https://straitstimes.com" className="underline">
+              The Straits Times
+            </LinkButton>
+            , producing content and data-driven stories. I&apos;ve been coding
+            for 10 years and can&apos;t wait for what&apos;s next.
           </p>
 
           {/*<p className="dark:text-stone-400">
@@ -88,27 +85,13 @@ export default function Home() {
             </LinkButton>
           </p>
 
-          <p>
-            I&apos;ve been in software for 10 years now, ever since I learned
-            Python very early on in my secondary school days.
-            {/*I also love
-          interaction&emdash;design, playing the guitar, and rock climbing.*/}
-          </p>
+          {/*<p>
+            I also love interaction design, playing the guitar, and rock
+            climbing.
+          </p>*/}
         </main>
-        <LinkButton href="/cv" external className="underline">
-          Copy of my CV
-        </LinkButton>
-        <p>
-          You can email me at{" "}
-          <LinkButton
-            href="mailto:hi@raphtlw.com?subject=Hi"
-            className="underline"
-          >
-            hi@raphtlw.com
-          </LinkButton>
-          .
-        </p>
-        <div className="flex justify-between lg:hidden">
+
+        {/*<div className="flex justify-between lg:hidden">
           <p>Swipe left to see my posts</p>
           <motion.div
             animate={{
@@ -124,14 +107,10 @@ export default function Home() {
           >
             <CircleIcon />
           </motion.div>
-        </div>
-        <div className="flex-1"></div>
-        <p className="font-sans text-sm dark:text-neutral-600 text-stone-400 font-light">
-          This site does not contain AI generated content.
-        </p>
+        </div>*/}
       </div>
 
-      <div
+      {/*<div
         className={cn(
           "flex flex-col font-serif px-6 py-20 gap-5",
           "snap-start snap-always",
@@ -169,6 +148,30 @@ export default function Home() {
             </LinkButton>
           </p>
         </main>
+      </div>*/}
+
+      <div className="flex-1"></div>
+
+      <div className="flex flex-col p-8 gap-4 font-serif">
+        <LinkButton href="/cv" external className="underline">
+          Copy of my CV
+        </LinkButton>
+        <p>
+          You can email me at{" "}
+          <LinkButton
+            href="mailto:hi@raphtlw.com?subject=Hi"
+            className="underline"
+          >
+            hi@raphtlw.com
+          </LinkButton>
+          .
+        </p>
+      </div>
+
+      <div className="flex flex-col px-6 py-4 border-t w-full">
+        <p className="font-sans text-sm dark:text-neutral-600 text-stone-400 font-light">
+          This site does not contain AI generated content.
+        </p>
       </div>
     </div>
   );
