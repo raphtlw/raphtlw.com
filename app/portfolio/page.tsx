@@ -20,7 +20,7 @@ export default function Portfolio() {
               />
               <p className="text-lg font-normal">{item.title}</p>
               <p>{item.description}</p>
-              <div className="flex flex-row justify-between text-neutral-300">
+              <div className="flex flex-row justify-between text-neutral-600 dark:text-neutral-300">
                 <p className="flex flex-row gap-2 flex-wrap">
                   {item.topics.map((topic, index) => (
                     <Fragment key={index}>
@@ -37,7 +37,7 @@ export default function Portfolio() {
             </Link>
 
             {index < works.length - 1 && (
-              <div className="h-[0.9px] w-full bg-stone-700" />
+              <div className="h-[0.9px] w-full bg-stone-400 dark:bg-stone-700" />
             )}
           </div>
         ))}

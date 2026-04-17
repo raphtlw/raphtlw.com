@@ -48,7 +48,7 @@ const newsreader = Newsreader({
 
 export const metadata: Metadata = {
   title: "raphael's space",
-  description: "Raphael Tang | Digital Native",
+  description: "Raphael Tang",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
