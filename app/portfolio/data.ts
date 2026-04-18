@@ -11,11 +11,13 @@ export type Work = {
 export const works: Work[] = [
   {
     title: "The thrill lasts seconds, the trash lasts forever.",
-    description: "Blind boxes are a billion-dollar business with a waste problem no one is talking about.",
+    description:
+      "Blind boxes are a billion-dollar business with a waste problem no one is talking about.",
     organization: "The Straits Times",
     thumbnail: "06fd8558fe2726bdadb5d3307dd394e26b17e29c.jpg",
     link: "https://www.straitstimes.com/multimedia/graphics/2026/03/blind-boxes/index.html",
-    topics: ["Video Analysis", "Emotion Capture", "Writing"]
+    topics: ["Video Analysis", "Emotion Capture", "Writing"],
+    pubdate: "2026-03-12",
   },
 
   {
