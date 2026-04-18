@@ -14,7 +14,7 @@ export type VideoMeta = {
 
 export type MediaMeta = ImageMeta | VideoMeta;
 
-import manifest from "./media.json" assert { type: "json" };
+import manifest from "./media.json" with { type: "json" };
 
 const db = manifest as Record<string, MediaMeta>;
 
