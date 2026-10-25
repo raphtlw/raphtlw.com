@@ -86,9 +86,8 @@ export default function Home() {
             </p>*/}
 
             <p>
-              My time was meaningfully spent working on 9 projects,{" "}
               <LinkButton className="underline" href="/portfolio">
-                5 of which have been published.
+                My time was meaningfully spent working on 7 projects, all of which have been published.
               </LinkButton>
             </p>
 
