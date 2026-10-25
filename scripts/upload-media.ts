@@ -100,6 +100,17 @@ function basename(p: string): string {
   return p.slice(p.lastIndexOf("/") + 1);
 }
 
+const CANONICAL_EXT: Record<string, string> = { ".jpeg": ".jpg" };
+
+function canonicalExt(e: string): string {
+  return CANONICAL_EXT[e] ?? e;
+}
+
+function contentHashOf(b2FileName: string): string | null {
+  const match = /^([0-9a-f]{40})\.[^.]+$/.exec(basename(b2FileName));
+  return match ? match[1] : null;
+}
+
 function mimeType(e: string): string {
   return (MIME_MAP as Record<string, string>)[e] ?? "application/octet-stream";
 }
@@ -190,51 +201,66 @@ async function fileExists(b2FileName: string): Promise<boolean> {
   return files.some((f) => f.fileName === b2FileName);
 }
 
-async function uploadFile(
-  filePath: string,
+const MAX_UPLOAD_ATTEMPTS = 5;
+
+function isRetryableUpload(status: number, body: string): boolean {
+  if (status === 401) return body.includes("expired_auth_token");
+  return status >= 500 || status === 408 || status === 429;
+}
+
+async function uploadBytes(
+  bytes: ArrayBuffer,
   b2FileName: string,
+  hash: string,
 ): Promise<UploadResponse> {
-  const { uploadUrl, uploadToken } = await getUploadUrl();
-  const fileBuffer = await Bun.file(filePath).arrayBuffer();
-  const hash = await sha1(fileBuffer);
-  const res = await fetch(uploadUrl, {
-    method: "POST",
-    headers: {
-      Authorization: uploadToken,
-      "X-Bz-File-Name": encodeURIComponent(b2FileName),
-      "Content-Type": mimeType(extname(b2FileName)),
-      "Content-Length": String(fileBuffer.byteLength),
-      "X-Bz-Content-Sha1": hash,
-    },
-    body: fileBuffer,
-  });
-  if (!res.ok) throw new Error(`Upload failed: ${await res.text()}`);
-  return UploadResponseSchema.parse(await res.json());
+  let backoffSeconds = 1;
+  let lastError = "";
+
+  for (let attempt = 1; attempt <= MAX_UPLOAD_ATTEMPTS; attempt++) {
+    const { uploadUrl, uploadToken } = await getUploadUrl();
+    let res: Response;
+    try {
+      res = await fetch(uploadUrl, {
+        method: "POST",
+        headers: {
+          Authorization: uploadToken,
+          "X-Bz-File-Name": encodeURIComponent(b2FileName),
+          "Content-Type": mimeType(extname(b2FileName)),
+          "Content-Length": String(bytes.byteLength),
+          "X-Bz-Content-Sha1": hash,
+        },
+        body: bytes,
+      });
+    } catch (err) {
+      lastError = (err as Error).message;
+      console.warn(`  ⚠️   Upload attempt ${attempt} failed: ${lastError}`);
+      continue;
+    }
+
+    if (res.ok) return UploadResponseSchema.parse(await res.json());
+
+    lastError = await res.text();
+    if (!isRetryableUpload(res.status, lastError)) break;
+
+    console.warn(`  ⚠️   Upload attempt ${attempt} failed (HTTP ${res.status})`);
+    if (res.status === 429) {
+      await Bun.sleep(backoffSeconds * 1000);
+      backoffSeconds *= 2;
+    }
+  }
+
+  throw new Error(`Upload failed: ${lastError}`);
 }
 
 async function uploadBuffer(
   buf: Buffer,
   b2FileName: string,
 ): Promise<UploadResponse> {
-  const { uploadUrl, uploadToken } = await getUploadUrl();
-  const ab = buf.buffer.slice(
+  const bytes = buf.buffer.slice(
     buf.byteOffset,
     buf.byteOffset + buf.byteLength,
   ) as ArrayBuffer;
-  const hash = await sha1(ab);
-  const res = await fetch(uploadUrl, {
-    method: "POST",
-    headers: {
-      Authorization: uploadToken,
-      "X-Bz-File-Name": encodeURIComponent(b2FileName),
-      "Content-Type": mimeType(extname(b2FileName)),
-      "Content-Length": String(buf.byteLength),
-      "X-Bz-Content-Sha1": hash,
-    },
-    body: ab,
-  });
-  if (!res.ok) throw new Error(`Upload failed: ${await res.text()}`);
-  return UploadResponseSchema.parse(await res.json());
+  return uploadBytes(bytes, b2FileName, await sha1(bytes));
 }
 
 async function computeImageMeta(filePath: string): Promise<ImageMeta> {
@@ -455,17 +481,27 @@ const manifest = await loadManifest();
 type Result = { id: string; url: string; meta: MediaMeta | null; tag: string };
 const results: Result[] = [];
 
+const storedNameByHash = new Map<string, string>();
+for (const name of Object.keys(manifest)) {
+  const hash = contentHashOf(name);
+  if (hash) storedNameByHash.set(hash, name);
+}
+
 for (const filePath of files) {
-  const e = extname(filePath);
+  const e = canonicalExt(extname(filePath));
   const kind = fileKind(e);
   const fileBuffer = await Bun.file(filePath).arrayBuffer();
-  const hash = Array.from(
-    new Uint8Array(await crypto.subtle.digest("SHA-1", fileBuffer)),
-  )
-    .map((b) => b.toString(16).padStart(2, "0"))
-    .join("");
-  const b2FileName = `${prefix}${hash}${e}`;
+  const hash = await sha1(fileBuffer);
   const originalName = basename(filePath);
+  const storedName = storedNameByHash.get(hash);
+  const b2FileName = storedName ?? `${prefix}${hash}${e}`;
+  storedNameByHash.set(hash, b2FileName);
+
+  if (storedName && storedName !== `${prefix}${hash}${e}`) {
+    console.log(
+      `🔁  ${originalName} has the same content as ${storedName}, reusing that name`,
+    );
+  }
 
   let meta: MediaMeta | null = manifest[b2FileName] ?? null;
   const missingPoster = meta?.kind === "video" && !meta.poster;
@@ -496,7 +532,7 @@ for (const filePath of files) {
     );
   } else {
     console.log(`⬆️   Uploading ${originalName} → ${b2FileName}`);
-    await uploadFile(filePath, b2FileName);
+    await uploadBytes(fileBuffer, b2FileName, hash);
     console.log(`✅  Done  hash=${hash}`);
   }
 

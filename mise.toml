@@ -1,3 +1,6 @@
 [tools]
 bun = "latest"
+node = "latest"
+"conda:imagemagick" = "latest"
+ffmpeg = "latest"
 "npm:vercel" = "latest"

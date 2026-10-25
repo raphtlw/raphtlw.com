@@ -929,31 +929,31 @@
     "height": 1920,
     "poster": "6c2b5d5af74980e230e2f254cf56e39072d9f15f_poster.avif"
   },
-  "photos/thumbnail-how-has-your-home-changed-over-the-years.jpg": {
+  "9620b9dd482d0932c2ba527b8444733d226d9e72.jpg": {
     "kind": "image",
     "width": 2401,
     "height": 2009,
     "blurDataURL": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAICAMAAAD3JJ6EAAAA0lBMVEX29/f9/Pz39/f4+Pj8+/vx8fPy8vP5+/v6+/v19fXZ0c7Yz8rw7u7u7e3i4uKKkoiLl4bn5+P7+vv////29fTv7u7x8fHo6enU1tLj5N/7+/v9/f79/f3q5uPg2dXh29fAw8Otr7K8vL7GyMbj3dre19Pg29nz8/K5urWWl5B/gnixsq3s6uf08e/p6ura2tve3duxraminpjNzMjr6+zZ0s/b0s/e3Nza2trW19jMy67Dwa7Y2Nnq6un5+fjw7ezv7Orx8PDc27zW1LXo6OX5+fkBx8tdAAAAYElEQVQI12NgYGBkYmZhZWPnYODk4ubh5eMXEBRiEBYRZRATl5CUkmaQkZWTF1ZQVFIWZmBUUVVT19DU0pZhkNHR1dM3MDQyNmEQMTUzt7C0sraxZbCzd3AU43NydnEFACsJCgenyogiAAAAAElFTkSuQmCC"
   },
-  "photos/thumbnail-singapore-redevelopment-masterplan.jpg": {
+  "bea8a3b05ebf401e93388e4c7ff9e7847ae4495b.jpg": {
     "kind": "image",
     "width": 1200,
     "height": 630,
     "blurDataURL": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAFCAMAAABLuo1aAAAAk1BMVEWKS1OARE1rLDV3MDp0Ljh3LzloKjNpKjNgKTFyPkWCR0+IR090OUFxOUB2O0NuMjp0LDZnLDRmNDtiNDp1Qkh0Q0p6SE5zQkh+TFJ0RkxrNj1kMDdnNz1pMzpjNz1ZLDJ2OkKBP0h9QkpyQ0lvQkhmNz1eOz9dMDZYLzRcMTZnO0BnOj9wQEZsQkdiQUVlP0RaNTohh19DAAAAP0lEQVQI12NgYGRiZmFlY+fgZODi5uHl4+EXEBRiEBYRFROXkJSSlmGQlZNXUFRSVlFVY1DX0NTS1tHV0zcAAFRLBKXwGOY7AAAAAElFTkSuQmCC"
   },
-  "photos/thumbnail-worldcup-2026-fixtures.jpg": {
+  "8e593a59666516620f8fda953841fabe91cbd939.jpg": {
     "kind": "image",
     "width": 1201,
     "height": 631,
     "blurDataURL": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAFCAMAAABLuo1aAAAAjVBMVEVtl4t2nIt4pJRgd3BWVE5VVE1mh31unJFwmIpumItul4txmo1pjX9yfHVnXl9gUlFkeW9nkodwmY1slottlYpnmZF4dWR+bmNgYmVbZT1aY1twk4VtmY0Tb2ITcWMibmU1bFRHemkzdGQmbGAWcmQTcGIAZ1kAZ1gAZ1wXb04ugWQXeWwEbF4AZlgAaFnB/YRiAAAAP0lEQVQI12NgYGRiZmFlY+fgZODi5uHl4xcQFBJmEBEVE5eQlJKW4WKQlZNXUFRSVlFVZVBT19DU0tbR1VMDAFRdBI/0SuM6AAAAAElFTkSuQmCC"
   },
-  "photos/thumbnail-visual-stories-and-digital-graphics-2025.jpg": {
+  "d44ae7fc4761ce971cc092aa45e221f32d76c710.jpg": {
     "kind": "image",
     "width": 1201,
     "height": 631,
     "blurDataURL": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAFCAMAAABLuo1aAAAAllBMVEWCe3+OgoFGaI8TZbAWXZ1OV11bWlE2Qk0dPVwfOlSMh4mknZRCX4QQYKwdZKZES1pQUFo2RFE1Um84WHaUjnyxpntBWHkfY51ghqtpcGtASFMpOE1QVF5WY3WRi3+nnYNMaYkqX4UwVXg6RlNHSjssNUMrQFcqQFeCfIKOg4ZUcZAMXKgXZKwrN00dISg3RlYWNFIaN1TXu+T8AAAAP0lEQVQI12NgYGRiZmFlY+fgZODi5uHl4xcQFBJmEBEVE5eQlJKWkWWQk1dQVFJWUVVTZ9DQ1NLW0dXTNzAEAFc6BMoXicIpAAAAAElFTkSuQmCC"
   },
-  "photos/thumbnail-stock-mkt-quiz-facebook.jpg": {
+  "909ff091d98c91b545089694a55b7dd4ab49ea3d.jpg": {
     "kind": "image",
     "width": 1200,
     "height": 630,
@@ -977,7 +977,7 @@
     "height": 600,
     "blurDataURL": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAFBAMAAACOSmBbAAAAKlBMVEX////7+/v9/f3y8vLf3+Dg4OD4+Pji4uPk5OT39/f29vbh4eLp6en+/v4qxfsrAAAAIElEQVQI12NgYBBiAAJm1wQgyd46AUhy7VEACV1gYAAAKfoDjYcpvIgAAAAASUVORK5CYII="
   },
-  "photos/thumbnail-1solar-sg-website.png": {
+  "32c86f488af31924558741152fcd0ce94a933d90.png": {
     "kind": "image",
     "width": 2768,
     "height": 1706,
@@ -1000,5 +1000,17 @@
     "width": 1200,
     "height": 630,
     "blurDataURL": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAFCAMAAABLuo1aAAAAllBMVEXgxrrkyrzcw7fKrJ/cv7H76uTPtq7h0s3/9fP67evgxrzbvrHVuaq2kHebak/kv6vFqqDj1ND/8/H46ujlyr3ky8Dls5Hgs4nHp5TlxLPbwbT46uX+8/H77erlyb3my8HeuaLCn43Vua3hx7vEoo7ly8D87+z049zkxbrpzMDdvqy1l43Iqp7avK7Nrp7o09Hq1NH67OvRVSLnAAAAP0lEQVQI12NgYGRiZmFlY+fgZODi5uHl4xcQFBJmEBEVE5eQlJKWkWWQk1dQVFJWUVVTZ9DQ1NLW0dXTNzAEAFc6BMoXicIpAAAAAElFTkSuQmCC"
+  },
+  "995467ae07e15753bbf5c2d7abb060b20270ab03.jpg": {
+    "kind": "image",
+    "width": 2400,
+    "height": 1260,
+    "blurDataURL": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAFCAMAAABLuo1aAAAAaVBMVEX////5/P728/Xt8PTl7/Do8/f1+vy7xMjIzM67vr+vvsPh8PT3+fr+///9/v7m7u/N2Nmho6OYmpuYmJjByMnc5+na6Oz6/f7///72+/3D1t2rt7vV3d22wMKyxc3t9/r2/f7Z5+rt9vgBkNR6AAAANUlEQVQI12NgYGBkYmZhZQADNnYOTi5uHl4GPn4BQSFhEVExcQYJSSlpGVk5eYgKBUUlEAUAMtACVJZr6qwAAAAASUVORK5CYII="
+  },
+  "846e4f057d3843e937e1b258d01ccc2a85ae7596.jpg": {
+    "kind": "image",
+    "width": 1200,
+    "height": 630,
+    "blurDataURL": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAFCAMAAABLuo1aAAAAaVBMVEXr6eXy8e/w7uzn5ODl4t3s6eTr6OLp5uHm49/m4976+vr7+/v8/P308u/o4d7U1dLb29Tp4Nrp6OT29fTw6+fl4d7l4dzz7ejr6eTu7On9/f3h4ODf3t3o5eDk4d3k4dzn5N/5+fjt6+mDDhTHAAAAPElEQVQI1w3BCQJAMAwEwEVUNq37rtv/H8kMkKSZ5K5Qwnwoq7ppO8Kb9cM4zYtgjdvuDj0v4n5elR/5AUCaAsGB+/oaAAAAAElFTkSuQmCC"
   }
 }

@@ -9,6 +9,7 @@ const nextConfig: NextConfig = {
     loaderFile: "./lib/image-loader.ts",
   },
   cacheComponents: true,
+  partialPrefetching: true,
   cacheMaxMemorySize: 0,
 };
 

@@ -10,6 +10,26 @@ export type Work = {
 
 export const works: Work[] = [
   {
+    title: "The sound of an identity: A look into the Singaporean accent",
+    description: "What does it mean to sound Singaporean? We listened to over 800 audio recordings of the Singaporean accent to find out.",
+    organization: "The Straits Times",
+    thumbnail: "846e4f057d3843e937e1b258d01ccc2a85ae7596.jpg",
+    link: "https://www.straitstimes.com/multimedia/graphics/2026/09/singaporean-accent/index.html",
+    topics: ["Speech Analysis", "Browser ML"],
+    pubdate: "2026-09-11"
+  },
+
+  {
+    title: "The ST×NLB Crossword",
+    description: "Play the latest crossword puzzles from The Straits Times and the National Library Board.",
+    organization: "The Straits Times",
+    thumbnail: "995467ae07e15753bbf5c2d7abb060b20270ab03.jpg",
+    link: "https://www.straitstimes.com/multimedia/graphics/2026/05/st-nlb-crossword/index.html",
+    topics: ["Crossword", "NYT Inspired", "Games"],
+    pubdate: "2026-05-31"
+  },
+
+  {
     title: "The thrill lasts seconds, the trash lasts forever.",
     description:
       "Blind boxes are a billion-dollar business with a waste problem no one is talking about.",
@@ -25,7 +45,7 @@ export const works: Work[] = [
     description:
       "Singapore’s landscape is constantly evolving. Here are some changes to come.",
     organization: "The Straits Times",
-    thumbnail: "photos/thumbnail-how-has-your-home-changed-over-the-years.jpg",
+    thumbnail: "9620b9dd482d0932c2ba527b8444733d226d9e72.jpg",
     link: "https://www.straitstimes.com/multimedia/graphics/2025/12/2025-masterplan-redevelopment/index.html",
     topics: ["Graphics", "ArcGIS", "GeoJSON"],
     pubdate: "2025-12-21",
@@ -37,7 +57,7 @@ export const works: Work[] = [
     description:
       "Singapore’s landscape is constantly evolving. Here are some changes to come.",
     organization: "The Straits Times",
-    thumbnail: "photos/thumbnail-singapore-redevelopment-masterplan.jpg",
+    thumbnail: "bea8a3b05ebf401e93388e4c7ff9e7847ae4495b.jpg",
     link: "https://www.straitstimes.com/multimedia/graphics/2025/12/2025-masterplan-redevelopment/index.html",
     topics: ["Graphics", "Mapbox", "Turf.js"],
     pubdate: "2025-12-21",
@@ -47,7 +67,7 @@ export const works: Work[] = [
     title: "World Cup 2026 — Calendar",
     description: "Keep up and keep score for every match at the 2026 World Cup",
     organization: "The Straits Times",
-    thumbnail: "photos/thumbnail-worldcup-2026-fixtures.jpg",
+    thumbnail: "8e593a59666516620f8fda953841fabe91cbd939.jpg",
     link: "https://www.straitstimes.com/multimedia/graphics/2025/12/worldcup-2026-fixtures/index.html",
     topics: ["UI/UX", "Interaction Design"],
     pubdate: "2025-12-06",
@@ -58,7 +78,7 @@ export const works: Work[] = [
     description:
       "An collection of all the digital graphics from The Straits Times",
     organization: "The Straits Times",
-    thumbnail: "photos/thumbnail-visual-stories-and-digital-graphics-2025.jpg",
+    thumbnail: "d44ae7fc4761ce971cc092aa45e221f32d76c710.jpg",
     link: "https://www.straitstimes.com/multimedia/graphics/2025/12/visual-stories-and-digital-graphics-2025/index.html",
     topics: ["MicroCMS", "Data Pipeline"],
     pubdate: "2025-12-29",
@@ -68,7 +88,7 @@ export const works: Work[] = [
     title: "Singapore Stock Market Quiz",
     description: "An interactive using the quiz format",
     organization: "The Straits Times",
-    thumbnail: "photos/thumbnail-stock-mkt-quiz-facebook.jpg",
+    thumbnail: "909ff091d98c91b545089694a55b7dd4ab49ea3d.jpg",
     link: "https://www.straitstimes.com/multimedia/graphics/2025/11/singapore-st-stock-market-quiz/index.html",
     topics: ["ArchieML", "Trivia", "Finance", "Investing"],
     pubdate: "2025-11-29",
@@ -90,7 +110,7 @@ export const works: Work[] = [
     description:
       "Developed and SEO optimized a Wordpress website for 1Solar, giving them a unique and targeted web presence.",
     organization: "1Solar Pte Ltd",
-    thumbnail: "photos/thumbnail-1solar-sg-website.png",
+    thumbnail: "32c86f488af31924558741152fcd0ce94a933d90.png",
     link: "https://1solar.sg",
     topics: ["PV Systems", "Wordpress", "WhatsApp"],
     pubdate: "2025-02-01",

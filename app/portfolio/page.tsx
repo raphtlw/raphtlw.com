@@ -20,7 +20,7 @@ export default function Portfolio() {
               />
               <p className="text-lg font-normal">{item.title}</p>
               <p>{item.description}</p>
-              <div className="flex flex-row justify-between text-neutral-600 dark:text-neutral-300">
+              <div className="flex flex-row justify-between text-neutral-600 dark:text-neutral-300 text-sm">
                 <p className="flex flex-row gap-2 flex-wrap">
                   {item.topics.map((topic, index) => (
                     <Fragment key={index}>
@@ -31,7 +31,7 @@ export default function Portfolio() {
                 </p>
 
                 {item.pubdate && (
-                  <p>{format(parseISO(item.pubdate), "MMM d")}</p>
+                  <p className="text-nowrap">{format(parseISO(item.pubdate), "MMM d")}</p>
                 )}
               </div>
             </Link>

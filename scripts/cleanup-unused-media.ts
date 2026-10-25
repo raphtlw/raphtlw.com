@@ -21,6 +21,7 @@ const BUCKET_PREFIX =
   prefixFlag !== -1 && args[prefixFlag + 1] ? args[prefixFlag + 1] : "";
 
 const MANIFEST_PATH = new URL("../app/media.json", import.meta.url).pathname;
+const PROJECT_ROOT = new URL("..", import.meta.url).pathname;
 
 const IGNORED_DIRS = new Set([
   "node_modules",
@@ -143,7 +144,10 @@ async function collectSourceFiles(dir: string): Promise<string[]> {
     }),
   ).filter(
     (p) =>
-      !p.split("/").some((seg) => IGNORED_DIRS.has(seg)) && p !== MANIFEST_PATH,
+      !p
+        .slice(dir.length)
+        .split("/")
+        .some((seg) => IGNORED_DIRS.has(seg)) && p !== MANIFEST_PATH,
   );
 }
 
@@ -196,7 +200,7 @@ if (bucketFiles.length === 0) {
 }
 
 console.log("📄  Scanning project source files…");
-const sourceFiles = await collectSourceFiles(".");
+const sourceFiles = await collectSourceFiles(PROJECT_ROOT);
 console.log(`    Found ${sourceFiles.length} source file(s) to scan.\n`);
 
 const corpus = (
@@ -254,9 +258,10 @@ console.log("─".repeat(52) + "\n");
 
 const manifestKeys = Object.keys(manifest);
 const unusedFileNames = new Set(unused.map((f) => f.fileName));
+const bucketFileNames = new Set(bucketFiles.map((f) => f.fileName));
 const manifestOrphans = manifestKeys.filter((key) => unusedFileNames.has(key));
 const manifestGhosts = manifestKeys.filter(
-  (key) => !bucketFiles.some((f) => f.fileName === key),
+  (key) => key.startsWith(BUCKET_PREFIX) && !bucketFileNames.has(key),
 );
 const allManifestPrune = [...new Set([...manifestOrphans, ...manifestGhosts])];
 
