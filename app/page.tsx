@@ -2,16 +2,18 @@ import { LinkButton } from "@/components/ui/button.client";
 import { cn } from "@/lib/utils";
 import type { Metadata } from "next";
 
+export const description = "designer"
+
 export const metadata: Metadata = {
   title: "raphael's space",
-  description: "Bridging the gap between design and engineering",
+  description,
   metadataBase: new URL("https://raphtlw.com"),
   openGraph: {
     type: "website",
     url: "https://raphtlw.com",
     siteName: "raphael's space",
     title: "raphael's space",
-    description: "Bridging the gap between design and engineering",
+    description,
     locale: "en_SG",
     images: [
       {
@@ -29,7 +31,7 @@ export const metadata: Metadata = {
     site: "@raphtlw",
     creator: "@raphtlw",
     title: "raphael's space",
-    description: "Bridging the gap between design and engineering",
+    description,
     images: ["/opengraph-image.png"],
   },
 
@@ -69,13 +71,13 @@ export default function Home() {
           </div>
           <main className="flex flex-col gap-4">
             <p>
-              I&apos;m a <LinkButton>design engineer</LinkButton>. Previously, I
+              I&apos;m currently serving my National Service in Singapore Civil Defence Force (SCDF). Previously, I
               interned at{" "}
               <LinkButton href="https://straitstimes.com" className="underline">
                 The Straits Times
               </LinkButton>
               , producing content and data-driven stories. I&apos;ve been coding
-              for 10 years and can&apos;t wait for what&apos;s next.
+              for 8 years.
             </p>
 
             {/*<p className="dark:text-stone-400">
@@ -85,9 +87,9 @@ export default function Home() {
               </span>
             </p>*/}
 
-            <p>
+            <p>My time was meaningfully spent contributing to 7 projects,&nbsp;
               <LinkButton className="underline" href="/portfolio">
-                My time was meaningfully spent working on 7 projects, all of which have been published.
+                which have been published.
               </LinkButton>
             </p>
 
